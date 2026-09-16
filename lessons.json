@@ -1,0 +1,286 @@
+{
+  "categories": [
+    {
+      "id": "basic",
+      "name_km": "រូបមន្តគ្រឹះនៃដេរីវេ",
+      "name_en": "Basic Derivative Rules",
+      "description": "រូបមន្តដេរីវេនៃអនុគមន៍ស្វ័យគុណ មេគុណថេរ និងឫស"
+    },
+    {
+      "id": "arithmetic",
+      "name_km": "ច្បាប់ផលបូក ផលគុណ និងផលចែក",
+      "name_en": "Sum, Product & Quotient Rules",
+      "description": "ដេរីវេនៃ (u ± v), (u × v) និង (u / v)"
+    },
+    {
+      "id": "chain_rule",
+      "name_km": "ដេរីវេបណ្ដាក់ (Chain Rule)",
+      "name_en": "Chain Rule",
+      "description": "ដេរីវេនៃអនុគមន៍បណ្ដាក់ y = f(u(x)) ឬ u^n"
+    },
+    {
+      "id": "trig",
+      "name_km": "ដេរីវេអនុគមន៍ត្រីកោណមាត្រ",
+      "name_en": "Trigonometric Derivatives",
+      "description": "ដេរីវេនៃ sin(x), cos(x), tan(x), cot(x)"
+    },
+    {
+      "id": "exp_log",
+      "name_km": "អនុគមន៍អិចស្បូណង់ស្យែល & លោការីត",
+      "name_en": "Exponential & Logarithmic",
+      "description": "ដេរីវេនៃ e^x, a^x, ln(x), log_a(x)"
+    }
+  ],
+  "formulas": [
+    {
+      "id": "form_c",
+      "category_id": "basic",
+      "title_km": "ដេរីវេនៃចំនួនថេរ (Constant)",
+      "title_en": "Derivative of a Constant",
+      "formula": "(c)' = 0   (ដែល c ជាចំនួនពិតថេរ)",
+      "explanation": "ដេរីវេនៃចំនួនថេរណាមួយ គឺស្មើនឹងសូន្យជានិច្ច ពីព្រោះតម្លៃរបស់វាមិនប្រែប្រួល។",
+      "example": "ឧទាហរណ៍៖ (5)' = 0, (-100)' = 0, (π)' = 0",
+      "keywords": ["ថេរ", "constant", "c", "c'=0", "រូបមន្តថេរ", "0"]
+    },
+    {
+      "id": "form_power",
+      "category_id": "basic",
+      "title_km": "ច្បាប់ស្វ័យគុណ (Power Rule)",
+      "title_en": "Power Rule",
+      "formula": "(xⁿ)' = n · xⁿ⁻¹\n(uⁿ)' = n · u' · uⁿ⁻¹",
+      "explanation": "ទម្លាក់ស្វ័យគុណ n មកមុខ រួចបន្ថយស្វ័យគុណចុះ 1។ បើជាអនុគមន៍ u(x) ត្រូវគុណនឹង u' បន្ថែម។",
+      "example": "ឧទាហរណ៍៖ (x³)' = 3x², (x⁵)' = 5x⁴, ((2x+1)³)' = 3(2)(2x+1)² = 6(2x+1)²",
+      "keywords": ["power", "ស្វ័យគុណ", "x^n", "xn", "power rule", "x²", "x³"]
+    },
+    {
+      "id": "form_sqrt",
+      "category_id": "basic",
+      "title_km": "ដេរីវេនៃឫសការ៉េ",
+      "title_en": "Derivative of Square Root",
+      "formula": "(√x)' = 1 / (2√x)   (x > 0)\n(√u)' = u' / (2√u)   (u > 0)",
+      "explanation": "ដេរីវេនៃឫស u គឺស្មើ u' ចែកនឹង ២ដងនៃឫស u។",
+      "example": "ឧទាហរណ៍៖ (√(3x - 1))' = (3x - 1)' / (2√(3x - 1)) = 3 / (2√(3x - 1))",
+      "keywords": ["sqrt", "ឫស", "ឫសការ៉េ", "root", "√x", "√u"]
+    },
+    {
+      "id": "form_inverse",
+      "category_id": "basic",
+      "title_km": "ដេរីវេនៃអនុគមន៍ច្រាស (1/x)",
+      "title_en": "Reciprocal Rule",
+      "formula": "(1/x)' = -1 / x²\n(1/u)' = -u' / u²",
+      "explanation": "ដេរីវេនៃ 1/u ស្មើនឹង ដកដេរីវេនៃ u ចែកនឹង u លើកជាការ៉េ។",
+      "example": "ឧទាហរណ៍៖ (1 / (4x+1))' = -(4x+1)' / (4x+1)² = -4 / (4x+1)²",
+      "keywords": ["1/x", "1/u", "ច្រាស", "reciprocal", "ប្រភាគ"]
+    },
+    {
+      "id": "form_product",
+      "category_id": "arithmetic",
+      "title_km": "ច្បាប់ផលគុណ (Product Rule)",
+      "title_en": "Product Rule",
+      "formula": "(u · v)' = u'v + uv'",
+      "explanation": "ដេរីវេផលគុណ ស្មើនឹង ដេរីវេតួទី១គុណតួទី២ បូកនឹង តួទី១គុណដេរីវេតួទី២។",
+      "example": "ឧទាហរណ៍៖ y = x · sin(x) => y' = (x)'sin(x) + x(sin(x))' = sin(x) + x·cos(x)",
+      "keywords": ["ផលគុណ", "product", "uv", "u*v", "ច្បាប់ផលគុណ", "product rule"]
+    },
+    {
+      "id": "form_quotient",
+      "category_id": "arithmetic",
+      "title_km": "ច្បាប់ផលចែក (Quotient Rule)",
+      "title_en": "Quotient Rule",
+      "formula": "(u / v)' = (u'v - uv') / v²   (v ≠ 0)",
+      "explanation": "ដេរីវេភាគយកគុណភាគបែង ដក ភាគយកគុណដេរីវេភាគបែង រួចចែកនឹងភាគបែងលើកជាការ៉េ។",
+      "example": "ឧទាហរណ៍៖ y = (2x+1)/(x-3) => y' = [2(x-3) - (2x+1)(1)] / (x-3)² = -7 / (x-3)²",
+      "keywords": ["ផលចែក", "quotient", "u/v", "ចែក", "ច្បាប់ផលចែក", "quotient rule"]
+    },
+    {
+      "id": "form_chain",
+      "category_id": "chain_rule",
+      "title_km": "ដេរីវេបណ្ដាក់ (Chain Rule)",
+      "title_en": "Chain Rule",
+      "formula": "dy/dx = (dy/du) · (du/dx)\n(f(g(x)))' = f'(g(x)) · g'(x)",
+      "explanation": "ដេរីវេអនុគមន៍ខាងក្រៅគិតត្រឹមកន្សោមខាងក្នុង រួចគុណនឹងដេរីវេនៃកន្សោមខាងក្នុង។",
+      "example": "ឧទាហរណ៍៖ y = (3x² - 5)⁴ => y' = 4(3x² - 5)³ · (3x² - 5)' = 4(3x² - 5)³ · (6x) = 24x(3x² - 5)³",
+      "keywords": ["chain", "chain rule", "បណ្ដាក់", "ដេរីវេបណ្ដាក់", "f(g(x))", "fg"]
+    },
+    {
+      "id": "form_trig_sin",
+      "category_id": "trig",
+      "title_km": "ដេរីវេនៃ sin(x) និង sin(u)",
+      "title_en": "Derivative of Sine",
+      "formula": "(sin x)' = cos x\n(sin u)' = u' · cos u",
+      "explanation": "ដេរីវេនៃស៊ីនុស គឺស្មើនឹងកូស៊ីនុស។",
+      "example": "ឧទាហរណ៍៖ (sin(3x²))' = (3x²)' · cos(3x²) = 6x · cos(3x²)",
+      "keywords": ["sin", "sin(x)", "sin(u)", "ស៊ីនុស", "sine"]
+    },
+    {
+      "id": "form_trig_cos",
+      "category_id": "trig",
+      "title_km": "ដេរីវេនៃ cos(x) និង cos(u)",
+      "title_en": "Derivative of Cosine",
+      "formula": "(cos x)' = -sin x\n(cos u)' = -u' · sin u",
+      "explanation": "ដេរីវេនៃកូស៊ីនុស គឺស្មើនឹង ដកស៊ីនុស (ប្រយ័ត្នសញ្ញាដក!)។",
+      "example": "ឧទាហរណ៍៖ (cos(5x))' = -(5x)' · sin(5x) = -5 · sin(5x)",
+      "keywords": ["cos", "cos(x)", "cos(u)", "កូស៊ីនុស", "cosine"]
+    },
+    {
+      "id": "form_trig_tan",
+      "category_id": "trig",
+      "title_km": "ដេរីវេនៃ tan(x) និង tan(u)",
+      "title_en": "Derivative of Tangent",
+      "formula": "(tan x)' = 1 / cos² x = 1 + tan² x\n(tan u)' = u' / cos² u = u'(1 + tan² u)",
+      "explanation": "ដេរីវេនៃតង់សង់ស្មើនឹង 1 លើ កូសការ៉េ ឬ 1 បូក តង់សង់ការ៉េ។",
+      "example": "ឧទាហរណ៍៖ (tan(2x))' = 2 / cos²(2x)",
+      "keywords": ["tan", "tan(x)", "tan(u)", "តង់សង់", "tangent"]
+    },
+    {
+      "id": "form_exp",
+      "category_id": "exp_log",
+      "title_km": "ដេរីវេនៃ eˣ និង eᵘ",
+      "title_en": "Derivative of Natural Exponential",
+      "formula": "(eˣ)' = eˣ\n(eᵘ)' = u' · eᵘ",
+      "explanation": "ដេរីវេនៃ e ស្វ័យគុណ u ស្មើ u' គុណ e ស្វ័យគុណ u ដដែល។",
+      "example": "ឧទាហរណ៍៖ (e^(x² - 3x))' = (2x - 3)e^(x² - 3x)",
+      "keywords": ["e^x", "exp", "ex", "e^u", "អិចស្បូណង់ស្យែល", "exponential"]
+    },
+    {
+      "id": "form_ln",
+      "category_id": "exp_log",
+      "title_km": "ដេរីវេនៃ ln(x) និង ln(u)",
+      "title_en": "Derivative of Natural Logarithm",
+      "formula": "(ln |x|)' = 1 / x   (x ≠ 0)\n(ln |u|)' = u' / u   (u ≠ 0)",
+      "explanation": "ដេរីវេនៃលោការីតនេពែ ln(u) គឺស្មើ u' ចែកនឹង u។",
+      "example": "ឧទាហរណ៍៖ (ln(x² + 1))' = (x² + 1)' / (x² + 1) = 2x / (x² + 1)",
+      "keywords": ["ln", "ln(x)", "ln(u)", "លោការីត", "log", "logarithm"]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "ex_1",
+      "category_id": "basic",
+      "code": "លំហាត់១",
+      "title": "ដេរីវេនៃពហុធាធម្មតា (Power Rule)",
+      "problem": "គណនាដេរីវេនៃអនុគមន៍ f(x) = 4x⁵ - 3x³ + 7x - 9",
+      "hints": "ប្រើរូបមន្ត (xⁿ)' = n·xⁿ⁻¹ និង (c)' = 0",
+      "solution_steps": [
+        "ជំហានទី១៖ អនុវត្តដេរីវេលើតួនិមួយៗ\nf'(x) = (4x⁵)' - (3x³)' + (7x)' - (9)'",
+        "ជំហានទី២៖ គណនាដេរីវេតាមរូបមន្តច្បាប់ស្វ័យគុណ\n• (4x⁵)' = 4 · (5x⁴) = 20x⁴\n• (3x³)' = 3 · (3x²) = 9x²\n• (7x)' = 7 · (1) = 7\n• (9)' = 0 (ដេរីវេចំនួនថេរ)",
+        "ជំហានទី៣៖ បូកសរុបលទ្ធផលចុងក្រោយ\nf'(x) = 20x⁴ - 9x² + 7"
+      ],
+      "final_answer": "f'(x) = 20x⁴ - 9x² + 7",
+      "difficulty": "ងាយស្រួល (Basic)",
+      "keywords": ["លំហាត់១", "ex1", "4x^5", "power rule", "ពហុធា"]
+    },
+    {
+      "id": "ex_2",
+      "category_id": "basic",
+      "code": "លំហាត់២",
+      "title": "ដេរីវេនៃកន្សោមមានឫសការ៉េ និងប្រភាគ",
+      "problem": "គណនាដេរីវេនៃ g(x) = 2√x + 3/x",
+      "hints": "ប្រើរូបមន្ត (√x)' = 1/(2√x) និង (1/x)' = -1/x²",
+      "solution_steps": [
+        "ជំហានទី១៖ បំបែកដេរីវេជាពីរតួ\ng'(x) = (2√x)' + (3/x)' = 2(√x)' + 3(1/x)'",
+        "ជំហានទី២៖ ជំនួសតាមរូបមន្តគ្រឹះ\n• 2(√x)' = 2 · (1 / (2√x)) = 1 / √x\n• 3(1/x)' = 3 · (-1 / x²) = -3 / x²",
+        "ជំហានទី៣៖ តម្រៀបចម្លើយ\ng'(x) = 1/√x - 3/x²  ឬ  g'(x) = (x√x - 3) / x²"
+      ],
+      "final_answer": "g'(x) = 1/√x - 3/x²",
+      "difficulty": "មធ្យម (Intermediate)",
+      "keywords": ["លំហាត់២", "ex2", "2√x", "3/x", "ឫស", "ប្រភាគ"]
+    },
+    {
+      "id": "ex_3",
+      "category_id": "arithmetic",
+      "code": "លំហាត់៣",
+      "title": "ដេរីវេផលគុណ (Product Rule)",
+      "problem": "គណនាដេរីវេនៃ h(x) = (x² + 3)(2x - 5)",
+      "hints": "ប្រើច្បាប់ផលគុណ (u·v)' = u'v + uv'",
+      "solution_steps": [
+        "ជំហានទី១៖ កំណត់អនុគមន៍ u និង v\n• តាង u = x² + 3  =>  u' = 2x\n• តាង v = 2x - 5  =>  v' = 2",
+        "ជំហានទី២៖ ជំនួសចូលក្នុងរូបមន្ត (uv)' = u'v + uv'\nh'(x) = (2x)(2x - 5) + (x² + 3)(2)",
+        "ជំហានទី៣៖ ពន្លាត និងបង្រួមកន្សោម\n= 4x² - 10x + 2x² + 6\n= 6x² - 10x + 6"
+      ],
+      "final_answer": "h'(x) = 6x² - 10x + 6",
+      "difficulty": "មធ្យម (Intermediate)",
+      "keywords": ["លំហាត់៣", "ex3", "ផលគុណ", "product rule", "(x^2+3)(2x-5)"]
+    },
+    {
+      "id": "ex_4",
+      "category_id": "arithmetic",
+      "code": "លំហាត់៤",
+      "title": "ដេរីវេផលចែកសនិទាន (Quotient Rule - បាក់ឌុប)",
+      "problem": "គណនាដេរីវេនៃ y = (3x - 2) / (x + 4)",
+      "hints": "ប្រើរូបមន្តផលចែក (u/v)' = (u'v - uv') / v²",
+      "solution_steps": [
+        "ជំហានទី១៖ កំណត់ u និង v\n• u = 3x - 2  =>  u' = 3\n• v = x + 4   =>  v' = 1",
+        "ជំហានទី២៖ អនុវត្តរូបមន្តផលចែក\ny' = [ u'v - uv' ] / v²\ny' = [ 3(x + 4) - (3x - 2)(1) ] / (x + 4)²",
+        "ជំហានទី៣៖ គណនាភាគយក\n= (3x + 12 - 3x + 2) / (x + 4)²\n= 14 / (x + 4)²"
+      ],
+      "final_answer": "y' = 14 / (x + 4)²",
+      "difficulty": "មធ្យម (BacII Standard)",
+      "keywords": ["លំហាត់៤", "ex4", "ផលចែក", "quotient rule", "(3x-2)/(x+4)", "បាក់ឌុប"]
+    },
+    {
+      "id": "ex_5",
+      "category_id": "chain_rule",
+      "code": "លំហាត់៥",
+      "title": "ដេរីវេបណ្ដាក់ស្វ័យគុណ (Chain Rule Power)",
+      "problem": "គណនាដេរីវេនៃ y = (2x³ - 5x + 1)⁴",
+      "hints": "ប្រើរូបមន្ត (uⁿ)' = n · u' · uⁿ⁻¹",
+      "solution_steps": [
+        "ជំហានទី១៖ កំណត់ u និង n\n• តាង u = 2x³ - 5x + 1  =>  u' = 6x² - 5\n• n = 4",
+        "ជំហានទី២៖ ជំនួសចូលរូបមន្ត\ny' = 4 · (2x³ - 5x + 1)' · (2x³ - 5x + 1)⁴⁻¹",
+        "ជំហានទី៣៖ គណនាតម្លៃចុងក្រោយ\ny' = 4(6x² - 5)(2x³ - 5x + 1)³"
+      ],
+      "final_answer": "y' = 4(6x² - 5)(2x³ - 5x + 1)³",
+      "difficulty": "មធ្យម (Intermediate)",
+      "keywords": ["លំហាត់៥", "ex5", "chain rule", "បណ្ដាក់", "(2x^3-5x+1)^4"]
+    },
+    {
+      "id": "ex_6",
+      "category_id": "trig",
+      "code": "លំហាត់៦",
+      "title": "ដេរីវេនៃផលគុណ និងត្រីកោណមាត្រ",
+      "problem": "គណនាដេរីវេនៃ f(x) = x³ · sin(2x)",
+      "hints": "ប្រើផលគុណ (uv)' និងដេរីវេ (sin 2x)' = 2 cos 2x",
+      "solution_steps": [
+        "ជំហានទី១៖ កំណត់ u និង v\n• u = x³  =>  u' = 3x²\n• v = sin(2x)  =>  v' = (2x)'·cos(2x) = 2·cos(2x)",
+        "ជំហានទី២៖ ជំនួសចូលរូបមន្ត (uv)' = u'v + uv'\nf'(x) = (3x²) · sin(2x) + (x³) · [2·cos(2x)]",
+        "ជំហានទី៣៖ ដាក់ x² ជាកត្តារួម\nf'(x) = x² [ 3·sin(2x) + 2x·cos(2x) ]"
+      ],
+      "final_answer": "f'(x) = x² [ 3 sin(2x) + 2x cos(2x) ]",
+      "difficulty": "កម្រិតខ្ពស់ (Advanced)",
+      "keywords": ["លំហាត់៦", "ex6", "sin", "sin(2x)", "x^3 sin(2x)", "ត្រីកោណមាត្រ"]
+    },
+    {
+      "id": "ex_7",
+      "category_id": "exp_log",
+      "code": "លំហាត់៧",
+      "title": "ដេរីវេអនុគមន៍អិចស្បូណង់ស្យែល និងលោការីត (បាក់ឌុប)",
+      "problem": "គណនាដេរីវេនៃ f(x) = (2x - 1) · e^(3x)",
+      "hints": "ប្រើផលគុណ (u·v)' និង (e^(3x))' = 3e^(3x)",
+      "solution_steps": [
+        "ជំហានទី១៖ កំណត់ u និង v\n• u = 2x - 1  =>  u' = 2\n• v = e^(3x)  =>  v' = 3e^(3x)",
+        "ជំហានទី២៖ ជំនួសចូលរូបមន្តផលគុណ\nf'(x) = u'v + uv'\nf'(x) = 2·e^(3x) + (2x - 1)·[3e^(3x)]",
+        "ជំហានទី៣៖ ដាក់ e^(3x) ជាកត្តារួម\n= e^(3x) [ 2 + 3(2x - 1) ]\n= e^(3x) [ 2 + 6x - 3 ]\n= (6x - 1) · e^(3x)"
+      ],
+      "final_answer": "f'(x) = (6x - 1) e^(3x)",
+      "difficulty": "បាក់ឌុប (BacII Exam Problem)",
+      "keywords": ["លំហាត់៧", "ex7", "e^3x", "exponential", "អិចស្បូណង់ស្យែល", "(2x-1)e^3x"]
+    },
+    {
+      "id": "ex_8",
+      "category_id": "exp_log",
+      "code": "លំហាត់៨",
+      "title": "ដេរីវេនៃអនុគមន៍លោការីតនេពែ",
+      "problem": "គណនាដេរីវេនៃ y = ln( (x - 1) / (x + 1) )  ចំពោះ x > 1",
+      "hints": "ល្បិចសម្រួល៖ ប្រើលក្ខណៈ ln(A/B) = ln(A) - ln(B) មុននឹងធ្វើដេរីវេ",
+      "solution_steps": [
+        "ជំហានទី១៖ បម្លែងរូបមន្តលោការីតជាមុនសិន\ny = ln(x - 1) - ln(x + 1)",
+        "ជំហានទី២៖ គណនាដេរីវេតាមរូបមន្ត (ln u)' = u'/u\ny' = (x - 1)' / (x - 1) - (x + 1)' / (x + 1)\ny' = 1 / (x - 1) - 1 / (x + 1)",
+        "ជំហានទី៣៖ តម្រូវភាគបែងរួម (x - 1)(x + 1) = x² - 1\ny' = [ (x + 1) - (x - 1) ] / (x² - 1)\ny' = 2 / (x² - 1)"
+      ],
+      "final_answer": "y' = 2 / (x² - 1)",
+      "difficulty": "កម្រិតខ្ពស់ (Smart BacII Technique)",
+      "keywords": ["លំហាត់៨", "ex8", "ln", "ln((x-1)/(x+1))", "លោការីត", "logarithm"]
+    }
+  ]
+}

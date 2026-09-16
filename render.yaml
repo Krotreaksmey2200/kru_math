@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: telegram-math-bot
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: TEACHER_ADMIN_ID
+        sync: false
+      - key: ENABLE_WEB_SERVER
+        value: "true"
+      - key: PORT
+        value: "8080"

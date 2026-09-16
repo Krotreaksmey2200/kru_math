@@ -1,0 +1,23 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environment variables (Never push your bot token to GitHub!)
+.env
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Database (optional: keep fresh on cloud)
+*.db-journal
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes

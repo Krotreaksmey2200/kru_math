@@ -1,0 +1,393 @@
+"""
+Exercises and Formulas Presentation Module.
+Handles navigation menus, formula views, exercise lists, hints, and step-by-step solutions.
+"""
+
+import json
+from typing import Optional, List, Dict, Any
+from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
+from telegram.constants import ParseMode, ChatType
+from telegram.ext import ContextTypes
+
+from database import db
+from handlers.group_privacy import send_solution_with_privacy
+
+
+
+def format_formula_html(form: Dict[str, Any]) -> str:
+    """Format a formula item into a clean, modern HTML message."""
+    title_km = form.get("title_km", "")
+    title_en = form.get("title_en", "")
+    formula = form.get("formula", "")
+    explanation = form.get("explanation", "")
+    example = form.get("example", "")
+
+    msg = (
+        f"📐 <b>{title_km}</b>\n"
+        f"<i>({title_en})</i>\n\n"
+        f"📌 <b>រូបមន្ត៖</b>\n"
+        f"<code>{formula}</code>\n\n"
+    )
+    if explanation:
+        msg += f"💡 <b>ពន្យល់៖</b> {explanation}\n\n"
+    if example:
+        msg += f"📝 <b>{example}</b>\n"
+
+    return msg
+
+
+def format_exercise_problem_html(ex: Dict[str, Any]) -> str:
+    """Format exercise statement without showing the full solution."""
+    code = ex.get("code", "")
+    title = ex.get("title", "")
+    problem = ex.get("problem", "")
+    difficulty = ex.get("difficulty", "មធ្យម")
+
+    msg = (
+        f"📝 <b>{code}៖ {title}</b>\n"
+        f"📊 <b>កម្រិត៖</b> {difficulty}\n\n"
+        f"❓ <b>ប្រធានលំហាត់៖</b>\n"
+        f"<code>{problem}</code>\n\n"
+        f"<i>ចុចប៊ូតុងខាងក្រោមដើម្បីមើលតម្រុយ ឬដំណោះស្រាយលម្អិត។</i>"
+    )
+    return msg
+
+
+def format_exercise_solution_html(ex: Dict[str, Any]) -> str:
+    """Format full step-by-step exercise solution."""
+    code = ex.get("code", "")
+    title = ex.get("title", "")
+    problem = ex.get("problem", "")
+    steps = ex.get("solution_steps", [])
+    final_answer = ex.get("final_answer", "")
+
+    msg = (
+        f"🎯 <b>ដំណោះស្រាយលម្អិត៖ {code}</b>\n"
+        f"📘 <b>ប្រធានបទ៖</b> {title}\n"
+        f"━━━━━━━━━━━━━━━━━━━━\n"
+        f"❓ <b>ប្រធាន៖</b> <code>{problem}</code>\n\n"
+    )
+
+    if steps:
+        msg += "📋 <b>ដំណើរការដោះស្រាយ៖</b>\n"
+        for step in steps:
+            msg += f"\n{step}\n"
+
+    if final_answer:
+        msg += f"\n━━━━━━━━━━━━━━━━━━━━\n"
+        msg += f"✅ <b>ចម្លើយចុងក្រោយ៖</b>\n<code>{final_answer}</code>\n"
+
+    return msg
+
+
+from config import is_admin
+
+
+def build_main_menu_keyboard(user_id: Optional[int] = None) -> InlineKeyboardMarkup:
+    """Main navigation keyboard. Automatically adds Admin button for the teacher."""
+    buttons = [
+        [
+            InlineKeyboardButton("📐 រូបមន្តដេរីវេ (Formulas)", callback_data="menu_formulas"),
+            InlineKeyboardButton("📝 លំហាត់ដេរីវេ (Exercises)", callback_data="menu_exercises")
+        ],
+        [
+            InlineKeyboardButton("🔍 ស្វែងរក (Search)", callback_data="menu_search"),
+            InlineKeyboardButton("ℹ️ ជំនួយ & របៀបប្រើ (Help)", callback_data="menu_help")
+        ]
+    ]
+
+    # Show Admin Dashboard button if the user is the teacher
+    if user_id and is_admin(user_id):
+        buttons.append([
+            InlineKeyboardButton("👨‍🏫 ផ្ទាំងគ្រប់គ្រងលោកគ្រូ (Admin Dashboard)", callback_data="admin_dashboard_cb")
+        ])
+
+    return InlineKeyboardMarkup(buttons)
+
+
+
+def build_categories_keyboard(prefix: str) -> InlineKeyboardMarkup:
+    """Keyboard for selecting a formula or exercise category."""
+    categories = db.get_categories()
+    buttons = []
+    for cat in categories:
+        name = cat["name_km"]
+        buttons.append([InlineKeyboardButton(f"📂 {name}", callback_data=f"{prefix}_cat_{cat['id']}")])
+    buttons.append([InlineKeyboardButton("🔙 ត្រឡប់ទៅម៉ឺនុយដើម (Home)", callback_data="menu_main")])
+    return InlineKeyboardMarkup(buttons)
+
+
+def build_formulas_list_keyboard(category_id: str) -> InlineKeyboardMarkup:
+    """Keyboard listing formulas in a selected category."""
+    formulas = db.get_formulas(category_id)
+    buttons = []
+    for f in formulas:
+        buttons.append([InlineKeyboardButton(f"📐 {f['title_km']}", callback_data=f"form_view_{f['id']}")])
+    buttons.append([InlineKeyboardButton("🔙 ត្រឡប់ទៅជំពូក (Categories)", callback_data="menu_formulas")])
+    return InlineKeyboardMarkup(buttons)
+
+
+def build_exercises_list_keyboard(category_id: str) -> InlineKeyboardMarkup:
+    """Keyboard listing exercises in a selected category."""
+    exercises = db.get_exercises(category_id)
+    buttons = []
+    for ex in exercises:
+        btn_text = f"📝 {ex.get('code', 'លំហាត់')}: {ex['title'][:22]}..." if len(ex['title']) > 22 else f"📝 {ex.get('code', 'លំហាត់')}: {ex['title']}"
+        buttons.append([InlineKeyboardButton(btn_text, callback_data=f"ex_view_{ex['id']}")])
+    buttons.append([InlineKeyboardButton("🔙 ត្រឡប់ទៅជំពូក (Categories)", callback_data="menu_exercises")])
+    return InlineKeyboardMarkup(buttons)
+
+
+def build_exercise_action_keyboard(exercise_id: str, in_group: bool = False, bot_username: str = "") -> InlineKeyboardMarkup:
+    """Action buttons for an exercise problem."""
+    buttons = []
+    if in_group:
+        # If viewed inside a group, the solution button directs to DM for privacy
+        dm_url = f"https://t.me/{bot_username}?start=ex_{exercise_id}" if bot_username else "#"
+        buttons.append([InlineKeyboardButton("🔒 មើលដំណោះស្រាយក្នុង DM", url=dm_url)])
+    else:
+        buttons.append([
+            InlineKeyboardButton("💡 មើលតម្រុយ (Hint)", callback_data=f"ex_hint_{exercise_id}"),
+            InlineKeyboardButton("✅ មើលដំណោះស្រាយ (Solution)", callback_data=f"ex_sol_{exercise_id}")
+        ])
+    buttons.append([InlineKeyboardButton("🔙 ត្រឡប់ក្រោយ (Back)", callback_data="menu_exercises")])
+    return InlineKeyboardMarkup(buttons)
+
+
+# --- Callback Query Handlers ---
+
+async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Router for all inline button callbacks."""
+    query = update.callback_query
+    if not query:
+        return
+
+    data = query.data
+    user = query.from_user
+    chat = query.message.chat if query.message else None
+    is_group = chat.type in [ChatType.GROUP, ChatType.SUPERGROUP] if chat else False
+
+    # Track user activity
+    db.track_user(user.id, user.username, user.first_name, user.last_name)
+
+    # 1. Main Menu
+    if data == "menu_main":
+        await query.answer()
+        welcome_text = (
+            "👋 <b>សូមស្វាគមន៍មកកាន់បូត គណិតវិទ្យា ដេរីវេនៃអនុគមន៍!</b> 🎓\n\n"
+            "ជ្រើសរើសជម្រើសខាងក្រោមដើម្បីសិក្សារូបមន្ត ឬដោះស្រាយលំហាត់៖"
+        )
+        await query.edit_message_text(
+            welcome_text,
+            parse_mode=ParseMode.HTML,
+            reply_markup=build_main_menu_keyboard(user.id)
+        )
+
+
+    # 2. Formulas Menu (Categories)
+    elif data == "menu_formulas":
+        await query.answer()
+        text = "📐 <b>សូមជ្រើសរើសផ្នែកនៃរូបមន្តដេរីវេដែលចង់មើល៖</b>"
+        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("form"))
+
+    # 3. View Formulas in Category
+    elif data.startswith("form_cat_"):
+        await query.answer()
+        cat_id = data.replace("form_cat_", "")
+        text = "📐 <b>ជ្រើសរើសរូបមន្តជាក់លាក់ដើម្បីមើលការពន្យល់ និងឧទាហរណ៍៖</b>"
+        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_formulas_list_keyboard(cat_id))
+
+    # 4. View Specific Formula
+    elif data.startswith("form_view_"):
+        await query.answer()
+        form_id = data.replace("form_view_", "")
+        form = db.get_formula_by_id(form_id)
+        if form:
+            msg_text = format_formula_html(form)
+            back_kb = InlineKeyboardMarkup([
+                [InlineKeyboardButton("🔙 ត្រឡប់ក្រោយ (Back)", callback_data=f"form_cat_{form.get('category_id', 'basic')}")]
+            ])
+            await query.edit_message_text(msg_text, parse_mode=ParseMode.HTML, reply_markup=back_kb)
+
+    # 5. Exercises Menu (Categories)
+    elif data == "menu_exercises":
+        await query.answer()
+        text = "📝 <b>សូមជ្រើសរើសកម្រិត ឬផ្នែកនៃលំហាត់ដេរីវេ៖</b>"
+        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("ex"))
+
+    # 6. View Exercises in Category
+    elif data.startswith("ex_cat_"):
+        await query.answer()
+        cat_id = data.replace("ex_cat_", "")
+        text = "📝 <b>ជ្រើសរើសលំហាត់ដើម្បីអនុវត្ត និងមើលដំណោះស្រាយ៖</b>"
+        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_exercises_list_keyboard(cat_id))
+
+    # 7. View Exercise Problem
+    elif data.startswith("ex_view_"):
+        await query.answer()
+        ex_id = data.replace("ex_view_", "")
+        ex = db.get_exercise_by_id(ex_id)
+        if ex:
+            bot_info = await context.bot.get_me()
+            msg_text = format_exercise_problem_html(ex)
+            kb = build_exercise_action_keyboard(ex_id, in_group=is_group, bot_username=bot_info.username)
+            await query.edit_message_text(msg_text, parse_mode=ParseMode.HTML, reply_markup=kb)
+
+    # 8. View Exercise Hint
+    elif data.startswith("ex_hint_"):
+        ex_id = data.replace("ex_hint_", "")
+        ex = db.get_exercise_by_id(ex_id)
+        if ex:
+            hint_text = ex.get("hints") or "មិនមានតម្រុយបន្ថែមសម្រាប់លំហាត់នេះទេ។"
+            await query.answer(f"💡 តម្រុយ៖ {hint_text}", show_alert=True)
+
+    # 9. View Exercise Solution (Respecting Privacy)
+    elif data.startswith("ex_sol_"):
+        await query.answer()
+        ex_id = data.replace("ex_sol_", "")
+        ex = db.get_exercise_by_id(ex_id)
+        if ex:
+            solution_text = format_exercise_solution_html(ex)
+            if is_group:
+                # Group Privacy: Send to student's DM!
+                back_kb = InlineKeyboardMarkup([
+                    [InlineKeyboardButton("🔙 ត្រឡប់ទៅម៉ឺនុយលំហាត់", callback_data="menu_exercises")]
+                ])
+                await send_solution_with_privacy(
+                    update=update,
+                    context=context,
+                    solution_text=solution_text,
+                    deep_link_payload=f"ex_{ex_id}",
+                    reply_markup=back_kb
+                )
+            else:
+                # Private chat: Edit current message to show full solution
+                back_kb = InlineKeyboardMarkup([
+                    [InlineKeyboardButton("❓ មើលប្រធានឡើងវិញ (Problem)", callback_data=f"ex_view_{ex_id}")],
+                    [InlineKeyboardButton("🔙 ត្រឡប់ទៅបញ្ជីលំហាត់", callback_data=f"ex_cat_{ex.get('category_id', 'basic')}")]
+                ])
+                await query.edit_message_text(solution_text, parse_mode=ParseMode.HTML, reply_markup=back_kb)
+
+    # 10. Help Menu
+    elif data == "menu_help":
+        await query.answer()
+        help_text = (
+            "ℹ️ <b>របៀបប្រើប្រាស់បូត (User Guide):</b>\n\n"
+            "• <b>ស្វែងរកលឿន៖</b> គ្រាន់តែវាយឈ្មោះលំហាត់ ឬពាក្យគន្លឹះ ដូចជា <code>លំហាត់១</code>, <code>sin(x)</code>, <code>power rule</code>, <code>បាក់ឌុប</code>\n"
+            "• <b>ប្រើប្រាស់ក្នុងគ្រុប (Group Privacy):</b> ដំណោះស្រាយនឹងត្រូវផ្ញើទៅកាន់ <b>Private Message (DM)</b> របស់អ្នក ដើម្បីរក្សាភាពឯកជន។\n"
+            "• <b>មុខងារ Inline:</b> វាយ <code>@botusername លំហាត់១</code> នៅក្នុងគ្រុបណាមួយដើម្បីមើលដំណោះស្រាយជាលក្ខណៈឯកជន។\n\n"
+            "📩 ទំនាក់ទំនងលោកគ្រូ៖ បើមានចម្ងល់លើមេរៀន អាចទាក់ទងលោកគ្រូបានជានិច្ច!"
+        )
+        back_kb = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🔙 ត្រឡប់ទៅម៉ឺនុយដើម (Home)", callback_data="menu_main")]
+        ])
+        await query.edit_message_text(help_text, parse_mode=ParseMode.HTML, reply_markup=back_kb)
+
+    # 11. Search instructions
+    elif data == "menu_search":
+        await query.answer()
+        search_prompt = (
+            "🔍 <b>របៀបស្វែងរក៖</b>\n\n"
+            "សូមផ្ញើសារនូវអ្វីដែលអ្នកចង់រក ឧទាហរណ៍៖\n"
+            "• <code>លំហាត់១</code> ឬ <code>ex1</code>\n"
+            "• <code>sin(x)</code> ឬ <code>cos(x)</code>\n"
+            "• <code>ផលគុណ</code> ឬ <code>ផលចែក</code>\n"
+            "• <code>chain rule</code>\n"
+            "• <code>e^x</code> ឬ <code>ln(x)</code>\n\n"
+            "បូតនឹងស្វែងរក និងបង្ហាញលទ្ធផលជូនភ្លាមៗ!"
+        )
+        back_kb = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🔙 ត្រឡប់ទៅម៉ឺនុយដើម (Home)", callback_data="menu_main")]
+        ])
+        await query.edit_message_text(search_prompt, parse_mode=ParseMode.HTML, reply_markup=back_kb)
+
+    # 12. Admin Dashboard Callbacks
+    elif data == "admin_dashboard_cb":
+        if not is_admin(user.id):
+            await query.answer("⛔️ សម្រាប់តែគ្រូបង្រៀនប៉ុណ្ណោះ!", show_alert=True)
+            return
+        await query.answer()
+        from handlers.admin import format_admin_dashboard_text, build_admin_panel_keyboard
+        await query.edit_message_text(
+            format_admin_dashboard_text(),
+            parse_mode=ParseMode.HTML,
+            reply_markup=build_admin_panel_keyboard()
+        )
+
+    elif data == "admin_stats_cb":
+        if not is_admin(user.id):
+            await query.answer("⛔️ សម្រាប់តែគ្រូបង្រៀនប៉ុណ្ណោះ!", show_alert=True)
+            return
+        await query.answer()
+        stats = db.get_stats()
+        stats_text = (
+            "📊 <b>ស្ថិតិប្រព័ន្ធបូតគណិតវិទ្យា៖</b>\n\n"
+            f"• ចំនួនសិស្សចុះឈ្មោះ៖ <b>{stats['total_users']}</b> នាក់\n"
+            f"• ចំនួនលំហាត់ដេរីវេ៖ <b>{stats['total_exercises']}</b> លំហាត់\n"
+            f"• ចំនួនរូបមន្តដេរីវេ៖ <b>{stats['total_formulas']}</b> រូបមន្ត\n"
+            f"• ចំនួនដងនៃការស្វែងរក៖ <b>{stats['total_searches']}</b> ដង\n"
+        )
+        back_kb = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🔙 ត្រឡប់ទៅផ្ទាំង Admin", callback_data="admin_dashboard_cb")]
+        ])
+        await query.edit_message_text(stats_text, parse_mode=ParseMode.HTML, reply_markup=back_kb)
+
+    elif data == "admin_backup_cb":
+        if not is_admin(user.id):
+            await query.answer("⛔️ សម្រាប់តែគ្រូបង្រៀនប៉ុណ្ណោះ!", show_alert=True)
+            return
+        await query.answer("📦 កំពុងបង្កើត Backup File...")
+        import io
+        data_export = db.export_all()
+        json_bytes = json.dumps(data_export, ensure_ascii=False, indent=2).encode("utf-8")
+        bio = io.BytesIO(json_bytes)
+        bio.name = "math_lessons_backup.json"
+        await chat.send_document(
+            document=bio,
+            caption="📦 <b>ឯកសារបម្រុងទុកទិន្នន័យ (Backup JSON)</b>",
+            parse_mode=ParseMode.HTML
+        )
+
+    elif data == "admin_sync_cb":
+        if not is_admin(user.id):
+            await query.answer("⛔️ សម្រាប់តែគ្រូបង្រៀនប៉ុណ្ណោះ!", show_alert=True)
+            return
+        await query.answer()
+        from sheets_sync import sync_from_google_sheet
+        wait_text = "⏳ <b>កំពុង Sync ទិន្នន័យពី Google Sheets...</b>"
+        await query.edit_message_text(wait_text, parse_mode=ParseMode.HTML)
+        try:
+            res = await sync_from_google_sheet()
+            result_text = f"✅ <b>ជោគជ័យ!</b> {res['message']}"
+        except Exception as e:
+            result_text = f"❌ <b>បរាជ័យក្នុងការ Sync៖</b>\n<code>{e}</code>\n\n<i>សូមពិនិត្យមើល GOOGLE_SHEET_CSV_URL ក្នុង .env ឬប្រើ /sync_sheets &lt;url&gt;</i>"
+        back_kb = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🔙 ត្រឡប់ទៅផ្ទាំង Admin", callback_data="admin_dashboard_cb")]
+        ])
+        await query.edit_message_text(result_text, parse_mode=ParseMode.HTML, reply_markup=back_kb)
+
+    elif data == "admin_add_guide_cb":
+        if not is_admin(user.id):
+            await query.answer("⛔️ សម្រាប់តែគ្រូបង្រៀនប៉ុណ្ណោះ!", show_alert=True)
+            return
+        await query.answer()
+        guide = (
+            "📝 <b>របៀបបញ្ចូលលំហាត់ថ្មីតាម Telegram៖</b>\n\n"
+            "សូម Copy និងបំពេញទម្រង់ខាងក្រោម រួចផ្ញើចូលក្នុងឆាតនេះ៖\n\n"
+            "<code>/add\n"
+            "code: លំហាត់៩\n"
+            "title: ដេរីវេនៃអនុគមន៍ tan(3x)\n"
+            "category: trig\n"
+            "problem: គណនាដេរីវេនៃ y = tan(3x)\n"
+            "hints: ប្រើរូបមន្ត (tan u)' = u' / cos²(u)\n"
+            "step: ជំហានទី១៖ តាង u = 3x => u' = 3\n"
+            "step: ជំហានទី២៖ y' = 3 / cos²(3x)\n"
+            "answer: y' = 3 / cos²(3x)\n"
+            "difficulty: មធ្យម\n"
+            "keywords: tan, tan(3x), លំហាត់៩</code>"
+        )
+        back_kb = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🔙 ត្រឡប់ទៅផ្ទាំង Admin", callback_data="admin_dashboard_cb")]
+        ])
+        await query.edit_message_text(guide, parse_mode=ParseMode.HTML, reply_markup=back_kb)
+
