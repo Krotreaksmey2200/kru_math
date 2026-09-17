@@ -11,6 +11,7 @@ import urllib.parse
 import aiohttp
 import logging
 from typing import Optional, List
+from PIL import Image
 
 logger = logging.getLogger("MathBot.LaTeX")
 
@@ -19,6 +20,7 @@ try:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    import matplotlib.patheffects as pe
     plt.rcParams.update({
         "mathtext.fontset": "cm",        # Authentic Computer Modern LaTeX font
         "font.family": "sans-serif",
@@ -237,3 +239,68 @@ async def render_latex_to_png(latex_str: str) -> Optional[bytes]:
         return png_bytes
 
     return None
+
+
+def render_latex_to_transparent_webp(latex_str: str) -> Optional[bytes]:
+    """
+    Renders LaTeX math into a transparent-background WebP sticker.
+    Dual-theme compatible with dark slate font and soft white stroke edge.
+    Conforms to Telegram sticker dimensions (<=512px).
+    """
+    if not MATPLOTLIB_AVAILABLE:
+        return None
+
+    eq_lines = clean_and_extract_equations(latex_str)
+    if not eq_lines:
+        return None
+
+    num_lines = len(eq_lines)
+    try:
+        fig_height = max(1.2, 0.6 + num_lines * 0.6)
+        fig = plt.figure(figsize=(7, fig_height), dpi=300)
+        fig.patch.set_alpha(0.0)
+        ax = plt.subplot(111)
+        ax.patch.set_alpha(0.0)
+        plt.axis("off")
+
+        y_step = 1.0 / (num_lines + 1)
+        for idx, eq in enumerate(eq_lines):
+            y_pos = 1.0 - (idx + 1) * y_step
+            plt.text(
+                0.5,
+                y_pos,
+                f"${eq}$",
+                size=20,
+                ha="center",
+                va="center",
+                color="#1A1B26",
+                path_effects=[
+                    pe.withStroke(linewidth=1.8, foreground="#FFFFFF")
+                ]
+            )
+
+        png_buf = io.BytesIO()
+        plt.savefig(
+            png_buf,
+            format="png",
+            transparent=True,
+            bbox_inches="tight",
+            pad_inches=0.15
+        )
+        plt.close(fig)
+        png_buf.seek(0)
+
+        img = Image.open(png_buf)
+        img.thumbnail((512, 512), Image.Resampling.LANCZOS)
+
+        webp_buf = io.BytesIO()
+        img.save(webp_buf, format="WEBP")
+        return webp_buf.getvalue()
+    except Exception as e:
+        logger.debug("Transparent WebP render failed: %s", e)
+        try:
+            plt.close(fig)
+        except Exception:
+            pass
+        return None
+

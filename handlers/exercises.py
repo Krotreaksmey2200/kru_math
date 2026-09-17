@@ -3,6 +3,7 @@ Exercises and Formulas Presentation Module.
 Handles navigation menus, formula views, exercise lists, hints, and step-by-step solutions.
 """
 
+import re
 import json
 from typing import Optional, List, Dict, Any
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
@@ -13,59 +14,105 @@ from database import db
 from handlers.group_privacy import send_solution_with_privacy
 
 
+def wrap_math_latex(text: str) -> str:
+    """Wraps math formulas and equations with $ ... $ for KaTeX / Telegram Web rendering."""
+    if not text:
+        return text
+
+    lines = text.splitlines()
+    out_lines = []
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:
+            out_lines.append("")
+            continue
+
+        if stripped.startswith("$") and stripped.endswith("$"):
+            out_lines.append(f"<code>{stripped}</code>")
+            continue
+
+        if any(c in stripped for c in "=+-*/^<>\\()|[]{}_∫√²³π"):
+            # Check for label with colon, e.g. "• ទម្រង់ពីជគណិត៖ ..."
+            m1 = re.match(r'^(.*?[៖:]\s*)(.+)$', stripped)
+            if m1:
+                prefix, math_part = m1.group(1), m1.group(2).strip()
+                out_lines.append(f"{prefix}<code>${math_part}$</code>")
+                continue
+
+            # Check for Khmer words at beginning before equation, e.g. "គណនា y = ..."
+            m2 = re.match(r'^([•\-\*\s]*[\u1780-\u17FF\s]+)\s+([a-zA-Z0-9\\].*)$', stripped)
+            if m2:
+                prefix, math_part = m2.group(1).strip(), m2.group(2).strip()
+                out_lines.append(f"{prefix} <code>${math_part}$</code>")
+                continue
+
+            out_lines.append(f"<code>${stripped}$</code>")
+        else:
+            out_lines.append(line)
+
+    return "\n".join(out_lines)
+
+
 
 def format_formula_html(form: Dict[str, Any]) -> str:
-    """Format a formula item into a clean, modern HTML message."""
+    """Format a formula item into a clean, modern HTML message with $...$ KaTeX math."""
     title_km = form.get("title_km", "")
     title_en = form.get("title_en", "")
     formula = form.get("formula", "")
     explanation = form.get("explanation", "")
     example = form.get("example", "")
 
+    wrapped_formula = wrap_math_latex(formula)
+    wrapped_example = wrap_math_latex(example)
+
     msg = (
         f"📐 <b>{title_km}</b>\n"
         f"<i>({title_en})</i>\n\n"
-        f"📌 <b>រូបមន្ត៖</b>\n"
-        f"<code>{formula}</code>\n\n"
+        f"📌 <b>រូបមន្ត (Formula)៖</b>\n"
+        f"{wrapped_formula}\n\n"
     )
     if explanation:
         msg += f"💡 <b>ពន្យល់៖</b> {explanation}\n\n"
     if example:
-        msg += f"📝 <b>{example}</b>\n"
+        msg += f"📝 <b>ឧទាហរណ៍៖</b>\n{wrapped_example}\n"
 
     return msg
 
 
 def format_exercise_problem_html(ex: Dict[str, Any]) -> str:
-    """Format exercise statement without showing the full solution."""
+    """Format exercise statement with $...$ KaTeX math without showing the full solution."""
     code = ex.get("code", "")
     title = ex.get("title", "")
     problem = ex.get("problem", "")
     difficulty = ex.get("difficulty", "មធ្យម")
 
+    wrapped_problem = wrap_math_latex(problem)
+
     msg = (
         f"📝 <b>{code}៖ {title}</b>\n"
         f"📊 <b>កម្រិត៖</b> {difficulty}\n\n"
         f"❓ <b>ប្រធានលំហាត់៖</b>\n"
-        f"<code>{problem}</code>\n\n"
+        f"{wrapped_problem}\n\n"
         f"<i>ចុចប៊ូតុងខាងក្រោមដើម្បីមើលតម្រុយ ឬដំណោះស្រាយលម្អិត។</i>"
     )
     return msg
 
 
 def format_exercise_solution_html(ex: Dict[str, Any]) -> str:
-    """Format full step-by-step exercise solution."""
+    """Format full step-by-step exercise solution with $...$ KaTeX math."""
     code = ex.get("code", "")
     title = ex.get("title", "")
     problem = ex.get("problem", "")
     steps = ex.get("solution_steps", [])
     final_answer = ex.get("final_answer", "")
 
+    wrapped_problem = wrap_math_latex(problem)
+
     msg = (
         f"🎯 <b>ដំណោះស្រាយលម្អិត៖ {code}</b>\n"
         f"📘 <b>ប្រធានបទ៖</b> {title}\n"
         f"━━━━━━━━━━━━━━━━━━━━\n"
-        f"❓ <b>ប្រធាន៖</b> <code>{problem}</code>\n\n"
+        f"❓ <b>ប្រធាន៖</b>\n{wrapped_problem}\n\n"
     )
 
     if steps:
@@ -74,8 +121,9 @@ def format_exercise_solution_html(ex: Dict[str, Any]) -> str:
             msg += f"\n{step}\n"
 
     if final_answer:
+        wrapped_answer = wrap_math_latex(final_answer)
         msg += f"\n━━━━━━━━━━━━━━━━━━━━\n"
-        msg += f"✅ <b>ចម្លើយចុងក្រោយ៖</b>\n<code>{final_answer}</code>\n"
+        msg += f"✅ <b>ចម្លើយចុងក្រោយ៖</b>\n{wrapped_answer}\n"
 
     return msg
 
@@ -194,7 +242,7 @@ def build_exercise_action_keyboard(exercise_id: str, in_group: bool = False, bot
             InlineKeyboardButton("✅ មើលដំណោះស្រាយ (Solution)", callback_data=f"ex_sol_{exercise_id}")
         ])
         buttons.append([
-            InlineKeyboardButton("🖼 មើលជារូបភាពសមីការ (Render HD)", callback_data=f"ex_render_{exercise_id}")
+            InlineKeyboardButton("🌟 មើលជា Sticker ថ្លា (Transparent)", callback_data=f"ex_render_{exercise_id}")
         ])
     buttons.append([InlineKeyboardButton("🔙 ត្រឡប់ក្រោយ (Back)", callback_data="menu_exercises")])
     return InlineKeyboardMarkup(buttons)
@@ -308,7 +356,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         if form:
             msg_text = format_formula_html(form)
             back_kb = InlineKeyboardMarkup([
-                [InlineKeyboardButton("🖼 មើលជារូបភាពសមីការ (Render HD)", callback_data=f"form_render_{form_id}")],
+                [InlineKeyboardButton("🌟 មើលជា Sticker ថ្លា (Transparent)", callback_data=f"form_render_{form_id}")],
                 [InlineKeyboardButton("🔙 ត្រឡប់ក្រោយ (Back)", callback_data=f"form_cat_{form.get('category_id', 'lesson_3')}")]
             ])
             await query.edit_message_text(msg_text, parse_mode=ParseMode.HTML, reply_markup=back_kb)
