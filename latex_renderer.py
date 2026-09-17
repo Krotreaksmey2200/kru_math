@@ -1,7 +1,8 @@
 """
 LaTeX Math Equation Rendering Engine.
-Renders LaTeX math formulas into high-resolution PNG images.
-Supports local high-speed rendering via Matplotlib with automatic online fallback (CodeCogs).
+Renders LaTeX math formulas and equations into high-resolution PNG images.
+Supports local high-speed rendering via Matplotlib (Computer Modern LaTeX font)
+with automatic Khmer label extraction, multiline equation alignment, and online fallback.
 """
 
 import io
@@ -9,7 +10,7 @@ import re
 import urllib.parse
 import aiohttp
 import logging
-from typing import Optional
+from typing import Optional, List
 
 logger = logging.getLogger("MathBot.LaTeX")
 
@@ -18,6 +19,11 @@ try:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    plt.rcParams.update({
+        "mathtext.fontset": "cm",        # Authentic Computer Modern LaTeX font
+        "font.family": "sans-serif",
+        "figure.autolayout": False,
+    })
     MATPLOTLIB_AVAILABLE = True
 except Exception as e:
     logger.warning("Matplotlib not available for local LaTeX render: %s", e)
@@ -65,12 +71,78 @@ def normalize_to_latex(text: str) -> str:
         ("==>", r"\implies"),
         ("=>", r"\implies"),
         ("⇌", r"\rightleftharpoons"),
+        ("ℝ", r"\mathbf{R}"),
+        (r"\mathbb{R}", r"\mathbf{R}"),
+        ("z̄", r"\bar{z}"),
+        ("x̄", r"\bar{x}"),
+        ("ȳ", r"\bar{y}"),
     ]
 
     for orig, rep in replacements:
         s = s.replace(orig, rep)
 
+    # Convert \sqrt(...) to \sqrt{...}
+    s = re.sub(r'\\sqrt\(([^)]+)\)', r'\\sqrt{\1}', s)
+
+    # Add space before parentheses when following alphanumeric, e.g. "bi (" -> "bi \quad ("
+    s = re.sub(r'([a-zA-Z0-9\^}])\s*\(', r'\1 \\quad (', s)
+
     return s
+
+
+def clean_and_extract_equations(raw_text: str) -> List[str]:
+    """
+    Extracts clean mathematical expressions from text.
+    Strips Khmer language prefixes, bullet points, and explanatory words
+    to prevent tofu/box glyph errors in LaTeX math mode.
+    """
+    if not raw_text:
+        return []
+
+    lines = raw_text.splitlines() if "\n" in raw_text else [raw_text]
+    cleaned_equations = []
+
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+
+        # Strip leading bullets, numbers, hyphens
+        line = re.sub(r'^[•\-\*\d\.\)]+\s*', '', line)
+
+        # Strip Khmer label prefixes like "ទម្រង់ពីជគណិត៖" or "ម៉ូឌុល៖"
+        line = re.sub(r'^[\u1780-\u17FF\s\:\៖\-\(\)]+[\:៖]\s*', '', line)
+
+        # Replace common Khmer connective words with math spacing
+        line = re.sub(r'\bដែល\b', '', line)
+        line = re.sub(r'\bដោយ\b', '', line)
+        line = re.sub(r'\bនាំឱ្យ\b', r'\\implies ', line)
+        line = re.sub(r'\bឬ\b', r'\\lor ', line)
+        line = re.sub(r'\bនិង\b', r'\\land ', line)
+
+        # Strip any remaining Khmer Unicode characters (U+1780 to U+17FF)
+        line = re.sub(r'[\u1780-\u17FF]', '', line)
+
+        # Clean empty parentheses and normalize whitespace
+        line = re.sub(r'\(\s*\)', '', line)
+        line = re.sub(r'\s+', ' ', line).strip()
+
+        # Only retain lines with mathematical substance
+        if line and any(c in line for c in '=+-*/^<>\\()|[]{}_'):
+            norm = normalize_to_latex(line)
+            if norm:
+                cleaned_equations.append(norm)
+
+    # Fallback: if stripping left nothing (e.g. pure LaTeX string with no Khmer text),
+    # return the normalized original string
+    if not cleaned_equations:
+        norm_orig = normalize_to_latex(raw_text)
+        # Strip stray Khmer if any
+        norm_orig = re.sub(r'[\u1780-\u17FF]', '', norm_orig).strip()
+        if norm_orig:
+            cleaned_equations.append(norm_orig)
+
+    return cleaned_equations
 
 
 def render_with_matplotlib(latex_str: str) -> Optional[bytes]:
@@ -78,24 +150,32 @@ def render_with_matplotlib(latex_str: str) -> Optional[bytes]:
     if not MATPLOTLIB_AVAILABLE:
         return None
 
-    clean = normalize_to_latex(latex_str)
+    eq_lines = clean_and_extract_equations(latex_str)
+    if not eq_lines:
+        return None
+
+    num_lines = len(eq_lines)
 
     try:
-        # Create small figure with dark slate background
-        fig = plt.figure(figsize=(0.1, 0.1), dpi=260)
-        fig.patch.set_facecolor("#1E1E2E")  # Modern dark slate
+        # Dynamic figure height based on number of equation lines
+        fig_height = max(1.0, 0.5 + num_lines * 0.55)
+        fig = plt.figure(figsize=(7, fig_height), dpi=260)
+        fig.patch.set_facecolor("#1E1E2E")  # Modern dark slate badge
         plt.axis("off")
 
-        # Render math text in crisp white/light
-        plt.text(
-            0.5,
-            0.5,
-            f"${clean}$",
-            size=18,
-            ha="center",
-            va="center",
-            color="#F8F9FA"
-        )
+        # Position lines nicely vertically
+        y_step = 1.0 / (num_lines + 1)
+        for idx, eq in enumerate(eq_lines):
+            y_pos = 1.0 - (idx + 1) * y_step
+            plt.text(
+                0.5,
+                y_pos,
+                f"${eq}$",
+                size=16,
+                ha="center",
+                va="center",
+                color="#F8F9FA"
+            )
 
         buf = io.BytesIO()
         plt.savefig(
@@ -103,7 +183,7 @@ def render_with_matplotlib(latex_str: str) -> Optional[bytes]:
             format="png",
             bbox_inches="tight",
             facecolor=fig.get_facecolor(),
-            pad_inches=0.18
+            pad_inches=0.22
         )
         plt.close(fig)
         buf.seek(0)
@@ -119,7 +199,11 @@ def render_with_matplotlib(latex_str: str) -> Optional[bytes]:
 
 async def render_with_codecogs(latex_str: str) -> Optional[bytes]:
     """Fallback online renderer using CodeCogs API."""
-    clean = normalize_to_latex(latex_str)
+    eq_lines = clean_and_extract_equations(latex_str)
+    if not eq_lines:
+        return None
+
+    clean = r" \\ ".join(eq_lines)
     query = r"\dpi{300}\bg{white} " + clean
     encoded = urllib.parse.quote(query)
     url = f"https://latex.codecogs.com/png.image?{encoded}"
@@ -138,7 +222,8 @@ async def render_with_codecogs(latex_str: str) -> Optional[bytes]:
 
 async def render_latex_to_png(latex_str: str) -> Optional[bytes]:
     """
-    Main entry point: Renders a LaTeX string into PNG image bytes.
+    Main entry point: Renders a LaTeX string or math formula into PNG image bytes.
+    Automatically cleans non-math Khmer text and strips tofu glyphs.
     First tries local Matplotlib, then falls back to CodeCogs online renderer.
     """
     # 1. Try local Matplotlib rendering
