@@ -43,7 +43,14 @@ from handlers.admin import (
     admin_broadcast,
     admin_backup
 )
+from handlers.rag_handler import (
+    ask_command,
+    handle_document_upload,
+    rag_status_command,
+    rag_delete_command
+)
 from web_server import start_web_server
+
 
 
 # Shortcuts for direct commands
@@ -100,8 +107,17 @@ def build_application() -> Application:
     # Telegram Inline Mode (@botusername keyword)
     app.add_handler(InlineQueryHandler(inline_query_handler))
 
+    # RAG AI and conceptual question answering
+    app.add_handler(CommandHandler("ask", ask_command))
+    app.add_handler(CommandHandler(["rag_docs", "docs"], rag_status_command))
+    app.add_handler(CommandHandler("rag_delete", rag_delete_command))
+
     # Natural text message search
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text_message))
+
+    # Teacher PDF document upload for RAG indexing
+    app.add_handler(MessageHandler(filters.Document.ALL, handle_document_upload))
+
 
     # Error handling
     app.add_error_handler(error_handler)

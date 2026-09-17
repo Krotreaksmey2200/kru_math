@@ -8,11 +8,13 @@ Provides:
 import json
 import logging
 from aiohttp import web
-from config import PORT, GOOGLE_SHEET_VIEW_URL, GOOGLE_SHEET_CSV_URL
+from config import PORT, GOOGLE_SHEET_VIEW_URL, GOOGLE_SHEET_CSV_URL, GEMINI_API_KEY
 from database import db
 from sheets_sync import sync_from_google_sheet
+from rag_engine import rag_db, is_rag_available, index_pdf_document, answer_with_rag
 
 logger = logging.getLogger("MathBot.WebServer")
+
 
 
 
@@ -93,6 +95,55 @@ async def sync_sheet_api(request):
     except Exception as e:
         logger.error("API sheet sync failed: %s", e)
         return web.json_response({"status": "error", "message": str(e)}, status=400)
+
+
+async def get_rag_docs_api(request):
+    """API returning list of uploaded RAG documents."""
+    return web.json_response({
+        "rag_available": is_rag_available(),
+        "documents": rag_db.get_documents()
+    })
+
+
+async def upload_rag_pdf_api(request):
+    """API to upload and index PDF document for RAG."""
+    if not is_rag_available():
+        return web.json_response({
+            "success": False,
+            "error": "សូមកំណត់ GEMINI_API_KEY ក្នុង .env ជាមុនសិន (Free នៅ aistudio.google.com/app/apikey)"
+        }, status=400)
+
+    try:
+        reader = await request.multipart()
+        field = await reader.next()
+        if not field or field.name != "pdf_file":
+            return web.json_response({"success": False, "error": "No file field found"}, status=400)
+
+        filename = field.filename or "document.pdf"
+        file_bytes = await field.read()
+        res = await index_pdf_document(filename, file_bytes)
+        return web.json_response(res, status=200 if res.get("success") else 400)
+    except Exception as e:
+        logger.error("Failed to upload PDF via API: %s", e)
+        return web.json_response({"success": False, "error": str(e)}, status=500)
+
+
+async def delete_rag_doc_api(request):
+    """API to delete document from RAG."""
+    doc_id = request.match_info.get("id")
+    deleted = rag_db.delete_document(doc_id)
+    return web.json_response({"success": deleted})
+
+
+async def ask_rag_api(request):
+    """API to test asking question to RAG AI."""
+    data = await request.json()
+    q = data.get("question", "").strip()
+    if not q:
+        return web.json_response({"error": "Question is required"}, status=400)
+    res = await answer_with_rag(q)
+    return web.json_response(res)
+
 
 
 
@@ -392,7 +443,57 @@ async def admin_portal_handler(request):
                     </div>
                 </div>
             </div>
+
+            <!-- RAG Knowledge Base Section -->
+            <div class="card" style="margin-top: 2rem; border-color: #38bdf8;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.2rem;">
+                    <div>
+                        <h2 style="color: #38bdf8; margin-bottom: 0.3rem;">📚 RAG AI Knowledge Base (សៀវភៅ & ឯកសារ PDF)</h2>
+                        <p style="color: #94a3b8; font-size: 0.9rem;">ផ្ទុកឯកសារ PDF ចូលទៅក្នុង AI ដើម្បីឱ្យ Bot ចងចាំ និងអាចពន្យល់សិស្សតាមក្បួនសៀវភៅរបស់លោកគ្រូ</p>
+                    </div>
+                    <span id="rag-badge" class="ex-badge" style="background: rgba(16, 185, 129, 0.2); color: #10b981; font-size: 0.9rem; padding: 0.4rem 0.8rem;">
+                        ● Gemini AI: កំពុងពិនិត្យ...
+                    </span>
+                </div>
+
+                <div class="content-grid" style="margin-top: 1rem;">
+                    <!-- Upload PDF form -->
+                    <div style="background: var(--bg-input); padding: 1.2rem; border-radius: 0.5rem; border: 1px dashed var(--border);">
+                        <h3 style="font-size: 1rem; margin-bottom: 0.8rem; color: #fff;">📤 Upload ឯកសារ PDF មេរៀនថ្មី</h3>
+                        <form id="uploadPdfForm">
+                            <input type="file" id="pdfFileInput" accept=".pdf" required style="margin-bottom: 0.8rem;">
+                            <button type="submit" id="btnUploadPdf" class="btn" style="width: 100%; justify-content: center; background: #38bdf8;">
+                                🚀 បញ្ចូលឯកសារទៅក្នុង RAG AI
+                            </button>
+                        </form>
+                        <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 0.8rem;">
+                            💡 <i>គន្លឹះ៖ លោកគ្រូក៏អាចផ្ញើ File PDF ចូលទៅក្នុង Telegram Bot ដោយផ្ទាល់បានដែរ!</i>
+                        </p>
+                    </div>
+
+                    <!-- PDF documents list -->
+                    <div>
+                        <h3 style="font-size: 1rem; margin-bottom: 0.8rem; color: #fff;">📋 សៀវភៅ/ឯកសារដែលបាន Upload រួច (<span id="rag-doc-count">0</span>)</h3>
+                        <div id="ragDocsList" style="display: flex; flex-direction: column; gap: 0.6rem; max-height: 250px; overflow-y: auto;">
+                            <!-- Loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Test Ask RAG section -->
+                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+                    <h3 style="font-size: 1rem; margin-bottom: 0.8rem; color: #fff;">💬 សាកល្បងសួរសំណួរទៅកាន់ RAG AI (Test Question)</h3>
+                    <div style="display: flex; gap: 0.6rem;">
+                        <input type="text" id="ragTestInput" placeholder="ឧ. តើដេរីវេនៃ sin(3x) គណនាយ៉ាងម៉េច? ឬ ច្បាប់ផលគុណ..." style="flex: 1;">
+                        <button onclick="testAskRag()" id="btnAskRag" class="btn" style="background: #10b981; color: #fff; white-space: nowrap;">
+                            🧠 សួរ AI
+                        </button>
+                    </div>
+                    <div id="ragAnswerBox" style="display: none; margin-top: 1rem; background: var(--bg-input); padding: 1rem; border-radius: 0.5rem; border-left: 3px solid #10b981; line-height: 1.6; font-size: 0.95rem; white-space: pre-wrap;"></div>
+                </div>
+            </div>
         </div>
+
 
         <div class="toast" id="toast"></div>
 
@@ -490,7 +591,127 @@ async def admin_portal_handler(request):
                 }}
             }}
 
+            async function loadRagDocs() {{
+                try {{
+                    const res = await fetch('/api/rag/docs');
+                    const data = await res.json();
+                    const badge = document.getElementById('rag-badge');
+                    if (data.rag_available) {{
+                        badge.innerText = '● Gemini AI: ដំណើរការ (Active)';
+                        badge.style.background = 'rgba(16, 185, 129, 0.2)';
+                        badge.style.color = '#10b981';
+                    }} else {{
+                        badge.innerText = '● ត្រូវការ GEMINI_API_KEY';
+                        badge.style.background = 'rgba(239, 68, 68, 0.2)';
+                        badge.style.color = '#ef4444';
+                    }}
+
+                    const docs = data.documents || [];
+                    document.getElementById('rag-doc-count').innerText = docs.length;
+                    const container = document.getElementById('ragDocsList');
+                    container.innerHTML = '';
+                    if (docs.length === 0) {{
+                        container.innerHTML = '<p style="color: #94a3b8; font-size: 0.85rem; font-style: italic;">មិនទាន់មានឯកសារ PDF នៅឡើយទេ។</p>';
+                        return;
+                    }}
+                    docs.forEach(d => {{
+                        const item = document.createElement('div');
+                        item.className = 'ex-item';
+                        item.style.padding = '0.6rem 0.8rem';
+                        item.innerHTML = `
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-weight: 600; font-size: 0.9rem; color: #fff;">📄 ${{d.filename}}</div>
+                                    <div style="font-size: 0.75rem; color: #94a3b8;">${{d.num_chunks}} កថាខណ្ឌ</div>
+                                </div>
+                                <button class="btn-danger" onclick="deleteRagDoc('${{d.id}}')">🗑 លុប</button>
+                            </div>
+                        `;
+                        container.appendChild(item);
+                    }});
+                }} catch (e) {{
+                    console.error('Failed to load RAG docs:', e);
+                }}
+            }}
+
+            document.getElementById('uploadPdfForm').addEventListener('submit', async (e) => {{
+                e.preventDefault();
+                const fileInput = document.getElementById('pdfFileInput');
+                if (!fileInput.files || fileInput.files.length === 0) return;
+                const file = fileInput.files[0];
+
+                const formData = new FormData();
+                formData.append('pdf_file', file);
+
+                const btn = document.getElementById('btnUploadPdf');
+                btn.disabled = true;
+                btn.innerText = '⏳ កំពុងដំណើរការ...';
+                showToast('⏳ កំពុងទាញយក និងបំបែកជា Embeddings...');
+
+                try {{
+                    const res = await fetch('/api/rag/upload', {{
+                        method: 'POST',
+                        body: formData
+                    }});
+                    const data = await res.json();
+                    if (res.ok) {{
+                        showToast('✅ ' + data.message);
+                        document.getElementById('uploadPdfForm').reset();
+                        loadRagDocs();
+                    }} else {{
+                        alert('❌ ' + (data.error || 'បរាជ័យក្នុងការ Upload'));
+                    }}
+                }} catch (err) {{
+                    alert('❌ បរាជ័យក្នុងការ Upload៖ ' + err);
+                }} finally {{
+                    btn.disabled = false;
+                    btn.innerText = '🚀 បញ្ចូលឯកសារទៅក្នុង RAG AI';
+                }}
+            }});
+
+            async function deleteRagDoc(id) {{
+                if (!confirm('តើលោកគ្រូពិតជាចង់លុបឯកសារនេះចេញពី RAG មែនទេ?')) return;
+                const res = await fetch('/api/rag/docs/' + encodeURIComponent(id), {{ method: 'DELETE' }});
+                if (res.ok) {{
+                    showToast('🗑 បានលុបឯកសាររួចរាល់!');
+                    loadRagDocs();
+                }}
+            }}
+
+            async function testAskRag() {{
+                const q = document.getElementById('ragTestInput').value.trim();
+                if (!q) return;
+                const ansBox = document.getElementById('ragAnswerBox');
+                const btn = document.getElementById('btnAskRag');
+                ansBox.style.display = 'block';
+                ansBox.innerHTML = '<i>🧠 កំពុងពិចារណា និងស្វែងរកក្នុងសៀវភៅ... សូមរង់ចាំបន្តិច ⏳</i>';
+                btn.disabled = true;
+
+                try {{
+                    const res = await fetch('/api/rag/ask', {{
+                        method: 'POST',
+                        headers: {{ 'Content-Type': 'application/json' }},
+                        body: JSON.stringify({{ question: q }})
+                    }});
+                    const data = await res.json();
+                    if (data.answer) {{
+                        let html = data.answer;
+                        if (data.sources && data.sources.length > 0) {{
+                            html += '<br><br><b>📚 ឯកសារយោង៖</b> ' + data.sources.join(', ');
+                        }}
+                        ansBox.innerHTML = html;
+                    }} else {{
+                        ansBox.innerHTML = '❌ មិនអាចទទួលបានចម្លើយ៖ ' + (data.error || 'Unknown error');
+                    }}
+                }} catch (err) {{
+                    ansBox.innerHTML = '❌ មានបញ្ហាតភ្ជាប់៖ ' + err;
+                }} finally {{
+                    btn.disabled = false;
+                }}
+            }}
+
             loadExercises();
+            loadRagDocs();
         </script>
     </body>
     </html>
@@ -508,7 +729,12 @@ def make_web_app():
     app.router.add_post("/api/exercises", add_exercise_api)
     app.router.add_delete("/api/exercises/{id}", delete_exercise_api)
     app.router.add_post("/api/sync_sheet", sync_sheet_api)
+    app.router.add_get("/api/rag/docs", get_rag_docs_api)
+    app.router.add_post("/api/rag/upload", upload_rag_pdf_api)
+    app.router.add_delete("/api/rag/docs/{id}", delete_rag_doc_api)
+    app.router.add_post("/api/rag/ask", ask_rag_api)
     return app
+
 
 
 

@@ -15,6 +15,10 @@ load_dotenv(BASE_DIR / ".env")
 # Telegram Bot Token
 BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
 
+# Google Gemini API Key for Free RAG System
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
+
+
 # Teacher Admin IDs (can be comma-separated string)
 _admin_raw = os.getenv("TEACHER_ADMIN_ID", "").strip()
 TEACHER_ADMIN_IDS = set()
