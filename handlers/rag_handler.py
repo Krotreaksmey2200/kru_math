@@ -56,19 +56,22 @@ async def ask_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await chat.send_message(notice, parse_mode=ParseMode.HTML)
         return
 
-    # Send temporary waiting indicator
+    student_name = user.first_name or user.username or "ប្អូនសិស្ស"
+
+    # Send temporary waiting indicator with student name and fun vibe
     wait_msg = await chat.send_message(
-        "🧠 <b>កំពុងស្វែងរកក្នុងសៀវភៅមេរៀន និងរៀបចំការពន្យល់...</b> ⏳",
+        f"🧠 <b>កំពុងបើកក្បួនគណិតដេរីវេឱ្យប្អូន {student_name}...</b> ⏳\n"
+        f"<i>រង់ចាំបន្តិចណា៎ គិតលឿនដូច Wifi 5G កុំទាន់បាក់ទឹកចិត្ត! 🚀😎</i>",
         parse_mode=ParseMode.HTML
     )
 
-    result = await answer_with_rag(question)
+    result = await answer_with_rag(question, student_name=student_name)
     answer_text = result.get("answer", "")
     sources = result.get("sources", [])
 
     # Format response message
     formatted_msg = (
-        f"❓ <b>សំណួរ៖</b> <i>{question}</i>\n"
+        f"❓ <b>សំណួររបស់ប្អូន {student_name}៖</b> <i>{question}</i>\n"
         "━━━━━━━━━━━━━━━━━━━━\n\n"
         f"{answer_text}\n"
     )
