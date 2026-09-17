@@ -50,11 +50,14 @@ def build_admin_panel_keyboard() -> InlineKeyboardMarkup:
             InlineKeyboardButton("📦 ទាញយក Backup", callback_data="admin_backup_cb")
         ],
         [
-            InlineKeyboardButton("📄 បើក Google Sheet", url=GOOGLE_SHEET_VIEW_URL or "https://docs.google.com/spreadsheets"),
+            InlineKeyboardButton("📚 គ្រប់គ្រងសៀវភៅ RAG (PDF)", callback_data="admin_rag_panel_cb"),
             InlineKeyboardButton("🔄 Sync ពី Google Sheets", callback_data="admin_sync_cb")
         ],
         [
-            InlineKeyboardButton("➕ របៀបបញ្ចូលលំហាត់", callback_data="admin_add_guide_cb"),
+            InlineKeyboardButton("📄 បើក Google Sheet", url=GOOGLE_SHEET_VIEW_URL or "https://docs.google.com/spreadsheets"),
+            InlineKeyboardButton("➕ របៀបបញ្ចូលលំហាត់", callback_data="admin_add_guide_cb")
+        ],
+        [
             InlineKeyboardButton("🏠 ម៉ឺនុយដើម (Home)", callback_data="menu_main")
         ]
     ])
@@ -73,10 +76,11 @@ def format_admin_dashboard_text() -> str:
         f"🔍 ចំនួនស្វែងរកសរុប៖ <b>{stats['total_searches']}</b> ដង\n\n"
         "🛠 <b>មុខងារគ្រប់គ្រងរហ័ស (Quick Actions)៖</b>\n"
         "ចុចប៊ូតុងខាងក្រោម ឬប្រើពាក្យបញ្ជាផ្ទាល់៖\n"
+        "• <code>/rag_docs</code> - គ្រប់គ្រងសៀវភៅមេរៀន PDF (RAG AI)\n"
         "• <code>/stats</code> - មើលស្ថិតិសិស្ស\n"
+        "• <code>/sync_sheets [url]</code> - Sync ពី Google Sheets\n"
         "• <code>/add</code> - បញ្ចូលលំហាត់ថ្មី\n"
         "• <code>/delete &lt;code&gt;</code> - លុបលំហាត់\n"
-        "• <code>/sync_sheets [url]</code> - Sync ពី Google Sheets\n"
         "• <code>/broadcast &lt;សារ&gt;</code> - ផ្ញើសារទៅសិស្សទាំងអស់\n"
         "• <code>/backup</code> - ទាញយកទិន្នន័យ Backup"
     )

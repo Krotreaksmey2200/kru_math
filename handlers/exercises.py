@@ -413,3 +413,33 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         ])
         await query.edit_message_text(guide, parse_mode=ParseMode.HTML, reply_markup=back_kb)
 
+    elif data == "admin_rag_panel_cb":
+        if not is_admin(user.id):
+            await query.answer("⛔️ សម្រាប់តែគ្រូបង្រៀនប៉ុណ្ណោះ!", show_alert=True)
+            return
+        await query.answer()
+        from handlers.rag_handler import format_rag_panel_text, build_rag_panel_keyboard
+        await query.edit_message_text(
+            format_rag_panel_text(),
+            parse_mode=ParseMode.HTML,
+            reply_markup=build_rag_panel_keyboard()
+        )
+
+    elif data.startswith("rag_del_cb_"):
+        if not is_admin(user.id):
+            await query.answer("⛔️ សម្រាប់តែគ្រូបង្រៀនប៉ុណ្ណោះ!", show_alert=True)
+            return
+        doc_id = data.replace("rag_del_cb_", "")
+        from rag_engine import rag_db
+        from handlers.rag_handler import format_rag_panel_text, build_rag_panel_keyboard
+        deleted = rag_db.delete_document(doc_id)
+        if deleted:
+            await query.answer(f"🗑 បានលុបឯកសារ «{doc_id}» រួចរាល់!", show_alert=True)
+        else:
+            await query.answer("⚠️ រកមិនឃើញឯកសារនេះទេ", show_alert=True)
+        await query.edit_message_text(
+            format_rag_panel_text(),
+            parse_mode=ParseMode.HTML,
+            reply_markup=build_rag_panel_keyboard()
+        )
+

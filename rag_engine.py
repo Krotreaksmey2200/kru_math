@@ -70,17 +70,21 @@ class RAGDatabase:
             conn.commit()
 
     def save_document_chunks(self, doc_id: str, filename: str, file_type: str, chunks_with_embeddings: List[Tuple[str, List[float]]]):
-        """Save a document and its embedded text chunks."""
+        """Save a document and its embedded text chunks. Cleans up old document of same filename if re-uploaded."""
         now = datetime.utcnow()
         with self._get_connection() as conn:
             cursor = conn.cursor()
+            # If a document with the same filename already exists, remove it cleanly
+            cursor.execute("SELECT id FROM rag_documents WHERE filename = ?", (filename,))
+            existing = cursor.fetchall()
+            for row in existing:
+                cursor.execute("DELETE FROM rag_chunks WHERE doc_id = ?", (row["id"],))
+                cursor.execute("DELETE FROM rag_documents WHERE id = ?", (row["id"],))
+
             cursor.execute("""
                 INSERT OR REPLACE INTO rag_documents (id, filename, file_type, num_chunks, created_at)
                 VALUES (?, ?, ?, ?, ?)
             """, (doc_id, filename, file_type, len(chunks_with_embeddings), now))
-
-            # Delete any old chunks for this doc_id
-            cursor.execute("DELETE FROM rag_chunks WHERE doc_id = ?", (doc_id,))
 
             for idx, (content, embedding) in enumerate(chunks_with_embeddings):
                 chunk_id = f"{doc_id}_{idx}"
@@ -130,16 +134,23 @@ class RAGDatabase:
 rag_db = RAGDatabase()
 
 
-def extract_text_from_pdf(pdf_bytes: bytes) -> str:
-    """Extract full text from uploaded PDF document bytes."""
+def extract_pdf_pages_and_text(pdf_bytes: bytes) -> Tuple[str, int]:
+    """Extract full text and total page count from uploaded PDF document bytes."""
     import pypdf
     reader = pypdf.PdfReader(io.BytesIO(pdf_bytes))
+    num_pages = len(reader.pages)
     full_text = []
     for i, page in enumerate(reader.pages):
         page_text = page.extract_text()
         if page_text:
             full_text.append(f"--- [ទំព័រ {i+1}] ---\n{page_text.strip()}")
-    return "\n\n".join(full_text)
+    return "\n\n".join(full_text), num_pages
+
+
+def extract_text_from_pdf(pdf_bytes: bytes) -> str:
+    """Extract full text from uploaded PDF document bytes."""
+    text, _ = extract_pdf_pages_and_text(pdf_bytes)
+    return text
 
 
 def chunk_text(text: str, chunk_size: int = 700, chunk_overlap: int = 120) -> List[str]:
@@ -216,27 +227,41 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
     return float(dot / (norm_a * norm_b))
 
 
-async def index_pdf_document(filename: str, pdf_bytes: bytes) -> Dict[str, Any]:
+async def index_pdf_document(filename: str, pdf_bytes: bytes, progress_callback=None) -> Dict[str, Any]:
     """Extract, chunk, embed, and store a PDF document into RAG database."""
     if not is_rag_available():
         return {
             "success": False,
-            "error": "សូមបញ្ចូល GEMINI_API_KEY ក្នុង .env ជាមុនសិន ដើម្បីប្រើប្រាស់មុខងារ RAG (Free នៅ aistudio.google.com/app/apikey)"
+            "error": "សូមបញ្ចូល GEMINI_API_KEY ក្នុង .env ឬ Render ជាមុនសិន ដើម្បីប្រើប្រាស់មុខងារ RAG (Free នៅ aistudio.google.com/app/apikey)"
         }
 
-    text = extract_text_from_pdf(pdf_bytes)
+    text, num_pages = extract_pdf_pages_and_text(pdf_bytes)
     if not text or len(text.strip()) < 30:
-        return {"success": False, "error": "មិនអាចអានអត្ថបទចេញពី File PDF នេះបានទេ (អាចជា PDF រូបភាព Scan)"}
+        return {
+            "success": False,
+            "error": "មិនអាចអានអត្ថបទចេញពី File PDF នេះបានទេ (អាចជា PDF រូបភាព Scan ឬគ្មានអត្ថបទ Text)។ សូមប្រើ PDF ដែលអាច Select/Copy អក្សរបាន។"
+        }
 
     chunks = chunk_text(text)
     if not chunks:
         return {"success": False, "error": "ឯកសារនេះទទេ ឬខ្លីពេក"}
 
+    if progress_callback:
+        try:
+            await progress_callback("chunking", 0, len(chunks), num_pages)
+        except Exception:
+            pass
+
     # Compute embeddings for chunks
     chunks_with_embeddings = []
-    for chunk in chunks:
+    for idx, chunk in enumerate(chunks):
         emb = get_embedding(chunk)
         chunks_with_embeddings.append((chunk, emb))
+        if progress_callback and ((idx + 1) % 5 == 0 or idx + 1 == len(chunks)):
+            try:
+                await progress_callback("embedding", idx + 1, len(chunks), num_pages)
+            except Exception:
+                pass
 
     doc_id = f"doc_{int(datetime.utcnow().timestamp())}"
     rag_db.save_document_chunks(doc_id, filename, "pdf", chunks_with_embeddings)
@@ -245,8 +270,9 @@ async def index_pdf_document(filename: str, pdf_bytes: bytes) -> Dict[str, Any]:
         "success": True,
         "doc_id": doc_id,
         "filename": filename,
+        "num_pages": num_pages,
         "num_chunks": len(chunks),
-        "message": f"បានបញ្ចូលឯកសារ «{filename}» ទៅក្នុង RAG ដោយជោគជ័យ (ចំនួន {len(chunks)} កថាខណ្ឌ)!"
+        "message": f"បានបញ្ចូលឯកសារ «{filename}» ទៅក្នុង RAG ដោយជោគជ័យ (ចំនួន {num_pages} ទំព័រ, {len(chunks)} កថាខណ្ឌ)!"
     }
 
 
