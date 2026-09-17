@@ -68,7 +68,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Default /start message (Bilingual Khmer & English)
     welcome_message = (
         f"👋 <b>សួស្ដី {user.first_name}! / Hello {user.first_name}!</b>\n\n"
-        "🇰🇭 <b>ស្វាគមន៍មកកាន់ប្រព័ន្ធជំនួយគណិតវិទ្យាថ្នាក់ទី១២ (ត្រៀមប្រឡងបាក់ឌុប)</b>\n"
+        "🇰🇭 <b>សូមស្វាគមន៍មកកាន់បូត គ្រូបង្រៀនគណិតវិទ្យាទី១២ (ត្រៀមប្រឡងបាក់ឌុប)</b> 🎓\n"
         "ខ្ញុំជាជំនួយការបង្រៀនគណិតវិទ្យាឌីជីថល សម្រាប់ជួយប្អូនៗក្នុងការរៀនរូបមន្ត និងដោះស្រាយលំហាត់ទាំង ១៥ មេរៀនពេញលេញ!\n\n"
         "🇬🇧 <b>Welcome to Grade 12 BacII Mathematics Assistant!</b>\n"
         "Your AI & database assistant for formulas, practice exercises, and step-by-step solutions covering all 15 curriculum chapters.\n\n"
@@ -78,7 +78,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "• សមីការឌីផេរ៉ង់ស្យែល (លំដាប់១ & ២) • ប្រូបាប\n"
         "• វ៉ិចទ័រក្នុងលំហ • កោនិក (ប៉ារ៉ាបូល, អេលីប, អ៊ីពែបូល)\n\n"
         "🔒 <b>Group Privacy:</b> សួរក្នុងគ្រុប ចម្លើយផ្ញើចូល DM ដោយសុវត្ថិភាព\n"
-        "🤖 <b>RAG AI:</b> វាយ <code>/ask &lt;សំណួរ&gt;</code> ដើម្បីសួរ AI ឆ្លើយមួយភ្លែតចេញបាត់!\n\n"
+        "🤖 <b>សួរសំណួរផ្សេ២😁:</b> វាយ <code>/ask &lt;សំណួរ&gt;</code> ដើម្បីសួរ AI ឆ្លើយមួយភ្លែតចេញបាត់!\n\n"
         "👇 <i>សូមជ្រើសរើសផ្នែកដែលអ្នកចង់សិក្សាខាងក្រោម៖</i>"
     )
 
@@ -113,9 +113,9 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "• <b>Inline Mode:</b> Type <code>@botusername &lt;query&gt;</code> in any chat to preview formulas and exercises.\n\n"
         "📌 <b>បញ្ជីពាក្យបញ្ជា / Commands:</b>\n"
         "/start - បើកម៉ឺនុយដើម (Start Bot)\n"
-        "/ask <សំណួរ> - សួរ AI ចម្ងល់មេរៀនគណិត (Ask AI Assistant)\n"
-        "/formulas - បញ្ជីរូបមន្តដេរីវេ (Derivative Formulas)\n"
-        "/exercises - បញ្ជីលំហាត់អនុវត្ត (Practice Exercises)\n"
+        "/ask <សំណួរ> - សួរសំណួរផ្សេ២😁 (ចម្ងល់មេរៀនគណិត)\n"
+        "/formulas - បញ្ជីរូបមន្តគណិតវិទ្យាទី១២ (Grade 12 Formulas)\n"
+        "/exercises - បញ្ជីលំហាត់គណិតវិទ្យាទី១២ (Grade 12 Exercises)\n"
         "/search - ណែនាំពីការស្វែងរក (Search Guide)\n"
         "/help - បង្ហាញជំនួយនេះ (Help)"
     )

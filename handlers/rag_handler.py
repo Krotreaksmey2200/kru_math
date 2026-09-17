@@ -34,12 +34,13 @@ async def ask_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     question = " ".join(context.args).strip() if context.args else ""
     if not question:
         help_msg = (
-            "🤖 <b>ជំនួយការឆ្លាតវៃ RAG AI គណិតវិទ្យា</b>\n"
+            "🤖 <b>សួរសំណួរផ្សេ២😁 (ជំនួយការឆ្លាតវៃ RAG AI)</b>\n"
             "━━━━━━━━━━━━━━━━━━━━\n"
-            "សិស្សអាចសួរសំណួរ ឬចម្ងល់មេរៀនគណិតវិទ្យាជាភាសាខ្មែរតាមបែបធម្មជាតិ!\n\n"
+            "សិស្សអាចសួរសំណួរ ឬចម្ងល់មេរៀនគណិតវិទ្យាទី១២ ទាំង ១៥ មេរៀន ជាភាសាខ្មែរតាមបែបធម្មជាតិ!\n\n"
             "📌 <b>របៀបប្រើប្រាស់៖</b>\n"
             "• <code>/ask តើដេរីវេនៃអនុគមន៍បណ្ដាក់ u^n រកយ៉ាងម៉េច?</code>\n"
             "• <code>/ask ហេតុអ្វីបានជាដេរីវេនៃ cos(x) ស្មើ -sin(x)?</code>\n"
+            "• <code>/ask រូបមន្តចំនួនកុំផ្លិចទម្រង់ត្រីកោណមាត្រមានអ្វីខ្លះ?</code>\n"
             "• <code>/ask ជួយពន្យល់ពីច្បាប់ផលចែក u/v ឱ្យងាយចាំបន្តិច</code>"
         )
         await chat.send_message(help_msg, parse_mode=ParseMode.HTML)
@@ -60,7 +61,7 @@ async def ask_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Send temporary waiting indicator with student name and fun vibe
     wait_msg = await chat.send_message(
-        f"🧠 <b>កំពុងបើកក្បួនគណិតដេរីវេឱ្យប្អូន {student_name}...</b> ⏳\n"
+        f"🧠 <b>កំពុងបើកក្បួនគណិតវិទ្យាទី១២ ឱ្យប្អូន {student_name}...</b> ⏳\n"
         f"<i>រង់ចាំបន្តិចណា៎ គិតលឿនដូច Wifi 5G កុំទាន់បាក់ទឹកចិត្ត! 🚀😎</i>",
         parse_mode=ParseMode.HTML
     )

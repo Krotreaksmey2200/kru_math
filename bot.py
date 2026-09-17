@@ -57,7 +57,7 @@ from web_server import start_web_server
 async def formulas_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Direct shortcut to view formula categories."""
     await update.effective_chat.send_message(
-        "📐 <b>សូមជ្រើសរើសផ្នែកនៃរូបមន្តដេរីវេដែលចង់មើល៖</b>",
+        "📐 <b>សូមជ្រើសរើសមេរៀនរូបមន្តគណិតវិទ្យាទី១២ ដែលចង់មើល៖</b>",
         parse_mode="HTML",
         reply_markup=build_categories_keyboard("form")
     )
@@ -66,7 +66,7 @@ async def formulas_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def exercises_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Direct shortcut to view exercise categories."""
     await update.effective_chat.send_message(
-        "📝 <b>សូមជ្រើសរើសកម្រិត ឬផ្នែកនៃលំហាត់ដេរីវេ៖</b>",
+        "📝 <b>សូមជ្រើសរើសមេរៀនលំហាត់គណិតវិទ្យាទី១២៖</b>",
         parse_mode="HTML",
         reply_markup=build_categories_keyboard("ex")
     )

@@ -71,8 +71,8 @@ def format_admin_dashboard_text() -> str:
         "👨‍🏫 <b>ផ្ទាំងគ្រប់គ្រងលោកគ្រូ (Teacher Admin Dashboard)</b>\n"
         "━━━━━━━━━━━━━━━━━━━━\n"
         f"👥 សិស្សចុះឈ្មោះសរុប៖ <b>{stats['total_users']}</b> នាក់\n"
-        f"📝 លំហាត់ក្នុងប្រព័ន្ធ៖ <b>{stats['total_exercises']}</b> លំហាត់\n"
-        f"📐 រូបមន្តដេរីវេ៖ <b>{stats['total_formulas']}</b> រូបមន្ត\n"
+        f"📝 លំហាត់គណិតវិទ្យាទី១២៖ <b>{stats['total_exercises']}</b> លំហាត់\n"
+        f"📐 រូបមន្តគណិតវិទ្យាទី១២៖ <b>{stats['total_formulas']}</b> រូបមន្ត\n"
         f"🔍 ចំនួនស្វែងរកសរុប៖ <b>{stats['total_searches']}</b> ដង\n\n"
         "🛠 <b>មុខងារគ្រប់គ្រងរហ័ស (Quick Actions)៖</b>\n"
         "ចុចប៊ូតុងខាងក្រោម ឬប្រើពាក្យបញ្ជាផ្ទាល់៖\n"
@@ -105,8 +105,8 @@ async def admin_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
     msg = (
         "📊 <b>ស្ថិតិប្រព័ន្ធបូតគណិតវិទ្យា៖</b>\n\n"
         f"• ចំនួនសិស្សកំពុងប្រើប្រាស់៖ <b>{stats['total_users']}</b>\n"
-        f"• ចំនួនលំហាត់ដេរីវេ៖ <b>{stats['total_exercises']}</b>\n"
-        f"• ចំនួនរូបមន្តដេរីវេ៖ <b>{stats['total_formulas']}</b>\n"
+        f"• ចំនួនលំហាត់គណិតវិទ្យាទី១២៖ <b>{stats['total_exercises']}</b>\n"
+        f"• ចំនួនរូបមន្តគណិតវិទ្យាទី១២៖ <b>{stats['total_formulas']}</b>\n"
         f"• ចំនួនដងនៃការស្វែងរក៖ <b>{stats['total_searches']}</b>\n"
     )
     await update.effective_chat.send_message(msg, parse_mode=ParseMode.HTML)

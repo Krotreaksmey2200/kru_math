@@ -325,7 +325,7 @@ async def answer_with_rag(question: str, student_name: str = "ប្អូនស
     if relevant_chunks:
         context_text = "\n\n".join([f"[ប្រភពពីឯកសារ៖ {c['filename']}]\n{c['content']}" for c in relevant_chunks])
     else:
-        context_text = "មិនមានឯកសារផ្ទៃក្នុងជាក់លាក់សម្រាប់សំណួរនេះទេ។ សូមពន្យល់ដោយផ្អែកលើចំណេះដឹងគណិតវិទ្យាដេរីវេទូទៅ។"
+        context_text = "មិនមានឯកសារផ្ទៃក្នុងជាក់លាក់សម្រាប់សំណួរនេះទេ។ សូមពន្យល់ដោយផ្អែកលើចំណេះដឹងគណិតវិទ្យាថ្នាក់ទី១២ទូទៅ។"
 
     safe_name = student_name.strip() if student_name else "ប្អូនសិស្ស"
 

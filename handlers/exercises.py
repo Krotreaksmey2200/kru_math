@@ -87,12 +87,12 @@ def build_main_menu_keyboard(user_id: Optional[int] = None) -> InlineKeyboardMar
     """Main navigation keyboard. Automatically adds Admin button for the teacher."""
     buttons = [
         [
-            InlineKeyboardButton("📐 រូបមន្តដេរីវេ (Formulas)", callback_data="menu_formulas"),
-            InlineKeyboardButton("📝 លំហាត់ដេរីវេ (Exercises)", callback_data="menu_exercises")
+            InlineKeyboardButton("📐 រូបមន្តគណិតវិទ្យាទី១២ (Formulas)", callback_data="menu_formulas"),
+            InlineKeyboardButton("📝 លំហាត់គណិតវិទ្យាទី១២ (Exercises)", callback_data="menu_exercises")
         ],
         [
             InlineKeyboardButton("🔍 ស្វែងរក (Search)", callback_data="menu_search"),
-            InlineKeyboardButton("🤖 សួរ AI (Ask AI)", callback_data="menu_rag_help")
+            InlineKeyboardButton("🤖 សួរសំណួរផ្សេ២😁", callback_data="menu_rag_help")
         ],
         [
             InlineKeyboardButton("ℹ️ ជំនួយ & របៀបប្រើ (Help)", callback_data="menu_help")
@@ -196,7 +196,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
     if data == "menu_main":
         await query.answer()
         welcome_text = (
-            "👋 <b>សូមស្វាគមន៍មកកាន់បូត គណិតវិទ្យា ដេរីវេនៃអនុគមន៍!</b> 🎓\n\n"
+            "👋 <b>សូមស្វាគមន៍មកកាន់បូត គ្រូបង្រៀនគណិតវិទ្យាទី១២!</b> 🎓\n\n"
             "ជ្រើសរើសជម្រើសខាងក្រោមដើម្បីសិក្សារូបមន្ត ឬដោះស្រាយលំហាត់៖"
         )
         await query.edit_message_text(
@@ -379,13 +379,14 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
     elif data == "menu_rag_help":
         await query.answer()
         rag_prompt = (
-            "🤖 <b>ជំនួយការឆ្លាតវៃ RAG AI គណិតវិទ្យា</b>\n"
+            "🤖 <b>សួរសំណួរផ្សេងៗ (ជំនួយការឆ្លាតវៃ RAG AI)</b> 😁\n"
             "━━━━━━━━━━━━━━━━━━━━\n"
-            "សិស្សអាចសួរសំណួរ ឬចម្ងល់មេរៀនគណិតវិទ្យាជាភាសាខ្មែរតាមបែបធម្មជាតិ!\n\n"
+            "សិស្សអាចសួរសំណួរ ឬចម្ងល់មេរៀនគណិតវិទ្យាទី១២ ទាំង ១៥ មេរៀន ជាភាសាខ្មែរតាមបែបធម្មជាតិ!\n\n"
             "📌 <b>របៀបប្រើប្រាស់៖</b>\n"
             "គ្រាន់តែវាយពាក្យបញ្ជា <code>/ask &lt;សំណួរ&gt;</code> ឧទាហរណ៍៖\n\n"
             "• <code>/ask តើដេរីវេនៃអនុគមន៍បណ្ដាក់ u^n រកយ៉ាងម៉េច?</code>\n"
             "• <code>/ask ហេតុអ្វីបានជាដេរីវេនៃ cos(x) ស្មើ -sin(x)?</code>\n"
+            "• <code>/ask រូបមន្តចំនួនកុំផ្លិចទម្រង់ត្រីកោណមាត្រមានអ្វីខ្លះ?</code>\n"
             "• <code>/ask ជួយពន្យល់ពីច្បាប់ផលចែក u/v ឱ្យងាយចាំបន្តិច</code>\n\n"
             "<i>AI នឹងស្រង់ឯកសារមេរៀនរបស់លោកគ្រូ រួចបកស្រាយមួយជំហានៗយ៉ាងក្បោះក្បាយ!</i>"
         )
@@ -416,8 +417,8 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         stats_text = (
             "📊 <b>ស្ថិតិប្រព័ន្ធបូតគណិតវិទ្យា៖</b>\n\n"
             f"• ចំនួនសិស្សចុះឈ្មោះ៖ <b>{stats['total_users']}</b> នាក់\n"
-            f"• ចំនួនលំហាត់ដេរីវេ៖ <b>{stats['total_exercises']}</b> លំហាត់\n"
-            f"• ចំនួនរូបមន្តដេរីវេ៖ <b>{stats['total_formulas']}</b> រូបមន្ត\n"
+            f"• ចំនួនលំហាត់គណិតវិទ្យាទី១២៖ <b>{stats['total_exercises']}</b> លំហាត់\n"
+            f"• ចំនួនរូបមន្តគណិតវិទ្យាទី១២៖ <b>{stats['total_formulas']}</b> រូបមន្ត\n"
             f"• ចំនួនដងនៃការស្វែងរក៖ <b>{stats['total_searches']}</b> ដង\n"
         )
         back_kb = InlineKeyboardMarkup([
