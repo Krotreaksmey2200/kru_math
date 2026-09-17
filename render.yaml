@@ -9,6 +9,8 @@ services:
         sync: false
       - key: TEACHER_ADMIN_ID
         sync: false
+      - key: GEMINI_API_KEY
+        sync: false
       - key: ENABLE_WEB_SERVER
         value: "true"
       - key: PORT
