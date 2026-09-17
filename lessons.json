@@ -1,162 +1,632 @@
 {
   "categories": [
     {
-      "id": "basic",
-      "name_km": "រូបមន្តគ្រឹះនៃដេរីវេ",
-      "name_en": "Basic Derivative Rules",
-      "description": "រូបមន្តដេរីវេនៃអនុគមន៍ស្វ័យគុណ មេគុណថេរ និងឫស"
+      "id": "lesson_1",
+      "name_km": "មេរៀនទី១៖ ចំនួនកុំផ្លិច",
+      "name_en": "Complex Numbers",
+      "description": "ទម្រង់ពីជគណិត ត្រីកោណមាត្រ ម៉ូឌុល អាគុយម៉ង់ និងរូបមន្តដឺម័រ",
+      "sort_order": 1
     },
     {
-      "id": "arithmetic",
-      "name_km": "ច្បាប់ផលបូក ផលគុណ និងផលចែក",
-      "name_en": "Sum, Product & Quotient Rules",
-      "description": "ដេរីវេនៃ (u ± v), (u × v) និង (u / v)"
+      "id": "lesson_2",
+      "name_km": "មេរៀនទី២៖ លីមីត",
+      "name_en": "Limits",
+      "description": "រាងមិនកំណត់ 0/0, ∞/∞, លីមីតត្រីកោណមាត្រ និងអ៊ិចស្ប៉ូណង់ស្យែល",
+      "sort_order": 2
     },
     {
-      "id": "chain_rule",
-      "name_km": "ដេរីវេបណ្ដាក់ (Chain Rule)",
-      "name_en": "Chain Rule",
-      "description": "ដេរីវេនៃអនុគមន៍បណ្ដាក់ y = f(u(x)) ឬ u^n"
+      "id": "lesson_3",
+      "name_km": "មេរៀនទី៣៖ ដេរីវេ",
+      "name_en": "Derivatives",
+      "description": "រូបមន្តគ្រឹះ ផលគុណ ផលចែក ដេរីវេបណ្ដាក់ និងត្រីកោណមាត្រ",
+      "sort_order": 3
     },
     {
-      "id": "trig",
-      "name_km": "ដេរីវេអនុគមន៍ត្រីកោណមាត្រ",
-      "name_en": "Trigonometric Derivatives",
-      "description": "ដេរីវេនៃ sin(x), cos(x), tan(x), cot(x)"
+      "id": "lesson_4",
+      "name_km": "មេរៀនទី៤៖ អាំងតេក្រាលមិនកំណត់",
+      "name_en": "Indefinite Integrals",
+      "description": "ព្រីមីទីវ រូបមន្តគ្រឹះ អាំងតេក្រាលដោយប្តូរអថេរ និងដោយផ្នែក",
+      "sort_order": 4
     },
     {
-      "id": "exp_log",
-      "name_km": "អនុគមន៍អិចស្បូណង់ស្យែល & លោការីត",
-      "name_en": "Exponential & Logarithmic",
-      "description": "ដេរីវេនៃ e^x, a^x, ln(x), log_a(x)"
+      "id": "lesson_5",
+      "name_km": "មេរៀនទី៥៖ សិក្សាអនុគមន៍សនិទាន",
+      "name_en": "Rational Functions",
+      "description": "ដែនកំណត់ អាស៊ីមតូតឈរ-ដេក-ទ្រេត តារាងអថេរភាព និងសង់ក្រាប",
+      "sort_order": 5
+    },
+    {
+      "id": "lesson_6",
+      "name_km": "មេរៀនទី៦៖ សិក្សាអនុគមន៍អ៊ិចស្ប៉ូ",
+      "name_en": "Exponential Functions",
+      "description": "អនុគមន៍ e^x, a^x ដេរីវេ លីមីត និងការសិក្សាអថេរភាពក្រាប",
+      "sort_order": 6
+    },
+    {
+      "id": "lesson_7",
+      "name_km": "មេរៀនទី៧៖ សិក្សាអនុគមន៍លោការីត",
+      "name_en": "Logarithmic Functions",
+      "description": "អនុគមន៍ ln(x), log_a(x) លក្ខណៈ លីមីត និងក្រាប",
+      "sort_order": 7
+    },
+    {
+      "id": "lesson_9",
+      "name_km": "មេរៀនទី៩៖ អាំងតេក្រាលកំណត់",
+      "name_en": "Definite Integrals",
+      "description": "រូបមន្តញូតុន-ឡែបនីស គណនាផ្ទៃក្រឡា និងមាឌសូលីដបដិវត្តន៍",
+      "sort_order": 9
+    },
+    {
+      "id": "lesson_10",
+      "name_km": "មេរៀនទី១០៖ សមីការឌីផេរ៉ង់ស្យែលលំដាប់១",
+      "name_en": "First Order Differential Equations",
+      "description": "សមីការលីនេអ៊ែរលំដាប់១ y' + ay = 0 និង y' + ay = P(x)",
+      "sort_order": 10
+    },
+    {
+      "id": "lesson_11",
+      "name_km": "មេរៀនទី១១៖ សមីការឌីផេរ៉ង់ស្យែលលំដាប់២",
+      "name_en": "Second Order Differential Equations",
+      "description": "សមីការ ay'' + by' + cy = 0 ករណីឌីសគ្រីមីណង់ Delta > 0, = 0, < 0",
+      "sort_order": 11
+    },
+    {
+      "id": "lesson_12",
+      "name_km": "មេរៀនទី១២៖ ប្រូបាប",
+      "name_en": "Probability",
+      "description": "ចម្ការគំរូ ចំនួនករណីអាច ករណីស្រប បន្សំ តម្រៀប និងច្បាប់ប៊ែរនូយី",
+      "sort_order": 12
+    },
+    {
+      "id": "lesson_13",
+      "name_km": "មេរៀនទី១៣៖ វ៉ិចទ័រក្នុងលំហ",
+      "name_en": "Vectors in Space",
+      "description": "ផលគុណស្កាលែ ផលគុណវ៉ិចទ័រ សមីការប្លង់ សមីការបន្ទាត់ និងចម្ងាយ",
+      "sort_order": 13
+    },
+    {
+      "id": "lesson_14",
+      "name_km": "មេរៀនទី១៤៖ ប៉ារ៉ាបូល",
+      "name_en": "Parabola",
+      "description": "សមីការស្ដង់ដា កំពូល កំណុំ បន្ទាត់ប្រាប់ទិស និងក្រាប",
+      "sort_order": 14
+    },
+    {
+      "id": "lesson_15",
+      "name_km": "មេរៀនទី១៥៖ អេលីប",
+      "name_en": "Ellipse",
+      "description": "សមីការស្ដង់ដា កំពូល កំណុំ អ័ក្សធំ អ័ក្សតូច និងអិចសង់ទ្រិស៊ីតេ",
+      "sort_order": 15
+    },
+    {
+      "id": "lesson_16",
+      "name_km": "មេរៀនទី១៦៖ អ៊ីពែបូល",
+      "name_en": "Hyperbola",
+      "description": "សមីការស្ដង់ដា កំពូល កំណុំ អាស៊ីមតូត និងអិចសង់ទ្រិស៊ីតេ",
+      "sort_order": 16
     }
   ],
   "formulas": [
     {
-      "id": "form_c",
-      "category_id": "basic",
-      "title_km": "ដេរីវេនៃចំនួនថេរ (Constant)",
-      "title_en": "Derivative of a Constant",
-      "formula": "(c)' = 0   (ដែល c ជាចំនួនពិតថេរ)",
-      "explanation": "ដេរីវេនៃចំនួនថេរណាមួយ គឺស្មើនឹងសូន្យជានិច្ច ពីព្រោះតម្លៃរបស់វាមិនប្រែប្រួល។",
-      "example": "ឧទាហរណ៍៖ (5)' = 0, (-100)' = 0, (π)' = 0",
-      "keywords": ["ថេរ", "constant", "c", "c'=0", "រូបមន្តថេរ", "0"]
+      "id": "form_cplx_alg",
+      "category_id": "lesson_1",
+      "title_km": "ទម្រង់ពីជគណិត ម៉ូឌុល និងកុំផ្លិចឆ្លាស់",
+      "title_en": "Algebraic Form, Modulus & Conjugate",
+      "formula": "• ទម្រង់ពីជគណិត៖ z = a + bi  (ដែល i² = -1, a, b ∈ ℝ)\n• ម៉ូឌុល៖ |z| = r = √(a² + b²)\n• កុំផ្លិចឆ្លាស់៖ z̄ = a - bi  (ដោយ z · z̄ = a² + b² = |z|²)",
+      "explanation": "a ជាផ្នែកពិត (Re(z)) និង b ជាផ្នែកនិម្មិត (Im(z))។ ម៉ូឌុលជាចម្ងាយពីគល់តម្រុយទៅចំណុចរូបភាព M(a, b)។",
+      "example": "ឧទាហរណ៍៖ z = 3 + 4i => |z| = √(3² + 4²) = 5, z̄ = 3 - 4i",
+      "keywords": [
+        "កុំផ្លិច",
+        "complex",
+        "z=a+bi",
+        "ម៉ូឌុល",
+        "ឆ្លាស់",
+        "i^2=-1",
+        "ទម្រង់ពីជគណិត"
+      ]
+    },
+    {
+      "id": "form_cplx_trig",
+      "category_id": "lesson_1",
+      "title_km": "ទម្រង់ត្រីកោណមាត្រ និងរូបមន្តដឺម័រ (De Moivre)",
+      "title_en": "Trigonometric Form & De Moivre Formula",
+      "formula": "• ទម្រង់ត្រីកោណមាត្រ៖ z = r(cos θ + i·sin θ)\n  (ដែល r = |z|, cos θ = a/r, sin θ = b/r)\n• រូបមន្តដឺម័រ៖ zⁿ = [r(cos θ + i·sin θ)]ⁿ = rⁿ(cos nθ + i·sin nθ)",
+      "explanation": "θ ជាអាគុយម៉ង់នៃ z (Arg(z))។ រូបមន្តដឺម័រប្រើសម្រាប់គណនាស្វ័យគុណខ្ពស់នៃចំនួនកុំផ្លិចបានយ៉ាងរហ័ស។",
+      "example": "ឧទាហរណ៍៖ z = 1 + i => r = √2, θ = π/4 => z = √2(cos(π/4) + i·sin(π/4))\n=> z⁸ = (√2)⁸(cos 2π + i·sin 2π) = 16(1 + 0) = 16",
+      "keywords": [
+        "ត្រីកោណមាត្រ",
+        "ដឺម័រ",
+        "de moivre",
+        "cos",
+        "sin",
+        "arg",
+        "អាគុយម៉ង់"
+      ]
+    },
+    {
+      "id": "form_lim_indet",
+      "category_id": "lesson_2",
+      "title_km": "រាងមិនកំណត់ 0/0, ∞/∞ និងវិធីដោះស្រាយ",
+      "title_en": "Indeterminate Forms 0/0 & ∞/∞",
+      "formula": "• រាង 0/0៖ ដាក់ជាកត្តារួម (x - a) សម្រួលចោល ឬគុណនឹងកន្សោមឆ្លាស់ (ករណីមានឫស)\n• រាង ∞/∞៖ ទាញអថេរដែលមានស្វ័យគុណធំបំផុតជាកត្តារួមទាំងភាគយក និងភាគបែង\n• រាង ∞ - ∞៖ គុណកន្សោមឆ្លាស់ ឬទាញតួធំជាកត្តា",
+      "explanation": "នៅពេលជំនួសតម្លៃលីមីតឃើញរាងមិនកំណត់ ត្រូវបំលែងតាមក្បួនពីជគណិតខាងលើសិន ទើបជំនួសតម្លៃម្ដងទៀត។",
+      "example": "ឧទាហរណ៍៖ lim(x->2) (x² - 4)/(x - 2) = lim(x->2) (x - 2)(x + 2)/(x - 2) = lim(x->2) (x + 2) = 4",
+      "keywords": [
+        "លីមីត",
+        "limit",
+        "0/0",
+        "កន្សោមឆ្លាស់",
+        "រាងមិនកំណត់",
+        "lim"
+      ]
+    },
+    {
+      "id": "form_lim_trig_exp",
+      "category_id": "lesson_2",
+      "title_km": "លីមីតត្រីកោណមាត្រ និងអ៊ិចស្ប៉ូណង់ស្យែលគ្រឹះ",
+      "title_en": "Trigonometric & Exponential Limits",
+      "formula": "• lim(x->0) (sin x)/x = 1\n• lim(x->0) (1 - cos x)/x² = 1/2\n• lim(x->0) (tan x)/x = 1\n• lim(x->0) (eˣ - 1)/x = 1\n• lim(x->0) (ln(1 + x))/x = 1",
+      "explanation": "រូបមន្តទាំងនេះជាគ្រឹះដាច់ខាតសម្រាប់ប្រឡងបាក់ឌុប នៅពេលដោះស្រាយលីមីតមាន sin, cos, tan, eˣ, ln។",
+      "example": "ឧទាហរណ៍៖ lim(x->0) (sin 5x)/(3x) = (5/3) · lim(x->0) (sin 5x)/(5x) = 5/3",
+      "keywords": [
+        "lim sinx/x",
+        "លីមីតត្រីកោណមាត្រ",
+        "e^x",
+        "ln",
+        "limit trig"
+      ]
     },
     {
       "id": "form_power",
-      "category_id": "basic",
-      "title_km": "ច្បាប់ស្វ័យគុណ (Power Rule)",
-      "title_en": "Power Rule",
-      "formula": "(xⁿ)' = n · xⁿ⁻¹\n(uⁿ)' = n · u' · uⁿ⁻¹",
+      "category_id": "lesson_3",
+      "title_km": "ច្បាប់ស្វ័យគុណ (Power Rule) & ចំនួនថេរ",
+      "title_en": "Power & Constant Rule",
+      "formula": "(c)' = 0\n(xⁿ)' = n · xⁿ⁻¹\n(uⁿ)' = n · u' · uⁿ⁻¹",
       "explanation": "ទម្លាក់ស្វ័យគុណ n មកមុខ រួចបន្ថយស្វ័យគុណចុះ 1។ បើជាអនុគមន៍ u(x) ត្រូវគុណនឹង u' បន្ថែម។",
-      "example": "ឧទាហរណ៍៖ (x³)' = 3x², (x⁵)' = 5x⁴, ((2x+1)³)' = 3(2)(2x+1)² = 6(2x+1)²",
-      "keywords": ["power", "ស្វ័យគុណ", "x^n", "xn", "power rule", "x²", "x³"]
+      "example": "ឧទាហរណ៍៖ (x⁵)' = 5x⁴, ((3x + 1)⁴)' = 4(3)(3x + 1)³ = 12(3x + 1)³",
+      "keywords": [
+        "power",
+        "ស្វ័យគុណ",
+        "x^n",
+        "ដេរីវេ",
+        "c'=0"
+      ]
     },
     {
-      "id": "form_sqrt",
-      "category_id": "basic",
-      "title_km": "ដេរីវេនៃឫសការ៉េ",
-      "title_en": "Derivative of Square Root",
-      "formula": "(√x)' = 1 / (2√x)   (x > 0)\n(√u)' = u' / (2√u)   (u > 0)",
-      "explanation": "ដេរីវេនៃឫស u គឺស្មើ u' ចែកនឹង ២ដងនៃឫស u។",
-      "example": "ឧទាហរណ៍៖ (√(3x - 1))' = (3x - 1)' / (2√(3x - 1)) = 3 / (2√(3x - 1))",
-      "keywords": ["sqrt", "ឫស", "ឫសការ៉េ", "root", "√x", "√u"]
+      "id": "form_prod_quot",
+      "category_id": "lesson_3",
+      "title_km": "ច្បាប់ផលគុណ និងផលចែក",
+      "title_en": "Product & Quotient Rules",
+      "formula": "• ផលគុណ៖ (u · v)' = u'v + uv'\n• ផលចែក៖ (u / v)' = (u'v - uv') / v²   (v ≠ 0)",
+      "explanation": "ដេរីវេផលគុណបូកបញ្ចូលគ្នា ដេរីវេផលចែកមានសញ្ញាដកនៅភាគយក និងភាគបែងលើកជាការ៉េ។",
+      "example": "ឧទាហរណ៍៖ ((2x+1)/(x-3))' = [2(x-3) - (2x+1)(1)] / (x-3)² = -7 / (x-3)²",
+      "keywords": [
+        "uv",
+        "u/v",
+        "ផលគុណ",
+        "ផលចែក",
+        "product",
+        "quotient"
+      ]
     },
     {
-      "id": "form_inverse",
-      "category_id": "basic",
-      "title_km": "ដេរីវេនៃអនុគមន៍ច្រាស (1/x)",
-      "title_en": "Reciprocal Rule",
-      "formula": "(1/x)' = -1 / x²\n(1/u)' = -u' / u²",
-      "explanation": "ដេរីវេនៃ 1/u ស្មើនឹង ដកដេរីវេនៃ u ចែកនឹង u លើកជាការ៉េ។",
-      "example": "ឧទាហរណ៍៖ (1 / (4x+1))' = -(4x+1)' / (4x+1)² = -4 / (4x+1)²",
-      "keywords": ["1/x", "1/u", "ច្រាស", "reciprocal", "ប្រភាគ"]
+      "id": "form_trig_der",
+      "category_id": "lesson_3",
+      "title_km": "ដេរីវេអនុគមន៍ត្រីកោណមាត្រ (sin, cos, tan)",
+      "title_en": "Trigonometric Derivatives",
+      "formula": "• (sin u)' = u' · cos u\n• (cos u)' = -u' · sin u\n• (tan u)' = u' / cos² u = u'(1 + tan² u)",
+      "explanation": "ប្រយ័ត្នសញ្ញាដកចំពោះដេរីវេនៃ cos u គឺបាន -u' sin u!",
+      "example": "ឧទាហរណ៍៖ (sin(3x))' = 3 cos(3x), (cos(5x))' = -5 sin(5x)",
+      "keywords": [
+        "sin",
+        "cos",
+        "tan",
+        "ដេរីវេត្រីកោណមាត្រ",
+        "trig"
+      ]
     },
     {
-      "id": "form_product",
-      "category_id": "arithmetic",
-      "title_km": "ច្បាប់ផលគុណ (Product Rule)",
-      "title_en": "Product Rule",
-      "formula": "(u · v)' = u'v + uv'",
-      "explanation": "ដេរីវេផលគុណ ស្មើនឹង ដេរីវេតួទី១គុណតួទី២ បូកនឹង តួទី១គុណដេរីវេតួទី២។",
-      "example": "ឧទាហរណ៍៖ y = x · sin(x) => y' = (x)'sin(x) + x(sin(x))' = sin(x) + x·cos(x)",
-      "keywords": ["ផលគុណ", "product", "uv", "u*v", "ច្បាប់ផលគុណ", "product rule"]
+      "id": "form_int_basic",
+      "category_id": "lesson_4",
+      "title_km": "រូបមន្តព្រីមីទីវ និងអាំងតេក្រាលគ្រឹះ",
+      "title_en": "Basic Indefinite Integrals",
+      "formula": "• ∫ k dx = kx + C\n• ∫ xⁿ dx = (xⁿ⁺¹) / (n + 1) + C   (n ≠ -1)\n• ∫ (1/x) dx = ln|x| + C\n• ∫ eˣ dx = eˣ + C\n• ∫ cos x dx = sin x + C\n• ∫ sin x dx = -cos x + C",
+      "explanation": "អាំងតេក្រាលមិនកំណត់ជាប្រតិបត្តិការច្រាសនៃដេរីវេ។ កុំភ្លេចថេរ C គ្រប់ពេល!",
+      "example": "ឧទាហរណ៍៖ ∫ (3x² + 4x - 5) dx = x³ + 2x² - 5x + C",
+      "keywords": [
+        "អាំងតេក្រាល",
+        "integral",
+        "ព្រីមីទីវ",
+        "primitive",
+        "x^n",
+        "+c"
+      ]
     },
     {
-      "id": "form_quotient",
-      "category_id": "arithmetic",
-      "title_km": "ច្បាប់ផលចែក (Quotient Rule)",
-      "title_en": "Quotient Rule",
-      "formula": "(u / v)' = (u'v - uv') / v²   (v ≠ 0)",
-      "explanation": "ដេរីវេភាគយកគុណភាគបែង ដក ភាគយកគុណដេរីវេភាគបែង រួចចែកនឹងភាគបែងលើកជាការ៉េ។",
-      "example": "ឧទាហរណ៍៖ y = (2x+1)/(x-3) => y' = [2(x-3) - (2x+1)(1)] / (x-3)² = -7 / (x-3)²",
-      "keywords": ["ផលចែក", "quotient", "u/v", "ចែក", "ច្បាប់ផលចែក", "quotient rule"]
+      "id": "form_int_parts",
+      "category_id": "lesson_4",
+      "title_km": "អាំងតេក្រាលដោយផ្នែក (Integration by Parts)",
+      "title_en": "Integration by Parts Formula",
+      "formula": "∫ u dv = u · v - ∫ v du",
+      "explanation": "ប្រើនៅពេលកន្សោមអាំងតេក្រាលជាផលគុណនៃអនុគមន៍ពីរផ្សេងគ្នា (ឧ. ពហុធាគុណត្រីកោណមាត្រ ឬអ៊ិចស្ប៉ូ)។ អាទិភាពតាង u តាមក្បួន LIATE (Log, Inverse, Algebraic, Trig, Exp)។",
+      "example": "ឧទាហរណ៍៖ ∫ x·eˣ dx => តាង u = x, dv = eˣ dx => du = dx, v = eˣ\n=> ∫ x·eˣ dx = x·eˣ - ∫ eˣ dx = x·eˣ - eˣ + C = (x - 1)eˣ + C",
+      "keywords": [
+        "ដោយផ្នែក",
+        "by parts",
+        "u dv",
+        "liate",
+        "អាំងតេក្រាលដោយផ្នែក"
+      ]
     },
     {
-      "id": "form_chain",
-      "category_id": "chain_rule",
-      "title_km": "ដេរីវេបណ្ដាក់ (Chain Rule)",
-      "title_en": "Chain Rule",
-      "formula": "dy/dx = (dy/du) · (du/dx)\n(f(g(x)))' = f'(g(x)) · g'(x)",
-      "explanation": "ដេរីវេអនុគមន៍ខាងក្រៅគិតត្រឹមកន្សោមខាងក្នុង រួចគុណនឹងដេរីវេនៃកន្សោមខាងក្នុង។",
-      "example": "ឧទាហរណ៍៖ y = (3x² - 5)⁴ => y' = 4(3x² - 5)³ · (3x² - 5)' = 4(3x² - 5)³ · (6x) = 24x(3x² - 5)³",
-      "keywords": ["chain", "chain rule", "បណ្ដាក់", "ដេរីវេបណ្ដាក់", "f(g(x))", "fg"]
+      "id": "form_rat_asymp",
+      "category_id": "lesson_5",
+      "title_km": "អាស៊ីមតូតឈរ ដេក និងទ្រេត",
+      "title_en": "Vertical, Horizontal & Oblique Asymptotes",
+      "formula": "• អាស៊ីមតូតឈរ (V.A)៖ បន្ទាត់ x = a កាលណា lim(x->a) f(x) = ±∞\n• អាស៊ីមតូតដេក (H.A)៖ បន្ទាត់ y = b កាលណា lim(x->±∞) f(x) = b\n• អាស៊ីមតូតទ្រេត (O.A)៖ បន្ទាត់ y = ax + b កាលណា lim(x->±∞) [f(x) - (ax + b)] = 0",
+      "explanation": "សម្រាប់អនុគមន៍សនិទាន y = P(x)/Q(x) បើដឺក្រេភាគយកធំជាងភាគបែង ១កម្រិត នោះមានអាស៊ីមតូតទ្រេត (ចែកពហុធាដើម្បីរក)។",
+      "example": "ឧទាហរណ៍៖ y = (2x + 1)/(x - 1) => អាស៊ីមតូតឈរ x = 1, អាស៊ីមតូតដេក y = 2",
+      "keywords": [
+        "អាស៊ីមតូត",
+        "asymptote",
+        "សនិទាន",
+        "ឈរ",
+        "ដេក",
+        "ទ្រេត",
+        "ក្រាប"
+      ]
     },
     {
-      "id": "form_trig_sin",
-      "category_id": "trig",
-      "title_km": "ដេរីវេនៃ sin(x) និង sin(u)",
-      "title_en": "Derivative of Sine",
-      "formula": "(sin x)' = cos x\n(sin u)' = u' · cos u",
-      "explanation": "ដេរីវេនៃស៊ីនុស គឺស្មើនឹងកូស៊ីនុស។",
-      "example": "ឧទាហរណ៍៖ (sin(3x²))' = (3x²)' · cos(3x²) = 6x · cos(3x²)",
-      "keywords": ["sin", "sin(x)", "sin(u)", "ស៊ីនុស", "sine"]
+      "id": "form_exp_study",
+      "category_id": "lesson_6",
+      "title_km": "រូបមន្តដេរីវេ លីមីត និងលក្ខណៈអនុគមន៍អ៊ិចស្ប៉ូ",
+      "title_en": "Exponential Function Properties",
+      "formula": "• ដេរីវេ៖ (eᵘ)' = u' · eᵘ\n• លក្ខណៈ៖ eˣ > 0 (គ្រប់ x ∈ ℝ), eᵃ · eᵇ = eᵃ⁺ᵇ\n• លីមីតសំខាន់៖\n  lim(x->+∞) eˣ = +∞,  lim(x->-∞) eˣ = 0 (បន្ទាត់ y = 0 ជាអាស៊ីមតូតដេកខាង -∞)\n  lim(x->+∞) (eˣ / xⁿ) = +∞,  lim(x->-∞) (xⁿ · eˣ) = 0",
+      "explanation": "ក្រាបអនុគមន៍ y = eˣ កើនដាច់ខាតលើ ℝ ហើយកាត់អ័ក្ស y ត្រង់ចំណុច (0, 1)។",
+      "example": "ឧទាហរណ៍៖ f(x) = (x - 2)eˣ => f'(x) = 1·eˣ + (x - 2)eˣ = (x - 1)eˣ",
+      "keywords": [
+        "e^x",
+        "អ៊ិចស្ប៉ូ",
+        "exponential",
+        "e^u",
+        "លីមីតអ៊ិចស្ប៉ូ"
+      ]
     },
     {
-      "id": "form_trig_cos",
-      "category_id": "trig",
-      "title_km": "ដេរីវេនៃ cos(x) និង cos(u)",
-      "title_en": "Derivative of Cosine",
-      "formula": "(cos x)' = -sin x\n(cos u)' = -u' · sin u",
-      "explanation": "ដេរីវេនៃកូស៊ីនុស គឺស្មើនឹង ដកស៊ីនុស (ប្រយ័ត្នសញ្ញាដក!)។",
-      "example": "ឧទាហរណ៍៖ (cos(5x))' = -(5x)' · sin(5x) = -5 · sin(5x)",
-      "keywords": ["cos", "cos(x)", "cos(u)", "កូស៊ីនុស", "cosine"]
+      "id": "form_log_study",
+      "category_id": "lesson_7",
+      "title_km": "រូបមន្តដេរីវេ លីមីត និងលក្ខណៈលោការីតនេពែ (ln)",
+      "title_en": "Logarithmic Function Properties",
+      "formula": "• ដែនកំណត់៖ D = (0, +∞)\n• ដេរីវេ៖ (ln u)' = u' / u\n• លក្ខណៈ៖ ln(ab) = ln a + ln b,  ln(a/b) = ln a - ln b,  ln(aⁿ) = n·ln a,  ln(1) = 0, ln(e) = 1\n• លីមីតសំខាន់៖\n  lim(x->0⁺) ln x = -∞ (x = 0 ជាអាស៊ីមតូតឈរ),  lim(x->+∞) ln x = +∞\n  lim(x->+∞) (ln x / xⁿ) = 0,  lim(x->0⁺) (xⁿ · ln x) = 0",
+      "explanation": "លោការីតនេពែ ln(x) កើនដាច់ខាតលើ (0, +∞) និងកាត់អ័ក្ស x ត្រង់ចំណុច (1, 0)។",
+      "example": "ឧទាហរណ៍៖ f(x) = ln(x² + 3) => f'(x) = 2x / (x² + 3)",
+      "keywords": [
+        "ln",
+        "លោការីត",
+        "logarithm",
+        "ln(x)",
+        "ln u",
+        "ដែនកំណត់"
+      ]
     },
     {
-      "id": "form_trig_tan",
-      "category_id": "trig",
-      "title_km": "ដេរីវេនៃ tan(x) និង tan(u)",
-      "title_en": "Derivative of Tangent",
-      "formula": "(tan x)' = 1 / cos² x = 1 + tan² x\n(tan u)' = u' / cos² u = u'(1 + tan² u)",
-      "explanation": "ដេរីវេនៃតង់សង់ស្មើនឹង 1 លើ កូសការ៉េ ឬ 1 បូក តង់សង់ការ៉េ។",
-      "example": "ឧទាហរណ៍៖ (tan(2x))' = 2 / cos²(2x)",
-      "keywords": ["tan", "tan(x)", "tan(u)", "តង់សង់", "tangent"]
+      "id": "form_defint_rules",
+      "category_id": "lesson_9",
+      "title_km": "រូបមន្តញូតុន-ឡែបនីស ផ្ទៃក្រឡា និងមាឌបដិវត្តន៍",
+      "title_en": "Definite Integral, Area & Volume",
+      "formula": "• រូបមន្តគ្រឹះ៖ ∫ₐᵇ f(x) dx = [F(x)]ₐᵇ = F(b) - F(a)\n• ផ្ទៃក្រឡារវាងក្រាបពីរ៖ S = ∫ₐᵇ [f(x) - g(x)] dx  (ដែល f(x) ≥ g(x))\n• មាឌសូលីដបដិវត្តន៍ជុំវិញអ័ក្ស Ox៖ V = π · ∫ₐᵇ [f(x)]² dx",
+      "explanation": "អាំងតេក្រាលកំណត់មានលទ្ធផលជាចំនួនពិត (គ្មានថេរ C ទេ)។ ផ្ទៃក្រឡាត្រូវតែវិជ្ជមានជានិច្ច។",
+      "example": "ឧទាហរណ៍៖ មាឌបង្កើតដោយបង្វិល y = √x ពី x = 0 ដល់ 4 ជុំវិញ Ox៖\nV = π ∫₀⁴ (√x)² dx = π ∫₀⁴ x dx = π [x²/2]₀⁴ = 8π (ឯកតាមាឌ)",
+      "keywords": [
+        "អាំងតេក្រាលកំណត់",
+        "definite integral",
+        "ផ្ទៃក្រឡា",
+        "មាឌ",
+        "volume",
+        "area",
+        "pi"
+      ]
     },
     {
-      "id": "form_exp",
-      "category_id": "exp_log",
-      "title_km": "ដេរីវេនៃ eˣ និង eᵘ",
-      "title_en": "Derivative of Natural Exponential",
-      "formula": "(eˣ)' = eˣ\n(eᵘ)' = u' · eᵘ",
-      "explanation": "ដេរីវេនៃ e ស្វ័យគុណ u ស្មើ u' គុណ e ស្វ័យគុណ u ដដែល។",
-      "example": "ឧទាហរណ៍៖ (e^(x² - 3x))' = (2x - 3)e^(x² - 3x)",
-      "keywords": ["e^x", "exp", "ex", "e^u", "អិចស្បូណង់ស្យែល", "exponential"]
+      "id": "form_diff1_rules",
+      "category_id": "lesson_10",
+      "title_km": "សមីការឌីផេរ៉ង់ស្យែលលីនេអ៊ែរលំដាប់១ (y' + ay = 0)",
+      "title_en": "First Order Linear Differential Equations",
+      "formula": "• សមីការអូម៉ូសែន៖ y' + ay = 0  (a ជាចំនួនថេរ)\n  => ចម្លើយទូទៅ៖ y = C · e⁻ᵃˣ  (ដែល C ជាចំនួនថេរពិត)\n• សមីការមិនអូម៉ូសែន៖ y' + ay = P(x)\n  => ចម្លើយទូទៅ៖ y = yₕ + yₚ  (ចម្លើយអូម៉ូសែន + ចម្លើយដោយឡែក)",
+      "explanation": "បើមានលក្ខខណ្ឌដើម y(x₀) = y₀ ជំនួសដើម្បីកំណត់រកតម្លៃថេរ C ជាក់លាក់។",
+      "example": "ឧទាហរណ៍៖ y' - 3y = 0 => y = C·e³ˣ។ បើ y(0) = 5 => 5 = C·e⁰ => C = 5 => y = 5e³ˣ",
+      "keywords": [
+        "ឌីផេរ៉ង់ស្យែល",
+        "differential",
+        "y'+ay=0",
+        "លំដាប់១",
+        "order 1"
+      ]
     },
     {
-      "id": "form_ln",
-      "category_id": "exp_log",
-      "title_km": "ដេរីវេនៃ ln(x) និង ln(u)",
-      "title_en": "Derivative of Natural Logarithm",
-      "formula": "(ln |x|)' = 1 / x   (x ≠ 0)\n(ln |u|)' = u' / u   (u ≠ 0)",
-      "explanation": "ដេរីវេនៃលោការីតនេពែ ln(u) គឺស្មើ u' ចែកនឹង u។",
-      "example": "ឧទាហរណ៍៖ (ln(x² + 1))' = (x² + 1)' / (x² + 1) = 2x / (x² + 1)",
-      "keywords": ["ln", "ln(x)", "ln(u)", "លោការីត", "log", "logarithm"]
+      "id": "form_diff2_rules",
+      "category_id": "lesson_11",
+      "title_km": "សមីការឌីផេរ៉ង់ស្យែលលីនេអ៊ែរលំដាប់២ (ay'' + by' + cy = 0)",
+      "title_en": "Second Order Linear Differential Equations",
+      "formula": "សមីការលក្ខណៈ៖ ar² + br + c = 0 (មានឌីសគ្រីមីណង់ Δ = b² - 4ac)\n1. បើ Δ > 0 (ឫសពីរ r₁ ≠ r₂)៖ y = C₁·eʳ¹ˣ + C₂·eʳ²ˣ\n2. បើ Δ = 0 (ឫសឌុប r₀ = -b/(2a))៖ y = (C₁·x + C₂)·eʳ⁰ˣ\n3. បើ Δ < 0 (ឫសកុំផ្លិច r = α ± iβ)៖ y = eᵅˣ(C₁·cos βx + C₂·sin βx)",
+      "explanation": "C₁ និង C₂ ជាចំនួនថេរពិត ដែលកំណត់បានតាមលក្ខខណ្ឌដើម y(x₀) = y₀ និង y'(x₀) = y'₀។",
+      "example": "ឧទាហរណ៍៖ y'' - 5y' + 6y = 0 => r² - 5r + 6 = 0 => r = 2, 3 => y = C₁e²ˣ + C₂e³ˣ",
+      "keywords": [
+        "y''",
+        "លំដាប់២",
+        "order 2",
+        "សមីការលក្ខណៈ",
+        "delta",
+        "cos",
+        "sin"
+      ]
+    },
+    {
+      "id": "form_prob_rules",
+      "category_id": "lesson_12",
+      "title_km": "រូបមន្តប្រូបាប បន្សំ តម្រៀប និងច្បាប់ប៊ែរនូយី",
+      "title_en": "Probability, Permutation, Combination & Bernoulli",
+      "formula": "• ប្រូបាបគ្រឹះ៖ P(A) = n(A) / n(S) = (ចំនួនករណីស្រប) / (ចំនួនករណីអាច)\n• បន្សំ (មិនគិតលំដាប់)៖ C(n, p) = n! / [p!(n - p)!]\n• ច្រៀក/តម្រៀប (គិតលំដាប់)៖ A(n, p) = n! / (n - p)!\n• ច្បាប់ប៊ែរនូយី (n ដង ជោគជ័យ k ដង)៖ P(X = k) = C(n, k) · pᵏ · (1 - p)ⁿ⁻ᵏ",
+      "explanation": "0 ≤ P(A) ≤ 1។ ព្រឹត្តិការណ៍បំពេញ៖ P(Ā) = 1 - P(A)។",
+      "example": "ឧទាហរណ៍៖ ចាប់យកបាល់ ៣ ក្នុងចំណោមបាល់ ១០ ដោយព្រមគ្នា => n(S) = C(10, 3) = 120",
+      "keywords": [
+        "ប្រូបាប",
+        "probability",
+        "បន្សំ",
+        "តម្រៀប",
+        "C(n,p)",
+        "bernoulli",
+        "ករណីស្រប"
+      ]
+    },
+    {
+      "id": "form_vec_rules",
+      "category_id": "lesson_13",
+      "title_km": "ផលគុណស្កាលែ ផលគុណវ៉ិចទ័រ សមីការប្លង់ និងចម្ងាយ",
+      "title_en": "Vectors in Space, Dot & Cross Product, Plane Equation",
+      "formula": "• ផលគុណស្កាលែ៖ u⃗ · v⃗ = x·x' + y·y' + z·z'\n• ផលគុណវ៉ិចទ័រ៖ u⃗ × v⃗ = (y·z' - z·y', z·x' - x·z', x·y' - y·x')\n• សមីការប្លង់ (P) កាត់តាម M₀(x₀, y₀, z₀) មានវ៉ិចទ័រណរម៉ាល់ n⃗(A, B, C)៖\n  A(x - x₀) + B(y - y₀) + C(z - z₀) = 0\n• ចម្ងាយពីចំណុច M₀ ទៅប្លង់ (P)៖ d(M₀, (P)) = |A·x₀ + B·y₀ + C·z₀ + D| / √(A² + B² + C²)",
+      "explanation": "u⃗ ⊥ v⃗ <=> u⃗ · v⃗ = 0។ ផលគុណវ៉ិចទ័រ u⃗ × v⃗ កែងនឹង u⃗ ផង និងកែងនឹង v⃗ ផង។",
+      "example": "ឧទាហរណ៍៖ ប្លង់កាត់តាម (1, 2, -1) មាន n⃗(2, -3, 4) => 2(x - 1) - 3(y - 2) + 4(z + 1) = 0 => 2x - 3y + 4z + 8 = 0",
+      "keywords": [
+        "វ៉ិចទ័រ",
+        "vector",
+        "លំហ",
+        "ប្លង់",
+        "ចម្ងាយ",
+        "ផលគុណស្កាលែ",
+        "ផលគុណវ៉ិចទ័រ"
+      ]
+    },
+    {
+      "id": "form_parabola_std",
+      "category_id": "lesson_14",
+      "title_km": "សមីការស្ដង់ដា កំពូល និងកំណុំប៉ារ៉ាបូល",
+      "title_en": "Parabola Standard Equations",
+      "formula": "១. កំពូល O(0, 0)៖\n• y² = 4px (អ័ក្សឆ្លុះដេក y = 0) => កំណុំ F(p, 0), បន្ទាត់ប្រាប់ទិស x = -p\n• x² = 4py (អ័ក្សឆ្លុះឈរ x = 0) => កំណុំ F(0, p), បន្ទាត់ប្រាប់ទិស y = -p\n២. កំពូល S(h, k)៖\n• (y - k)² = 4p(x - h) => កំណុំ F(h + p, k), បន្ទាត់ប្រាប់ទិស x = h - p\n• (x - h)² = 4p(y - k) => កំណុំ F(h, k + p), បន្ទាត់ប្រាប់ទិស y = k - p",
+      "explanation": "បើ p > 0 ក្រាបបែរទៅទិសវិជ្ជមាន បើ p < 0 ក្រាបបែរទៅទិសអវិជ្ជមាន។ ចម្ងាយពីកំពូលទៅកំណុំគឺ |p|។",
+      "example": "ឧទាហរណ៍៖ y² = 12x => 4p = 12 => p = 3 => កំពូល (0,0), កំណុំ F(3, 0), បន្ទាត់ប្រាប់ទិស x = -3",
+      "keywords": [
+        "ប៉ារ៉ាបូល",
+        "parabola",
+        "y^2=4px",
+        "កំពូល",
+        "កំណុំ",
+        "បន្ទាត់ប្រាប់ទិស"
+      ]
+    },
+    {
+      "id": "form_ellipse_std",
+      "category_id": "lesson_15",
+      "title_km": "សមីការស្ដង់ដា កំពូល កំណុំ និងអិចសង់ទ្រិស៊ីតេអេលីប",
+      "title_en": "Ellipse Standard Equations",
+      "formula": "សមីការស្ដង់ដា (ផ្ចិត O(0, 0))៖\n• អ័ក្សធំដេក (a > b)៖ x²/a² + y²/b² = 1\n  => កំពូល V(±a, 0), កំណុំ F(±c, 0), អ័ក្សធំ 2a, អ័ក្សតូច 2b\n• អ័ក្សធំឈរ (a > b)៖ x²/b² + y²/a² = 1\n  => កំពូល V(0, ±a), កំណុំ F(0, ±c)\n• ទំនាក់ទំនងគន្លឹះ៖ a² = b² + c²  (c² = a² - b²)\n• អិចសង់ទ្រិស៊ីតេ៖ e = c / a  (0 < e < 1)",
+      "explanation": "a តែងតែធំជាង b ជានិច្ច។ បើភាគបែង x² ធំជាង នោះអ័ក្សធំនៅលើអ័ក្ស Ox។",
+      "example": "ឧទាហរណ៍៖ x²/25 + y²/9 = 1 => a² = 25, b² = 9 => c² = 16 => c = 4 => កំណុំ F(±4, 0), e = 4/5",
+      "keywords": [
+        "អេលីប",
+        "ellipse",
+        "x^2/a^2",
+        "អ័ក្សធំ",
+        "អ័ក្សតូច",
+        "អិចសង់ទ្រិស៊ីតេ"
+      ]
+    },
+    {
+      "id": "form_hyperbola_std",
+      "category_id": "lesson_16",
+      "title_km": "សមីការស្ដង់ដា កំណុំ និងអាស៊ីមតូតនៃអ៊ីពែបូល",
+      "title_en": "Hyperbola Standard Equations",
+      "formula": "សមីការស្ដង់ដា (ផ្ចិត O(0, 0))៖\n• អ័ក្សទទឹងដេក៖ x²/a² - y²/b² = 1\n  => កំពូល V(±a, 0), កំណុំ F(±c, 0), អាស៊ីមតូត y = ±(b/a)x\n• អ័ក្សទទឹងឈរ៖ y²/a² - x²/b² = 1\n  => កំពូល V(0, ±a), កំណុំ F(0, ±c), អាស៊ីមតូត y = ±(a/b)x\n• ទំនាក់ទំនងគន្លឹះ៖ c² = a² + b²  (c > a)\n• អិចសង់ទ្រិស៊ីតេ៖ e = c / a  (e > 1)",
+      "explanation": "តួដែលមានសញ្ញាបូកកំណត់ទិសដៅអ័ក្សទទឹង។ អ៊ីពែបូលមានបន្ទាត់អាស៊ីមតូតពីរកាត់តាមផ្ចិត។",
+      "example": "ឧទាហរណ៍៖ x²/16 - y²/9 = 1 => a = 4, b = 3 => c² = 25 => c = 5 => អាស៊ីមតូត y = ±(3/4)x, e = 5/4",
+      "keywords": [
+        "អ៊ីពែបូល",
+        "hyperbola",
+        "អាស៊ីមតូត",
+        "x^2/a^2-y^2/b^2=1",
+        "អ័ក្សទទឹង"
+      ]
     }
   ],
   "exercises": [
     {
+      "id": "ex_cplx_1",
+      "category_id": "lesson_1",
+      "code": "លំហាត់កុំផ្លិច១",
+      "title": "សរសេរចំនួនកុំផ្លិចជាទម្រង់ត្រីកោណមាត្រ (បាក់ឌុប)",
+      "problem": "សរសេរចំនួនកុំផ្លិច z = 1 + i√3 ជាទម្រង់ត្រីកោណមាត្រ រួចគណនា z⁶",
+      "hints": "គណនាម៉ូឌុល r = √(a² + b²) រួចរកមុំ θ តាម cos θ = a/r, sin θ = b/r ហើយប្រើរូបមន្តដឺម័រ",
+      "solution_steps": [
+        "ជំហានទី១៖ គណនាម៉ូឌុល r\nr = √(1² + (√3)²) = √(1 + 3) = √4 = 2",
+        "ជំហានទី២៖ រកអាគុយម៉ង់ θ\ncos θ = 1/2  និង  sin θ = √3/2  =>  θ = π/3\nដូចនេះ ទម្រង់ត្រីកោណមាត្រគឺ៖ z = 2(cos(π/3) + i·sin(π/3))",
+        "ជំហានទី៣៖ គណនា z⁶ តាមរូបមន្តដឺម័រ\nz⁶ = [2(cos(π/3) + i·sin(π/3))]⁶\nz⁶ = 2⁶ · [cos(6 · π/3) + i·sin(6 · π/3)]\nz⁶ = 64 · [cos(2π) + i·sin(2π)] = 64 · (1 + 0) = 64"
+      ],
+      "final_answer": "z = 2(cos(π/3) + i·sin(π/3)) និង z⁶ = 64",
+      "difficulty": "បាក់ឌុប (BacII Exam)",
+      "keywords": [
+        "កុំផ្លិច",
+        "1+i√3",
+        "ដឺម័រ",
+        "ត្រីកោណមាត្រ",
+        "លំហាត់កុំផ្លិច១"
+      ]
+    },
+    {
+      "id": "ex_lim_1",
+      "category_id": "lesson_2",
+      "code": "លំហាត់លីមីត១",
+      "title": "គណនាលីមីតរាងមិនកំណត់ 0/0 មានឫសការ៉េ",
+      "problem": "គណនាលីមីត L = lim(x->1) (√(2x + 2) - 2) / (x - 1)",
+      "hints": "ជំនួស x = 1 ឃើញរាង 0/0 => គុណភាគយក និងភាគបែងនឹងកន្សោមឆ្លាស់ (√(2x + 2) + 2)",
+      "solution_steps": [
+        "ជំហានទី១៖ ពិនិត្យរាងលីមីត ឃើញរាង 0/0\nគុណកន្សោមឆ្លាស់៖ (√(2x + 2) - 2)(√(2x + 2) + 2) = (2x + 2) - 4 = 2x - 2 = 2(x - 1)",
+        "ជំហានទី២៖ ជំនួសចូលលីមីត\nL = lim(x->1) [2(x - 1)] / [ (x - 1)(√(2x + 2) + 2) ]",
+        "ជំហានទី៣៖ សម្រួលកត្តា (x - 1) ចោល\nL = lim(x->1) 2 / (√(2x + 2) + 2) = 2 / (√(4) + 2) = 2 / 4 = 1/2"
+      ],
+      "final_answer": "L = 1/2",
+      "difficulty": "មធ្យម (BacII Standard)",
+      "keywords": [
+        "លីមីត",
+        "0/0",
+        "កន្សោមឆ្លាស់",
+        "លំហាត់លីមីត១"
+      ]
+    },
+    {
+      "id": "ex_int_1",
+      "category_id": "lesson_4",
+      "code": "លំហាត់អាំងតេក្រាល១",
+      "title": "គណនាអាំងតេក្រាលដោយផ្នែក ∫ x · cos(x) dx",
+      "problem": "គណនាអាំងតេក្រាល I = ∫ x · cos(x) dx",
+      "hints": "ប្រើរូបមន្តដោយផ្នែក ∫ u dv = uv - ∫ v du ដោយតាង u = x និង dv = cos x dx",
+      "solution_steps": [
+        "ជំហានទី១៖ កំណត់ u និង dv\n• តាង u = x  =>  du = dx\n• dv = cos x dx  =>  v = sin x",
+        "ជំហានទី២៖ អនុវត្តរូបមន្ត ∫ u dv = uv - ∫ v du\nI = x · sin x - ∫ sin x dx",
+        "ជំហានទី៣៖ គណនាព្រីមីទីវចុងក្រោយ\nI = x · sin x - (-cos x) + C = x · sin x + cos x + C"
+      ],
+      "final_answer": "I = x · sin(x) + cos(x) + C",
+      "difficulty": "មធ្យម (BacII Standard)",
+      "keywords": [
+        "អាំងតេក្រាល",
+        "ដោយផ្នែក",
+        "x cos x",
+        "លំហាត់អាំងតេក្រាល១"
+      ]
+    },
+    {
+      "id": "ex_rat_1",
+      "category_id": "lesson_5",
+      "code": "លំហាត់អនុគមន៍សនិទាន១",
+      "title": "រកអាស៊ីមតូតនៃអនុគមន៍សនិទាន f(x) = (2x - 1) / (x + 2)",
+      "problem": "កំណត់ដែនកំណត់ និងសមីការអាស៊ីមតូតឈរ អាស៊ីមតូតដេក នៃក្រាប f(x) = (2x - 1)/(x + 2)",
+      "hints": "ដែនកំណត់ភាគបែងខុសពីសូន្យ។ អាស៊ីមតូតឈរកាលណា x ខិតទៅរកឫសភាគបែង។ អាស៊ីមតូតដេកគិត lim នៅ ±∞",
+      "solution_steps": [
+        "ជំហានទី១៖ ដែនកំណត់\nអនុគមន៍មានន័យលុះត្រាតែ x + 2 ≠ 0 => x ≠ -2 => D = ℝ \\ {-2}",
+        "ជំហានទី២៖ អាស៊ីមតូតឈរ\nlim(x->-2) (2x - 1)/(x + 2) = -5 / 0 = ±∞ => បន្ទាត់ x = -2 ជាអាស៊ីមតូតឈរ",
+        "ជំហានទី៣៖ អាស៊ីមតូតដេក\nlim(x->±∞) (2x - 1)/(x + 2) = lim(x->±∞) (2x / x) = 2 => បន្ទាត់ y = 2 ជាអាស៊ីមតូតដេក"
+      ],
+      "final_answer": "D = ℝ \\ {-2}, អាស៊ីមតូតឈរ x = -2, អាស៊ីមតូតដេក y = 2",
+      "difficulty": "ងាយស្រួល (Basic BacII)",
+      "keywords": [
+        "សនិទាន",
+        "អាស៊ីមតូត",
+        "x=-2",
+        "y=2",
+        "លំហាត់អនុគមន៍សនិទាន១"
+      ]
+    },
+    {
+      "id": "ex_prob_1",
+      "category_id": "lesson_12",
+      "code": "លំហាត់ប្រូបាប១",
+      "title": "គណនាប្រូបាបចាប់បាល់ក្នុងថង់ដោយព្រមគ្នា",
+      "problem": "ក្នុងថង់មួយមានបាល់ក្រហម ៤ និងបាល់ស ៦។ គេចាប់យកបាល់ ៣ ព្រមគ្នាដោយចៃដន្យ។ រកប្រូបាបដើម្បីទទួលបានបាល់ពណ៌ដូចគ្នាទាំង ៣។",
+      "hints": "ចំនួនករណីអាច n(S) = C(10, 3)។ ពណ៌ដូចគ្នាទាំងបីមាន ២ ករណី៖ ក្រហមទាំង ៣ ឬ សទាំង ៣។",
+      "solution_steps": [
+        "ជំហានទី១៖ រកចំនួនករណីអាច n(S)\nn(S) = C(10, 3) = 10! / (3! · 7!) = (10 · 9 · 8) / (3 · 2 · 1) = 120",
+        "ជំហានទី២៖ រកចំនួនករណីស្រប n(A)\nព្រឹត្តិការណ៍ A៖ «ចាប់បានបាល់ពណ៌ដូចគ្នាទាំង ៣»\n• ករណីក្រហមទាំង ៣៖ C(4, 3) = 4\n• ករណីសទាំង ៣៖ C(6, 3) = (6 · 5 · 4) / 6 = 20\n=> n(A) = 4 + 20 = 24",
+        "ជំហានទី៣៖ គណនាប្រូបាប\nP(A) = n(A) / n(S) = 24 / 120 = 1 / 5 = 0.2"
+      ],
+      "final_answer": "P(A) = 1/5 = 0.2",
+      "difficulty": "មធ្យម (BacII Standard)",
+      "keywords": [
+        "ប្រូបាប",
+        "បាល់",
+        "បន្សំ",
+        "C(10,3)",
+        "លំហាត់ប្រូបាប១"
+      ]
+    },
+    {
+      "id": "ex_vec_1",
+      "category_id": "lesson_13",
+      "code": "លំហាត់វ៉ិចទ័រ១",
+      "title": "សរសេរសមីការប្លង់កាត់តាម ៣ ចំណុច A, B, C",
+      "problem": "ក្នុងលំហតម្រុយអ័រតូណរម៉ាល់ គេមានចំណុច A(1, 0, 2), B(2, 1, 0), C(0, 3, 1)។ សរសេរសមីការប្លង់ (ABC)។",
+      "hints": "រកវ៉ិចទ័រ AB⃗ និង AC⃗ រួចគណនាផលគុណវ៉ិចទ័រ n⃗ = AB⃗ × AC⃗ ជាវ៉ិចទ័រណរម៉ាល់នៃប្លង់",
+      "solution_steps": [
+        "ជំហានទី១៖ គណនាវ៉ិចទ័រ AB⃗ និង AC⃗\n• AB⃗ = (2-1, 1-0, 0-2) = (1, 1, -2)\n• AC⃗ = (0-1, 3-0, 1-2) = (-1, 3, -1)",
+        "ជំហានទី២៖ គណនាផលគុណវ៉ិចទ័រ n⃗ = AB⃗ × AC⃗\n• x = 1(-1) - (-2)(3) = -1 + 6 = 5\n• y = (-2)(-1) - 1(-1) = 2 + 1 = 3\n• z = 1(3) - 1(-1) = 3 + 1 = 4\n=> n⃗ = (5, 5, 4)",
+        "ជំហានទី៣៖ សរសេរសមីការប្លង់កាត់តាម A(1, 0, 2)\n5(x - 1) + 5(y - 0) + 4(z - 2) = 0\n5x - 5 + 5y + 4z - 8 = 0\n5x + 5y + 4z - 13 = 0"
+      ],
+      "final_answer": "សមីការប្លង់ (ABC) គឺ៖ 5x + 5y + 4z - 13 = 0",
+      "difficulty": "បាក់ឌុប (BacII Exam)",
+      "keywords": [
+        "វ៉ិចទ័រ",
+        "ប្លង់",
+        "ABC",
+        "លំហាត់វ៉ិចទ័រ១",
+        "ផលគុណវ៉ិចទ័រ"
+      ]
+    },
+    {
+      "id": "ex_parab_1",
+      "category_id": "lesson_14",
+      "code": "លំហាត់ប៉ារ៉ាបូល១",
+      "title": "កំណត់កំពូល កំណុំ និងបន្ទាត់ប្រាប់ទិសនៃប៉ារ៉ាបូល y² = 8x",
+      "problem": "គេឱ្យសមីការប៉ារ៉ាបូល (P): y² = 8x។ កំណត់កូអរដោនេកំពូល កំណុំ សមីការអ័ក្សឆ្លុះ និងសមីការបន្ទាត់ប្រាប់ទិស។",
+      "hints": "ប្រៀបធៀបជាមួយសមីការស្ដង់ដា y² = 4px => 4p = 8 => p = 2",
+      "solution_steps": [
+        "ជំហានទី១៖ កំណត់ប៉ារ៉ាម៉ែត្រ p\nសមីការមានទម្រង់ y² = 4px => 4p = 8 => p = 2 > 0",
+        "ជំហានទី២៖ កំណត់លក្ខណៈធរណីមាត្រ\n• កំពូល៖ O(0, 0)\n• កំណុំ៖ F(p, 0) = F(2, 0)\n• សមីការអ័ក្សឆ្លុះ៖ អ័ក្សដេក y = 0 (អ័ក្ស Ox)\n• សមីការបន្ទាត់ប្រាប់ទិស (d)៖ x = -p => x = -2",
+        "ជំហានទី៣៖ សន្និដ្ឋាន\nក្រាបបែរមាត់ទៅខាងស្តាំ (ទិស Ox វិជ្ជមាន)។"
+      ],
+      "final_answer": "កំពូល O(0, 0), កំណុំ F(2, 0), អ័ក្សឆ្លុះ y = 0, បន្ទាត់ប្រាប់ទិស x = -2",
+      "difficulty": "ងាយស្រួល (Basic)",
+      "keywords": [
+        "ប៉ារ៉ាបូល",
+        "y^2=8x",
+        "កំពូល",
+        "កំណុំ",
+        "បន្ទាត់ប្រាប់ទិស",
+        "លំហាត់ប៉ារ៉ាបូល១"
+      ]
+    },
+    {
+      "id": "ex_ellip_1",
+      "category_id": "lesson_15",
+      "code": "លំហាត់អេលីប១",
+      "title": "កំណត់កំពូល កំណុំ និងអិចសង់ទ្រិស៊ីតេនៃអេលីប 9x² + 25y² = 225",
+      "problem": "គេឱ្យសមីការអេលីប (E): 9x² + 25y² = 225។ សរសេរជាទម្រង់ស្ដង់ដា រួចកំណត់កូអរដោនេកំពូល កំណុំ និងអិចសង់ទ្រិស៊ីតេ។",
+      "hints": "ចែកអង្គសងខាងនឹង 225 ដើម្បីបានទម្រង់ x²/a² + y²/b² = 1 រួចប្រើ c² = a² - b²",
+      "solution_steps": [
+        "ជំហានទី១៖ បម្លែងជាទម្រង់ស្ដង់ដា\nចែកអង្គទាំងសងខាងនឹង 225៖\n(9x²)/225 + (25y²)/225 = 1 => x²/25 + y²/9 = 1",
+        "ជំហានទី២៖ កំណត់ a, b, c\n• a² = 25 => a = 5\n• b² = 9 => b = 3\n• c² = a² - b² = 25 - 9 = 16 => c = 4",
+        "ជំហានទី៣៖ កំណត់ធាតុផ្សំ (អ័ក្សធំដេក)\n• កំពូលទាំងពីរ៖ V₁(5, 0), V₂(-5, 0)\n• កំណុំទាំងពីរ៖ F₁(4, 0), F₂(-4, 0)\n• អិចសង់ទ្រិស៊ីតេ៖ e = c / a = 4 / 5 = 0.8"
+      ],
+      "final_answer": "ទម្រង់ស្ដង់ដា x²/25 + y²/9 = 1, កំពូល (±5, 0), កំណុំ (±4, 0), e = 4/5",
+      "difficulty": "មធ្យម (BacII Standard)",
+      "keywords": [
+        "អេលីប",
+        "ellipse",
+        "9x^2+25y^2=225",
+        "e=4/5",
+        "លំហាត់អេលីប១"
+      ]
+    },
+    {
       "id": "ex_1",
-      "category_id": "basic",
+      "category_id": "lesson_3",
       "code": "លំហាត់១",
       "title": "ដេរីវេនៃពហុធាធម្មតា (Power Rule)",
       "problem": "គណនាដេរីវេនៃអនុគមន៍ f(x) = 4x⁵ - 3x³ + 7x - 9",
@@ -168,11 +638,17 @@
       ],
       "final_answer": "f'(x) = 20x⁴ - 9x² + 7",
       "difficulty": "ងាយស្រួល (Basic)",
-      "keywords": ["លំហាត់១", "ex1", "4x^5", "power rule", "ពហុធា"]
+      "keywords": [
+        "លំហាត់១",
+        "ex1",
+        "4x^5",
+        "power rule",
+        "ពហុធា"
+      ]
     },
     {
       "id": "ex_2",
-      "category_id": "basic",
+      "category_id": "lesson_3",
       "code": "លំហាត់២",
       "title": "ដេរីវេនៃកន្សោមមានឫសការ៉េ និងប្រភាគ",
       "problem": "គណនាដេរីវេនៃ g(x) = 2√x + 3/x",
@@ -184,11 +660,18 @@
       ],
       "final_answer": "g'(x) = 1/√x - 3/x²",
       "difficulty": "មធ្យម (Intermediate)",
-      "keywords": ["លំហាត់២", "ex2", "2√x", "3/x", "ឫស", "ប្រភាគ"]
+      "keywords": [
+        "លំហាត់២",
+        "ex2",
+        "2√x",
+        "3/x",
+        "ឫស",
+        "ប្រភាគ"
+      ]
     },
     {
       "id": "ex_3",
-      "category_id": "arithmetic",
+      "category_id": "lesson_3",
       "code": "លំហាត់៣",
       "title": "ដេរីវេផលគុណ (Product Rule)",
       "problem": "គណនាដេរីវេនៃ h(x) = (x² + 3)(2x - 5)",
@@ -200,11 +683,17 @@
       ],
       "final_answer": "h'(x) = 6x² - 10x + 6",
       "difficulty": "មធ្យម (Intermediate)",
-      "keywords": ["លំហាត់៣", "ex3", "ផលគុណ", "product rule", "(x^2+3)(2x-5)"]
+      "keywords": [
+        "លំហាត់៣",
+        "ex3",
+        "ផលគុណ",
+        "product rule",
+        "(x^2+3)(2x-5)"
+      ]
     },
     {
       "id": "ex_4",
-      "category_id": "arithmetic",
+      "category_id": "lesson_3",
       "code": "លំហាត់៤",
       "title": "ដេរីវេផលចែកសនិទាន (Quotient Rule - បាក់ឌុប)",
       "problem": "គណនាដេរីវេនៃ y = (3x - 2) / (x + 4)",
@@ -216,11 +705,18 @@
       ],
       "final_answer": "y' = 14 / (x + 4)²",
       "difficulty": "មធ្យម (BacII Standard)",
-      "keywords": ["លំហាត់៤", "ex4", "ផលចែក", "quotient rule", "(3x-2)/(x+4)", "បាក់ឌុប"]
+      "keywords": [
+        "លំហាត់៤",
+        "ex4",
+        "ផលចែក",
+        "quotient rule",
+        "(3x-2)/(x+4)",
+        "បាក់ឌុប"
+      ]
     },
     {
       "id": "ex_5",
-      "category_id": "chain_rule",
+      "category_id": "lesson_3",
       "code": "លំហាត់៥",
       "title": "ដេរីវេបណ្ដាក់ស្វ័យគុណ (Chain Rule Power)",
       "problem": "គណនាដេរីវេនៃ y = (2x³ - 5x + 1)⁴",
@@ -232,11 +728,17 @@
       ],
       "final_answer": "y' = 4(6x² - 5)(2x³ - 5x + 1)³",
       "difficulty": "មធ្យម (Intermediate)",
-      "keywords": ["លំហាត់៥", "ex5", "chain rule", "បណ្ដាក់", "(2x^3-5x+1)^4"]
+      "keywords": [
+        "លំហាត់៥",
+        "ex5",
+        "chain rule",
+        "បណ្ដាក់",
+        "(2x^3-5x+1)^4"
+      ]
     },
     {
       "id": "ex_6",
-      "category_id": "trig",
+      "category_id": "lesson_3",
       "code": "លំហាត់៦",
       "title": "ដេរីវេនៃផលគុណ និងត្រីកោណមាត្រ",
       "problem": "គណនាដេរីវេនៃ f(x) = x³ · sin(2x)",
@@ -248,11 +750,18 @@
       ],
       "final_answer": "f'(x) = x² [ 3 sin(2x) + 2x cos(2x) ]",
       "difficulty": "កម្រិតខ្ពស់ (Advanced)",
-      "keywords": ["លំហាត់៦", "ex6", "sin", "sin(2x)", "x^3 sin(2x)", "ត្រីកោណមាត្រ"]
+      "keywords": [
+        "លំហាត់៦",
+        "ex6",
+        "sin",
+        "sin(2x)",
+        "x^3 sin(2x)",
+        "ត្រីកោណមាត្រ"
+      ]
     },
     {
       "id": "ex_7",
-      "category_id": "exp_log",
+      "category_id": "lesson_6",
       "code": "លំហាត់៧",
       "title": "ដេរីវេអនុគមន៍អិចស្បូណង់ស្យែល និងលោការីត (បាក់ឌុប)",
       "problem": "គណនាដេរីវេនៃ f(x) = (2x - 1) · e^(3x)",
@@ -264,11 +773,18 @@
       ],
       "final_answer": "f'(x) = (6x - 1) e^(3x)",
       "difficulty": "បាក់ឌុប (BacII Exam Problem)",
-      "keywords": ["លំហាត់៧", "ex7", "e^3x", "exponential", "អិចស្បូណង់ស្យែល", "(2x-1)e^3x"]
+      "keywords": [
+        "លំហាត់៧",
+        "ex7",
+        "e^3x",
+        "exponential",
+        "អិចស្បូណង់ស្យែល",
+        "(2x-1)e^3x"
+      ]
     },
     {
       "id": "ex_8",
-      "category_id": "exp_log",
+      "category_id": "lesson_6",
       "code": "លំហាត់៨",
       "title": "ដេរីវេនៃអនុគមន៍លោការីតនេពែ",
       "problem": "គណនាដេរីវេនៃ y = ln( (x - 1) / (x + 1) )  ចំពោះ x > 1",
@@ -280,7 +796,14 @@
       ],
       "final_answer": "y' = 2 / (x² - 1)",
       "difficulty": "កម្រិតខ្ពស់ (Smart BacII Technique)",
-      "keywords": ["លំហាត់៨", "ex8", "ln", "ln((x-1)/(x+1))", "លោការីត", "logarithm"]
+      "keywords": [
+        "លំហាត់៨",
+        "ex8",
+        "ln",
+        "ln((x-1)/(x+1))",
+        "លោការីត",
+        "logarithm"
+      ]
     }
   ]
 }

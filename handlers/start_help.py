@@ -68,15 +68,17 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Default /start message (Bilingual Khmer & English)
     welcome_message = (
         f"👋 <b>សួស្ដី {user.first_name}! / Hello {user.first_name}!</b>\n\n"
-        "🇰🇭 <b>ស្វាគមន៍មកកាន់ប្រព័ន្ធជំនួយគណិតវិទ្យា៖ ដេរីវេនៃអនុគមន៍</b>\n"
-        "ខ្ញុំជាជំនួយការបង្រៀនគណិតវិទ្យា សម្រាប់ជួយប្អូនៗក្នុងការរៀនរូបមន្ត និងដោះស្រាយលំហាត់ដេរីវេ (ត្រៀមប្រឡងបាក់ឌុប)។\n\n"
-        "🇬🇧 <b>Welcome to Calculus Derivative Assistant!</b>\n"
-        "I am your automated math assistant for learning derivative formulas, rules, and step-by-step exam exercises.\n\n"
-        "✨ <b>លក្ខណៈពិសេសចម្បង / Key Features:</b>\n"
-        "• 📐 រូបមន្តគ្រឹះ ផលគុណ ផលចែក ដេរីវេបណ្ដាក់ និងត្រីកោណមាត្រ\n"
-        "• 📝 លំហាត់អនុវត្តជាមួយដំណោះស្រាយមួយជំហានៗយ៉ាងក្បោះក្បាយ\n"
-        "• 🔒 <b>Group Privacy:</b> នៅពេលសួរក្នុងគ្រុប ដំណោះស្រាយនឹងផ្ញើទៅកាន់ DM របស់អ្នកដោយសុវត្ថិភាព\n"
-        "• ⚡️ <b>Inline Mode:</b> វាយ <code>@botusername លំហាត់១</code> ក្នុងគ្រុបណាក៏បានដើម្បីមើលចម្លើយ\n\n"
+        "🇰🇭 <b>ស្វាគមន៍មកកាន់ប្រព័ន្ធជំនួយគណិតវិទ្យាថ្នាក់ទី១២ (ត្រៀមប្រឡងបាក់ឌុប)</b>\n"
+        "ខ្ញុំជាជំនួយការបង្រៀនគណិតវិទ្យាឌីជីថល សម្រាប់ជួយប្អូនៗក្នុងការរៀនរូបមន្ត និងដោះស្រាយលំហាត់ទាំង ១៥ មេរៀនពេញលេញ!\n\n"
+        "🇬🇧 <b>Welcome to Grade 12 BacII Mathematics Assistant!</b>\n"
+        "Your AI & database assistant for formulas, practice exercises, and step-by-step solutions covering all 15 curriculum chapters.\n\n"
+        "✨ <b>កម្មវិធីសិក្សាពេញលេញ (15 Chapters):</b>\n"
+        "• ចំនួនកុំផ្លិច • លីមីត • ដេរីវេ • អាំងតេក្រាល (មិនកំណត់ & កំណត់)\n"
+        "• សិក្សាអនុគមន៍ (សនិទាន, អ៊ិចស្ប៉ូ, លោការីត)\n"
+        "• សមីការឌីផេរ៉ង់ស្យែល (លំដាប់១ & ២) • ប្រូបាប\n"
+        "• វ៉ិចទ័រក្នុងលំហ • កោនិក (ប៉ារ៉ាបូល, អេលីប, អ៊ីពែបូល)\n\n"
+        "🔒 <b>Group Privacy:</b> សួរក្នុងគ្រុប ចម្លើយផ្ញើចូល DM ដោយសុវត្ថិភាព\n"
+        "🤖 <b>RAG AI:</b> វាយ <code>/ask &lt;សំណួរ&gt;</code> ដើម្បីសួរ AI ឆ្លើយមួយភ្លែតចេញបាត់!\n\n"
         "👇 <i>សូមជ្រើសរើសផ្នែកដែលអ្នកចង់សិក្សាខាងក្រោម៖</i>"
     )
 

@@ -109,14 +109,33 @@ def build_main_menu_keyboard(user_id: Optional[int] = None) -> InlineKeyboardMar
 
 
 
-def build_categories_keyboard(prefix: str) -> InlineKeyboardMarkup:
-    """Keyboard for selecting a formula or exercise category."""
+def build_categories_keyboard(prefix: str, page: int = 1, page_size: int = 8) -> InlineKeyboardMarkup:
+    """Keyboard for selecting a lesson category with pagination."""
     categories = db.get_categories()
+    total_cats = len(categories)
+    total_pages = max(1, (total_cats + page_size - 1) // page_size)
+    page = max(1, min(page, total_pages))
+
+    start_idx = (page - 1) * page_size
+    end_idx = start_idx + page_size
+    page_cats = categories[start_idx:end_idx]
+
     buttons = []
-    for cat in categories:
+    for cat in page_cats:
         name = cat["name_km"]
-        buttons.append([InlineKeyboardButton(f"📂 {name}", callback_data=f"{prefix}_cat_{cat['id']}")])
-    buttons.append([InlineKeyboardButton("🔙 ត្រឡប់ទៅម៉ឺនុយដើម (Home)", callback_data="menu_main")])
+        buttons.append([InlineKeyboardButton(f"📘 {name}", callback_data=f"{prefix}_cat_{cat['id']}")])
+
+    # Navigation buttons if multiple pages
+    if total_pages > 1:
+        nav_row = []
+        if page > 1:
+            nav_row.append(InlineKeyboardButton("⬅️ មុន", callback_data=f"{prefix}_page_{page - 1}"))
+        nav_row.append(InlineKeyboardButton(f"📄 ទំព័រ {page}/{total_pages}", callback_data="noop"))
+        if page < total_pages:
+            nav_row.append(InlineKeyboardButton("បន្ទាប់ ➡️", callback_data=f"{prefix}_page_{page + 1}"))
+        buttons.append(nav_row)
+
+    buttons.append([InlineKeyboardButton("🏠 ម៉ឺនុយដើម (Home)", callback_data="menu_main")])
     return InlineKeyboardMarkup(buttons)
 
 
@@ -126,7 +145,7 @@ def build_formulas_list_keyboard(category_id: str) -> InlineKeyboardMarkup:
     buttons = []
     for f in formulas:
         buttons.append([InlineKeyboardButton(f"📐 {f['title_km']}", callback_data=f"form_view_{f['id']}")])
-    buttons.append([InlineKeyboardButton("🔙 ត្រឡប់ទៅជំពូក (Categories)", callback_data="menu_formulas")])
+    buttons.append([InlineKeyboardButton("🔙 ត្រឡប់ទៅបញ្ជីមេរៀន", callback_data="menu_formulas")])
     return InlineKeyboardMarkup(buttons)
 
 
@@ -137,7 +156,7 @@ def build_exercises_list_keyboard(category_id: str) -> InlineKeyboardMarkup:
     for ex in exercises:
         btn_text = f"📝 {ex.get('code', 'លំហាត់')}: {ex['title'][:22]}..." if len(ex['title']) > 22 else f"📝 {ex.get('code', 'លំហាត់')}: {ex['title']}"
         buttons.append([InlineKeyboardButton(btn_text, callback_data=f"ex_view_{ex['id']}")])
-    buttons.append([InlineKeyboardButton("🔙 ត្រឡប់ទៅជំពូក (Categories)", callback_data="menu_exercises")])
+    buttons.append([InlineKeyboardButton("🔙 ត្រឡប់ទៅបញ្ជីមេរៀន", callback_data="menu_exercises")])
     return InlineKeyboardMarkup(buttons)
 
 
@@ -190,15 +209,39 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
     # 2. Formulas Menu (Categories)
     elif data == "menu_formulas":
         await query.answer()
-        text = "📐 <b>សូមជ្រើសរើសផ្នែកនៃរូបមន្តដេរីវេដែលចង់មើល៖</b>"
-        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("form"))
+        text = "📐 <b>សូមជ្រើសរើសមេរៀនគណិតវិទ្យាដែលចង់មើលរូបមន្ត៖</b>"
+        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("form", page=1))
+
+    # Pagination for formulas
+    elif data.startswith("form_page_"):
+        await query.answer()
+        page_num = int(data.replace("form_page_", ""))
+        text = "📐 <b>សូមជ្រើសរើសមេរៀនគណិតវិទ្យាដែលចង់មើលរូបមន្ត៖</b>"
+        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("form", page=page_num))
 
     # 3. View Formulas in Category
     elif data.startswith("form_cat_"):
         await query.answer()
         cat_id = data.replace("form_cat_", "")
-        text = "📐 <b>ជ្រើសរើសរូបមន្តជាក់លាក់ដើម្បីមើលការពន្យល់ និងឧទាហរណ៍៖</b>"
-        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_formulas_list_keyboard(cat_id))
+        formulas = db.get_formulas(cat_id)
+        if formulas:
+            text = "📐 <b>ជ្រើសរើសរូបមន្តជាក់លាក់ដើម្បីមើលការពន្យល់ និងឧទាហរណ៍៖</b>"
+            await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_formulas_list_keyboard(cat_id))
+        else:
+            cat_obj = next((c for c in db.get_categories() if c["id"] == cat_id), None)
+            cat_name = cat_obj["name_km"] if cat_obj else "មេរៀននេះ"
+            text = (
+                f"📐 <b>{cat_name}</b>\n"
+                "━━━━━━━━━━━━━━━━━━━━\n"
+                "<i>បច្ចុប្បន្នមិនទាន់មានរូបមន្តដែលបានបញ្ចូលក្នុង Database នៅឡើយទេ។</i>\n\n"
+                "💡 <b>ប្អូនៗអាចសួរ AI អំពីក្បួន និងរូបមន្តមេរៀននេះបានភ្លាមៗ៖</b>\n"
+                f"👉 វាយ៖ <code>/ask តើរូបមន្តសំខាន់ៗក្នុង {cat_name} មានអ្វីខ្លះ?</code>"
+            )
+            back_kb = InlineKeyboardMarkup([
+                [InlineKeyboardButton("🤖 សួរ AI លើមេរៀននេះ", callback_data="menu_rag_help")],
+                [InlineKeyboardButton("🔙 ត្រឡប់ទៅបញ្ជីមេរៀន", callback_data="menu_formulas")]
+            ])
+            await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=back_kb)
 
     # 4. View Specific Formula
     elif data.startswith("form_view_"):
@@ -208,22 +251,50 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         if form:
             msg_text = format_formula_html(form)
             back_kb = InlineKeyboardMarkup([
-                [InlineKeyboardButton("🔙 ត្រឡប់ក្រោយ (Back)", callback_data=f"form_cat_{form.get('category_id', 'basic')}")]
+                [InlineKeyboardButton("🔙 ត្រឡប់ក្រោយ (Back)", callback_data=f"form_cat_{form.get('category_id', 'lesson_3')}")]
             ])
             await query.edit_message_text(msg_text, parse_mode=ParseMode.HTML, reply_markup=back_kb)
 
     # 5. Exercises Menu (Categories)
     elif data == "menu_exercises":
         await query.answer()
-        text = "📝 <b>សូមជ្រើសរើសកម្រិត ឬផ្នែកនៃលំហាត់ដេរីវេ៖</b>"
-        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("ex"))
+        text = "📝 <b>សូមជ្រើសរើសមេរៀនគណិតវិទ្យាដែលចង់អនុវត្តលំហាត់៖</b>"
+        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("ex", page=1))
+
+    # Pagination for exercises
+    elif data.startswith("ex_page_"):
+        await query.answer()
+        page_num = int(data.replace("ex_page_", ""))
+        text = "📝 <b>សូមជ្រើសរើសមេរៀនគណិតវិទ្យាដែលចង់អនុវត្តលំហាត់៖</b>"
+        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("ex", page=page_num))
 
     # 6. View Exercises in Category
     elif data.startswith("ex_cat_"):
         await query.answer()
         cat_id = data.replace("ex_cat_", "")
-        text = "📝 <b>ជ្រើសរើសលំហាត់ដើម្បីអនុវត្ត និងមើលដំណោះស្រាយ៖</b>"
-        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_exercises_list_keyboard(cat_id))
+        exercises = db.get_exercises(cat_id)
+        if exercises:
+            text = "📝 <b>ជ្រើសរើសលំហាត់ដើម្បីអនុវត្ត និងមើលដំណោះស្រាយ៖</b>"
+            await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_exercises_list_keyboard(cat_id))
+        else:
+            cat_obj = next((c for c in db.get_categories() if c["id"] == cat_id), None)
+            cat_name = cat_obj["name_km"] if cat_obj else "មេរៀននេះ"
+            text = (
+                f"📝 <b>{cat_name}</b>\n"
+                "━━━━━━━━━━━━━━━━━━━━\n"
+                "<i>មិនទាន់មានលំហាត់ក្នុង Database សម្រាប់មេរៀននេះនៅឡើយទេ។</i>\n\n"
+                "💡 <b>ប្អូនៗអាចសុំឱ្យ AI បង្កើតលំហាត់ប្រឡងបាក់ឌុប និងដំណោះស្រាយបានភ្លាមៗ៖</b>\n"
+                f"👉 វាយ៖ <code>/ask សូមផ្តល់លំហាត់ ១ លើ {cat_name} ព្រមទាំងដំណោះស្រាយលម្អិត</code>"
+            )
+            back_kb = InlineKeyboardMarkup([
+                [InlineKeyboardButton("🤖 សួរ AI លើមេរៀននេះ", callback_data="menu_rag_help")],
+                [InlineKeyboardButton("🔙 ត្រឡប់ទៅបញ្ជីមេរៀន", callback_data="menu_exercises")]
+            ])
+            await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=back_kb)
+
+    elif data == "noop":
+        await query.answer()
+        return
 
     # 7. View Exercise Problem
     elif data.startswith("ex_view_"):

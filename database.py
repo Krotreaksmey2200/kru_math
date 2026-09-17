@@ -35,9 +35,14 @@ class Database:
                     id TEXT PRIMARY KEY,
                     name_km TEXT NOT NULL,
                     name_en TEXT,
-                    description TEXT
+                    description TEXT,
+                    sort_order INTEGER DEFAULT 0
                 )
             """)
+            try:
+                cursor.execute("ALTER TABLE categories ADD COLUMN sort_order INTEGER DEFAULT 0")
+            except Exception:
+                pass
 
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS formulas (
@@ -122,13 +127,14 @@ class Database:
             # Import categories
             for cat in data.get("categories", []):
                 cursor.execute("""
-                    INSERT INTO categories (id, name_km, name_en, description)
-                    VALUES (?, ?, ?, ?)
+                    INSERT INTO categories (id, name_km, name_en, description, sort_order)
+                    VALUES (?, ?, ?, ?, ?)
                     ON CONFLICT(id) DO UPDATE SET
                         name_km = excluded.name_km,
                         name_en = excluded.name_en,
-                        description = excluded.description
-                """, (cat["id"], cat["name_km"], cat.get("name_en", ""), cat.get("description", "")))
+                        description = excluded.description,
+                        sort_order = excluded.sort_order
+                """, (cat["id"], cat["name_km"], cat.get("name_en", ""), cat.get("description", ""), cat.get("sort_order", 0)))
 
             # Import formulas
             for form in data.get("formulas", []):
@@ -227,7 +233,7 @@ class Database:
     def get_categories(self) -> List[Dict[str, Any]]:
         with self._get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM categories")
+            cursor.execute("SELECT * FROM categories ORDER BY sort_order ASC, rowid ASC")
             return [dict(row) for row in cursor.fetchall()]
 
     def get_formulas(self, category_id: Optional[str] = None) -> List[Dict[str, Any]]:
