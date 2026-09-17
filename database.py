@@ -95,29 +95,20 @@ class Database:
             """)
             conn.commit()
 
-        # Check if database is empty; if so, seed from lessons.json
-        self._seed_if_empty()
+        # Sync categories, formulas, and exercises from lessons.json on startup
+        self._seed_or_sync_lessons()
 
-    def _seed_if_empty(self):
-        """Seed categories, formulas, and exercises from lessons.json if empty."""
-        with self._get_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute("SELECT COUNT(*) FROM formulas")
-            count_formulas = cursor.fetchone()[0]
-
-            cursor.execute("SELECT COUNT(*) FROM exercises")
-            count_exercises = cursor.fetchone()[0]
-
-            if count_formulas == 0 and count_exercises == 0:
-                json_path = Path(LESSONS_JSON_PATH)
-                if json_path.exists():
-                    try:
-                        with open(json_path, "r", encoding="utf-8") as f:
-                            data = json.load(f)
-                        self.import_json_data(data)
-                        logger.info("Successfully seeded database from %s", LESSONS_JSON_PATH)
-                    except Exception as e:
-                        logger.error("Failed to seed database from %s: %s", LESSONS_JSON_PATH, e)
+    def _seed_or_sync_lessons(self):
+        """Seed or sync categories, formulas, and exercises from lessons.json."""
+        json_path = Path(LESSONS_JSON_PATH)
+        if json_path.exists():
+            try:
+                with open(json_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                self.import_json_data(data)
+                logger.info("Successfully synced database from %s", LESSONS_JSON_PATH)
+            except Exception as e:
+                logger.error("Failed to sync database from %s: %s", LESSONS_JSON_PATH, e)
 
     def import_json_data(self, data: Dict[str, Any], overwrite: bool = True):
         """Import lessons, formulas, and exercises from JSON dictionary."""
