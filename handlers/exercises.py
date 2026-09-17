@@ -193,6 +193,9 @@ def build_exercise_action_keyboard(exercise_id: str, in_group: bool = False, bot
             InlineKeyboardButton("💡 មើលតម្រុយ (Hint)", callback_data=f"ex_hint_{exercise_id}"),
             InlineKeyboardButton("✅ មើលដំណោះស្រាយ (Solution)", callback_data=f"ex_sol_{exercise_id}")
         ])
+        buttons.append([
+            InlineKeyboardButton("🖼 មើលជារូបភាពសមីការ (Render HD)", callback_data=f"ex_render_{exercise_id}")
+        ])
     buttons.append([InlineKeyboardButton("🔙 ត្រឡប់ក្រោយ (Back)", callback_data="menu_exercises")])
     return InlineKeyboardMarkup(buttons)
 
@@ -305,6 +308,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         if form:
             msg_text = format_formula_html(form)
             back_kb = InlineKeyboardMarkup([
+                [InlineKeyboardButton("🖼 មើលជារូបភាពសមីការ (Render HD)", callback_data=f"form_render_{form_id}")],
                 [InlineKeyboardButton("🔙 ត្រឡប់ក្រោយ (Back)", callback_data=f"form_cat_{form.get('category_id', 'lesson_3')}")]
             ])
             await query.edit_message_text(msg_text, parse_mode=ParseMode.HTML, reply_markup=back_kb)
@@ -416,6 +420,17 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
                     [InlineKeyboardButton("🔙 ត្រឡប់ទៅបញ្ជីលំហាត់", callback_data=f"ex_cat_{ex.get('category_id', 'basic')}")]
                 ])
                 await query.edit_message_text(solution_text, parse_mode=ParseMode.HTML, reply_markup=back_kb)
+
+    # LaTeX Rendering Callbacks
+    elif data.startswith("form_render_"):
+        form_id = data.replace("form_render_", "")
+        from handlers.latex_handler import render_formula_callback
+        await render_formula_callback(query, form_id)
+
+    elif data.startswith("ex_render_"):
+        ex_id = data.replace("ex_render_", "")
+        from handlers.latex_handler import render_exercise_callback
+        await render_exercise_callback(query, ex_id)
 
     # 10. Help Menu
     elif data == "menu_help":

@@ -108,6 +108,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/ask <សំណួរ> - សួរសំណួរផ្សេ២😁 (ចម្ងល់គណិត រូប គីមី)\n"
         "/formulas - បញ្ជីរូបមន្ត (Formulas)\n"
         "/exercises - បញ្ជីលំហាត់ (Exercises)\n"
+        "/latex <កូដ> - Render សមីការ LaTeX ជារូបភាព HD (Render Equation)\n"
         "/search - ណែនាំពីការស្វែងរក (Search Guide)\n"
         "/help - បង្ហាញជំនួយនេះ (Help)"
     )

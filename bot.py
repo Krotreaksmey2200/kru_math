@@ -49,6 +49,7 @@ from handlers.rag_handler import (
     rag_status_command,
     rag_delete_command
 )
+from handlers.latex_handler import latex_command
 from web_server import start_web_server
 
 
@@ -91,6 +92,7 @@ def build_application() -> Application:
     app.add_handler(CommandHandler(["formulas", "formula", "rules"], formulas_command))
     app.add_handler(CommandHandler(["exercises", "exercise", "practice"], exercises_command))
     app.add_handler(CommandHandler("search", handle_search_command))
+    app.add_handler(CommandHandler(["latex", "render"], latex_command))
 
     # Teacher admin commands
     app.add_handler(CommandHandler("admin", admin_dashboard))
