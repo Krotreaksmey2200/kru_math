@@ -111,6 +111,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "• <b>Inline Mode:</b> Type <code>@botusername &lt;query&gt;</code> in any chat to preview formulas and exercises.\n\n"
         "📌 <b>បញ្ជីពាក្យបញ្ជា / Commands:</b>\n"
         "/start - បើកម៉ឺនុយដើម (Start Bot)\n"
+        "/ask <សំណួរ> - សួរ AI ចម្ងល់មេរៀនគណិត (Ask AI Assistant)\n"
         "/formulas - បញ្ជីរូបមន្តដេរីវេ (Derivative Formulas)\n"
         "/exercises - បញ្ជីលំហាត់អនុវត្ត (Practice Exercises)\n"
         "/search - ណែនាំពីការស្វែងរក (Search Guide)\n"

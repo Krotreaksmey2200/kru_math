@@ -92,6 +92,9 @@ def build_main_menu_keyboard(user_id: Optional[int] = None) -> InlineKeyboardMar
         ],
         [
             InlineKeyboardButton("🔍 ស្វែងរក (Search)", callback_data="menu_search"),
+            InlineKeyboardButton("🤖 សួរ AI (Ask AI)", callback_data="menu_rag_help")
+        ],
+        [
             InlineKeyboardButton("ℹ️ ជំនួយ & របៀបប្រើ (Help)", callback_data="menu_help")
         ]
     ]
@@ -300,6 +303,25 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
             [InlineKeyboardButton("🔙 ត្រឡប់ទៅម៉ឺនុយដើម (Home)", callback_data="menu_main")]
         ])
         await query.edit_message_text(search_prompt, parse_mode=ParseMode.HTML, reply_markup=back_kb)
+
+    # 11b. Ask AI Guide
+    elif data == "menu_rag_help":
+        await query.answer()
+        rag_prompt = (
+            "🤖 <b>ជំនួយការឆ្លាតវៃ RAG AI គណិតវិទ្យា</b>\n"
+            "━━━━━━━━━━━━━━━━━━━━\n"
+            "សិស្សអាចសួរសំណួរ ឬចម្ងល់មេរៀនគណិតវិទ្យាជាភាសាខ្មែរតាមបែបធម្មជាតិ!\n\n"
+            "📌 <b>របៀបប្រើប្រាស់៖</b>\n"
+            "គ្រាន់តែវាយពាក្យបញ្ជា <code>/ask &lt;សំណួរ&gt;</code> ឧទាហរណ៍៖\n\n"
+            "• <code>/ask តើដេរីវេនៃអនុគមន៍បណ្ដាក់ u^n រកយ៉ាងម៉េច?</code>\n"
+            "• <code>/ask ហេតុអ្វីបានជាដេរីវេនៃ cos(x) ស្មើ -sin(x)?</code>\n"
+            "• <code>/ask ជួយពន្យល់ពីច្បាប់ផលចែក u/v ឱ្យងាយចាំបន្តិច</code>\n\n"
+            "<i>AI នឹងស្រង់ឯកសារមេរៀនរបស់លោកគ្រូ រួចបកស្រាយមួយជំហានៗយ៉ាងក្បោះក្បាយ!</i>"
+        )
+        back_kb = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🔙 ត្រឡប់ទៅម៉ឺនុយដើម (Home)", callback_data="menu_main")]
+        ])
+        await query.edit_message_text(rag_prompt, parse_mode=ParseMode.HTML, reply_markup=back_kb)
 
     # 12. Admin Dashboard Callbacks
     elif data == "admin_dashboard_cb":
