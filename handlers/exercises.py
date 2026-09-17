@@ -242,7 +242,7 @@ def build_exercise_action_keyboard(exercise_id: str, in_group: bool = False, bot
             InlineKeyboardButton("✅ មើលដំណោះស្រាយ (Solution)", callback_data=f"ex_sol_{exercise_id}")
         ])
         buttons.append([
-            InlineKeyboardButton("🌟 មើលជា Sticker ថ្លា (Transparent)", callback_data=f"ex_render_{exercise_id}")
+            InlineKeyboardButton("🖼 មើលរូបភាពសមីការ (Render ផ្ទៃស)", callback_data=f"ex_render_{exercise_id}")
         ])
     buttons.append([InlineKeyboardButton("🔙 ត្រឡប់ក្រោយ (Back)", callback_data="menu_exercises")])
     return InlineKeyboardMarkup(buttons)
@@ -356,7 +356,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         if form:
             msg_text = format_formula_html(form)
             back_kb = InlineKeyboardMarkup([
-                [InlineKeyboardButton("🌟 មើលជា Sticker ថ្លា (Transparent)", callback_data=f"form_render_{form_id}")],
+                [InlineKeyboardButton("🖼 មើលរូបភាពសមីការ (Render ផ្ទៃស)", callback_data=f"form_render_{form_id}")],
                 [InlineKeyboardButton("🔙 ត្រឡប់ក្រោយ (Back)", callback_data=f"form_cat_{form.get('category_id', 'lesson_3')}")]
             ])
             await query.edit_message_text(msg_text, parse_mode=ParseMode.HTML, reply_markup=back_kb)

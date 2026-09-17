@@ -1,19 +1,22 @@
 """
-LaTeX Math Equation Rendering Engine.
-Renders LaTeX math formulas and equations into high-resolution PNG images.
-Supports local high-speed rendering via Matplotlib (Computer Modern LaTeX font)
-with automatic Khmer label extraction, multiline equation alignment, and online fallback.
+LaTeX Math Equation & Khmer Text Rendering Engine.
+Renders mixed Khmer text and LaTeX mathematical formulas into high-resolution images
+with a clean white background (or transparent sticker).
 """
 
+import os
 import io
 import re
 import urllib.parse
 import aiohttp
 import logging
-from typing import Optional, List
+from typing import Optional, List, Tuple
 from PIL import Image
 
 logger = logging.getLogger("MathBot.LaTeX")
+
+# Configure bundled Khmer font
+FONT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "fonts", "KhmerFont.ttf")
 
 # Configure Matplotlib for headless server environment
 try:
@@ -21,15 +24,20 @@ try:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     import matplotlib.patheffects as pe
+    from matplotlib.font_manager import FontProperties
+
     plt.rcParams.update({
         "mathtext.fontset": "cm",        # Authentic Computer Modern LaTeX font
         "font.family": "sans-serif",
         "figure.autolayout": False,
     })
+
+    KHMER_FP = FontProperties(fname=FONT_PATH) if os.path.exists(FONT_PATH) else None
     MATPLOTLIB_AVAILABLE = True
 except Exception as e:
     logger.warning("Matplotlib not available for local LaTeX render: %s", e)
     MATPLOTLIB_AVAILABLE = False
+    KHMER_FP = None
 
 
 def normalize_to_latex(text: str) -> str:
@@ -92,92 +100,123 @@ def normalize_to_latex(text: str) -> str:
     return s
 
 
+def clean_math_part(text: str) -> str:
+    """Cleans up internal Khmer words from math expressions to keep math parsing pristine."""
+    s = text.strip()
+    s = re.sub(r'\bដែល\b', '', s)
+    s = re.sub(r'\bដោយ\b', '', s)
+    s = re.sub(r'\bនាំឱ្យ\b', r'\\implies ', s)
+    s = re.sub(r'[\u1780-\u17FF]', '', s)
+    s = re.sub(r'\(\s*\)', '', s)
+    s = re.sub(r'\s+', ' ', s).strip()
+    return normalize_to_latex(s)
+
+
+def parse_line_khmer_and_math(line: str) -> Tuple[str, str]:
+    """
+    Parses a single line into (Khmer text prefix, LaTeX math expression).
+    Handles labels with colons ("• ទម្រង់ពីជគណិត៖ z = a + bi...")
+    and natural text before math ("សាលារៀន \int x^3 dx").
+    """
+    line = line.strip()
+    # Strip leading bullets and numbering
+    line = re.sub(r'^[•\-\*\d\.\)]+\s*', '', line)
+
+    has_khmer = bool(re.search(r'[\u1780-\u17FF]', line))
+    if not has_khmer:
+        return ("", clean_math_part(line))
+
+    # Pattern 1: Khmer label ending with colon e.g. "ទម្រង់ពីជគណិត៖ z = a + bi..."
+    m1 = re.match(r'^([\u1780-\u17FF\s\(\)]+[៖:])\s*(.*)$', line)
+    if m1:
+        return (m1.group(1).strip(), clean_math_part(m1.group(2)))
+
+    # Pattern 2: Khmer words followed by a math expression e.g. "សាលារៀន \int x^3 dx"
+    m2 = re.match(r'^([\u1780-\u17FF\s]+?)\s+([\\$a-zA-Z0-9].*)$', line)
+    if m2:
+        return (m2.group(1).strip(), clean_math_part(m2.group(2)))
+
+    # Pattern 3: Pure Khmer text with no clear math
+    return (line, "")
+
+
 def clean_and_extract_equations(raw_text: str) -> List[str]:
-    """
-    Extracts clean mathematical expressions from text.
-    Strips Khmer language prefixes, bullet points, and explanatory words
-    to prevent tofu/box glyph errors in LaTeX math mode.
-    """
-    if not raw_text:
-        return []
-
+    """Fallback helper: extracts only the math parts as a list of strings."""
     lines = raw_text.splitlines() if "\n" in raw_text else [raw_text]
-    cleaned_equations = []
-
+    equations = []
     for line in lines:
-        line = line.strip()
-        if not line:
-            continue
-
-        # Strip leading bullets, numbers, hyphens
-        line = re.sub(r'^[•\-\*\d\.\)]+\s*', '', line)
-
-        # Strip Khmer label prefixes like "ទម្រង់ពីជគណិត៖" or "ម៉ូឌុល៖"
-        line = re.sub(r'^[\u1780-\u17FF\s\:\៖\-\(\)]+[\:៖]\s*', '', line)
-
-        # Replace common Khmer connective words with math spacing
-        line = re.sub(r'\bដែល\b', '', line)
-        line = re.sub(r'\bដោយ\b', '', line)
-        line = re.sub(r'\bនាំឱ្យ\b', r'\\implies ', line)
-        line = re.sub(r'\bឬ\b', r'\\lor ', line)
-        line = re.sub(r'\bនិង\b', r'\\land ', line)
-
-        # Strip any remaining Khmer Unicode characters (U+1780 to U+17FF)
-        line = re.sub(r'[\u1780-\u17FF]', '', line)
-
-        # Clean empty parentheses and normalize whitespace
-        line = re.sub(r'\(\s*\)', '', line)
-        line = re.sub(r'\s+', ' ', line).strip()
-
-        # Only retain lines with mathematical substance
-        if line and any(c in line for c in '=+-*/^<>\\()|[]{}_'):
-            norm = normalize_to_latex(line)
-            if norm:
-                cleaned_equations.append(norm)
-
-    # Fallback: if stripping left nothing (e.g. pure LaTeX string with no Khmer text),
-    # return the normalized original string
-    if not cleaned_equations:
-        norm_orig = normalize_to_latex(raw_text)
-        # Strip stray Khmer if any
-        norm_orig = re.sub(r'[\u1780-\u17FF]', '', norm_orig).strip()
-        if norm_orig:
-            cleaned_equations.append(norm_orig)
-
-    return cleaned_equations
+        _, math = parse_line_khmer_and_math(line)
+        if math:
+            equations.append(math)
+    return equations or [normalize_to_latex(raw_text)]
 
 
-def render_with_matplotlib(latex_str: str) -> Optional[bytes]:
-    """Render LaTeX string using local matplotlib.mathtext with a sleek dark slate badge."""
+def render_with_matplotlib(latex_str: str, bg_color: str = "#FFFFFF") -> Optional[bytes]:
+    """
+    Render mixed Khmer text and LaTeX equations on a clean white background (#FFFFFF).
+    Uses bundled Khmer font for authentic Khmer calligraphy and Computer Modern for LaTeX.
+    """
     if not MATPLOTLIB_AVAILABLE:
         return None
 
-    eq_lines = clean_and_extract_equations(latex_str)
-    if not eq_lines:
+    raw_lines = latex_str.splitlines() if "\n" in latex_str else [latex_str]
+    parsed_lines = [parse_line_khmer_and_math(l) for l in raw_lines if l.strip()]
+
+    if not parsed_lines:
         return None
 
-    num_lines = len(eq_lines)
+    num_lines = len(parsed_lines)
 
     try:
-        # Dynamic figure height based on number of equation lines
-        fig_height = max(1.0, 0.5 + num_lines * 0.55)
-        fig = plt.figure(figsize=(7, fig_height), dpi=260)
-        fig.patch.set_facecolor("#1E1E2E")  # Modern dark slate badge
+        fig_height = max(1.1, 0.5 + num_lines * 0.72)
+        fig = plt.figure(figsize=(7.5, fig_height), dpi=260)
+        fig.patch.set_facecolor(bg_color)
+        ax = plt.subplot(111)
+        ax.patch.set_facecolor(bg_color)
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
         plt.axis("off")
 
-        # Position lines nicely vertically
+        fig.canvas.draw()
+        renderer = fig.canvas.get_renderer()
+        inv = ax.transData.inverted()
+
         y_step = 1.0 / (num_lines + 1)
-        for idx, eq in enumerate(eq_lines):
+
+        text_color = "#0F172A" if bg_color.upper() == "#FFFFFF" else "#F8F9FA"
+        khmer_color = "#1E293B" if bg_color.upper() == "#FFFFFF" else "#E2E8F0"
+
+        for idx, (kh, math) in enumerate(parsed_lines):
             y_pos = 1.0 - (idx + 1) * y_step
-            plt.text(
-                0.5,
-                y_pos,
-                f"${eq}$",
-                size=16,
-                ha="center",
-                va="center",
-                color="#F8F9FA"
-            )
+            x_cursor = 0.04
+
+            # Draw Khmer text if present
+            if kh:
+                if KHMER_FP:
+                    t_kh = ax.text(
+                        x_cursor, y_pos, kh,
+                        fontproperties=KHMER_FP,
+                        size=16,
+                        color=khmer_color,
+                        va="center"
+                    )
+                else:
+                    t_kh = ax.text(x_cursor, y_pos, kh, size=15, color=khmer_color, va="center")
+
+                fig.canvas.draw()
+                bbox = t_kh.get_window_extent(renderer=renderer)
+                bbox_data = inv.transform(bbox)
+                x_cursor = bbox_data[1][0] + 0.025
+
+            # Draw LaTeX math expression if present
+            if math:
+                ax.text(
+                    x_cursor, y_pos,
+                    f"${math}$",
+                    size=18,
+                    color=text_color,
+                    va="center"
+                )
 
         buf = io.BytesIO()
         plt.savefig(
@@ -222,14 +261,13 @@ async def render_with_codecogs(latex_str: str) -> Optional[bytes]:
     return None
 
 
-async def render_latex_to_png(latex_str: str) -> Optional[bytes]:
+async def render_latex_to_png(latex_str: str, bg_color: str = "#FFFFFF") -> Optional[bytes]:
     """
-    Main entry point: Renders a LaTeX string or math formula into PNG image bytes.
-    Automatically cleans non-math Khmer text and strips tofu glyphs.
-    First tries local Matplotlib, then falls back to CodeCogs online renderer.
+    Main entry point: Renders mixed Khmer text and LaTeX equations into a clean PNG image.
+    Defaults to clean white background (#FFFFFF) per user preference.
     """
-    # 1. Try local Matplotlib rendering
-    png_bytes = render_with_matplotlib(latex_str)
+    # 1. Try local Matplotlib with Khmer Font + Computer Modern LaTeX
+    png_bytes = render_with_matplotlib(latex_str, bg_color=bg_color)
     if png_bytes and len(png_bytes) > 200:
         return png_bytes
 
@@ -243,41 +281,70 @@ async def render_latex_to_png(latex_str: str) -> Optional[bytes]:
 
 def render_latex_to_transparent_webp(latex_str: str) -> Optional[bytes]:
     """
-    Renders LaTeX math into a transparent-background WebP sticker.
-    Dual-theme compatible with dark slate font and soft white stroke edge.
+    Renders mixed Khmer text & LaTeX math into a transparent-background WebP sticker.
+    Dual-theme compatible with dark slate font.
     Conforms to Telegram sticker dimensions (<=512px).
     """
     if not MATPLOTLIB_AVAILABLE:
         return None
 
-    eq_lines = clean_and_extract_equations(latex_str)
-    if not eq_lines:
+    raw_lines = latex_str.splitlines() if "\n" in latex_str else [latex_str]
+    parsed_lines = [parse_line_khmer_and_math(l) for l in raw_lines if l.strip()]
+    if not parsed_lines:
         return None
 
-    num_lines = len(eq_lines)
+    num_lines = len(parsed_lines)
     try:
-        fig_height = max(1.2, 0.6 + num_lines * 0.6)
-        fig = plt.figure(figsize=(7, fig_height), dpi=300)
+        fig_height = max(1.1, 0.5 + num_lines * 0.7)
+        fig = plt.figure(figsize=(7.5, fig_height), dpi=300)
         fig.patch.set_alpha(0.0)
         ax = plt.subplot(111)
         ax.patch.set_alpha(0.0)
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
         plt.axis("off")
 
+        fig.canvas.draw()
+        renderer = fig.canvas.get_renderer()
+        inv = ax.transData.inverted()
+
         y_step = 1.0 / (num_lines + 1)
-        for idx, eq in enumerate(eq_lines):
+        for idx, (kh, math) in enumerate(parsed_lines):
             y_pos = 1.0 - (idx + 1) * y_step
-            plt.text(
-                0.5,
-                y_pos,
-                f"${eq}$",
-                size=20,
-                ha="center",
-                va="center",
-                color="#1A1B26",
-                path_effects=[
-                    pe.withStroke(linewidth=1.8, foreground="#FFFFFF")
-                ]
-            )
+            x_cursor = 0.04
+
+            if kh:
+                if KHMER_FP:
+                    t_kh = ax.text(
+                        x_cursor, y_pos, kh,
+                        fontproperties=KHMER_FP,
+                        size=17,
+                        color="#1A1B26",
+                        va="center",
+                        path_effects=[pe.withStroke(linewidth=1.8, foreground="#FFFFFF")]
+                    )
+                else:
+                    t_kh = ax.text(
+                        x_cursor, y_pos, kh,
+                        size=16,
+                        color="#1A1B26",
+                        va="center",
+                        path_effects=[pe.withStroke(linewidth=1.8, foreground="#FFFFFF")]
+                    )
+
+                fig.canvas.draw()
+                bbox = t_kh.get_window_extent(renderer=renderer)
+                bbox_data = inv.transform(bbox)
+                x_cursor = bbox_data[1][0] + 0.025
+
+            if math:
+                ax.text(
+                    x_cursor, y_pos, f"${math}$",
+                    size=19,
+                    ha="left", va="center",
+                    color="#1A1B26",
+                    path_effects=[pe.withStroke(linewidth=1.8, foreground="#FFFFFF")]
+                )
 
         png_buf = io.BytesIO()
         plt.savefig(
@@ -303,4 +370,3 @@ def render_latex_to_transparent_webp(latex_str: str) -> Optional[bytes]:
         except Exception:
             pass
         return None
-
