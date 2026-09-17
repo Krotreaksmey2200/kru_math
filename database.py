@@ -43,6 +43,10 @@ class Database:
                 cursor.execute("ALTER TABLE categories ADD COLUMN sort_order INTEGER DEFAULT 0")
             except Exception:
                 pass
+            try:
+                cursor.execute("ALTER TABLE categories ADD COLUMN subject TEXT DEFAULT 'math'")
+            except Exception:
+                pass
 
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS formulas (
@@ -54,9 +58,14 @@ class Database:
                     explanation TEXT,
                     example TEXT,
                     keywords TEXT,
+                    subject TEXT DEFAULT 'math',
                     FOREIGN KEY (category_id) REFERENCES categories (id)
                 )
             """)
+            try:
+                cursor.execute("ALTER TABLE formulas ADD COLUMN subject TEXT DEFAULT 'math'")
+            except Exception:
+                pass
 
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS exercises (
@@ -70,9 +79,14 @@ class Database:
                     final_answer TEXT NOT NULL,
                     difficulty TEXT,
                     keywords TEXT,
+                    subject TEXT DEFAULT 'math',
                     FOREIGN KEY (category_id) REFERENCES categories (id)
                 )
             """)
+            try:
+                cursor.execute("ALTER TABLE exercises ADD COLUMN subject TEXT DEFAULT 'math'")
+            except Exception:
+                pass
 
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS users (
@@ -118,21 +132,22 @@ class Database:
             # Import categories
             for cat in data.get("categories", []):
                 cursor.execute("""
-                    INSERT INTO categories (id, name_km, name_en, description, sort_order)
-                    VALUES (?, ?, ?, ?, ?)
+                    INSERT INTO categories (id, name_km, name_en, description, sort_order, subject)
+                    VALUES (?, ?, ?, ?, ?, ?)
                     ON CONFLICT(id) DO UPDATE SET
                         name_km = excluded.name_km,
                         name_en = excluded.name_en,
                         description = excluded.description,
-                        sort_order = excluded.sort_order
-                """, (cat["id"], cat["name_km"], cat.get("name_en", ""), cat.get("description", ""), cat.get("sort_order", 0)))
+                        sort_order = excluded.sort_order,
+                        subject = excluded.subject
+                """, (cat["id"], cat["name_km"], cat.get("name_en", ""), cat.get("description", ""), cat.get("sort_order", 0), cat.get("subject", "math")))
 
             # Import formulas
             for form in data.get("formulas", []):
                 keywords_str = ",".join(form.get("keywords", [])) if isinstance(form.get("keywords"), list) else form.get("keywords", "")
                 cursor.execute("""
-                    INSERT INTO formulas (id, category_id, title_km, title_en, formula, explanation, example, keywords)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO formulas (id, category_id, title_km, title_en, formula, explanation, example, keywords, subject)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ON CONFLICT(id) DO UPDATE SET
                         category_id = excluded.category_id,
                         title_km = excluded.title_km,
@@ -140,7 +155,8 @@ class Database:
                         formula = excluded.formula,
                         explanation = excluded.explanation,
                         example = excluded.example,
-                        keywords = excluded.keywords
+                        keywords = excluded.keywords,
+                        subject = excluded.subject
                 """, (
                     form["id"],
                     form.get("category_id", "basic"),
@@ -149,7 +165,8 @@ class Database:
                     form["formula"],
                     form.get("explanation", ""),
                     form.get("example", ""),
-                    keywords_str
+                    keywords_str,
+                    form.get("subject", "math")
                 ))
 
             # Import exercises
@@ -158,8 +175,8 @@ class Database:
                 keywords_str = ",".join(ex.get("keywords", [])) if isinstance(ex.get("keywords"), list) else ex.get("keywords", "")
 
                 cursor.execute("""
-                    INSERT INTO exercises (id, category_id, code, title, problem, hints, solution_steps, final_answer, difficulty, keywords)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO exercises (id, category_id, code, title, problem, hints, solution_steps, final_answer, difficulty, keywords, subject)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ON CONFLICT(id) DO UPDATE SET
                         category_id = excluded.category_id,
                         code = excluded.code,
@@ -169,7 +186,8 @@ class Database:
                         solution_steps = excluded.solution_steps,
                         final_answer = excluded.final_answer,
                         difficulty = excluded.difficulty,
-                        keywords = excluded.keywords
+                        keywords = excluded.keywords,
+                        subject = excluded.subject
                 """, (
                     ex["id"],
                     ex.get("category_id", "basic"),
@@ -180,7 +198,8 @@ class Database:
                     solution_steps_str,
                     ex.get("final_answer", ""),
                     ex.get("difficulty", "មធ្យម"),
-                    keywords_str
+                    keywords_str,
+                    ex.get("subject", "math")
                 ))
 
             conn.commit()
@@ -221,11 +240,21 @@ class Database:
             return [row["user_id"] for row in cursor.fetchall()]
 
     # --- Queries ---
-    def get_categories(self) -> List[Dict[str, Any]]:
+    def get_categories(self, subject: Optional[str] = None) -> List[Dict[str, Any]]:
         with self._get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM categories ORDER BY sort_order ASC, rowid ASC")
+            if subject:
+                cursor.execute("SELECT * FROM categories WHERE subject = ? ORDER BY sort_order ASC, rowid ASC", (subject,))
+            else:
+                cursor.execute("SELECT * FROM categories ORDER BY sort_order ASC, rowid ASC")
             return [dict(row) for row in cursor.fetchall()]
+
+    def get_category_by_id(self, category_id: str) -> Optional[Dict[str, Any]]:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM categories WHERE id = ?", (category_id,))
+            row = cursor.fetchone()
+            return dict(row) if row else None
 
     def get_formulas(self, category_id: Optional[str] = None) -> List[Dict[str, Any]]:
         with self._get_connection() as conn:

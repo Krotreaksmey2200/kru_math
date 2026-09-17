@@ -84,11 +84,16 @@ from config import is_admin
 
 
 def build_main_menu_keyboard(user_id: Optional[int] = None) -> InlineKeyboardMarkup:
-    """Main navigation keyboard. Automatically adds Admin button for the teacher."""
+    """Main navigation keyboard supporting Math, Physics, and Chemistry."""
     buttons = [
         [
-            InlineKeyboardButton("📐 រូបមន្តគណិតវិទ្យាទី១២ (Formulas)", callback_data="menu_formulas"),
-            InlineKeyboardButton("📝 លំហាត់គណិតវិទ្យាទី១២ (Exercises)", callback_data="menu_exercises")
+            InlineKeyboardButton("📐 គណិតវិទ្យា", callback_data="subj_math"),
+            InlineKeyboardButton("⚡️ រូបវិទ្យា", callback_data="subj_physics"),
+            InlineKeyboardButton("🧪 គីមីវិទ្យា", callback_data="subj_chem"),
+        ],
+        [
+            InlineKeyboardButton("📐 រូបមន្ត (Formulas)", callback_data="menu_formulas"),
+            InlineKeyboardButton("📝 លំហាត់ (Exercises)", callback_data="menu_exercises")
         ],
         [
             InlineKeyboardButton("🔍 ស្វែងរក (Search)", callback_data="menu_search"),
@@ -109,9 +114,9 @@ def build_main_menu_keyboard(user_id: Optional[int] = None) -> InlineKeyboardMar
 
 
 
-def build_categories_keyboard(prefix: str, page: int = 1, page_size: int = 8) -> InlineKeyboardMarkup:
-    """Keyboard for selecting a lesson category with pagination."""
-    categories = db.get_categories()
+def build_categories_keyboard(prefix: str, subject: str = "math", page: int = 1, page_size: int = 8) -> InlineKeyboardMarkup:
+    """Keyboard for selecting a lesson category with subject switcher tabs and pagination."""
+    categories = db.get_categories(subject=subject)
     total_cats = len(categories)
     total_pages = max(1, (total_cats + page_size - 1) // page_size)
     page = max(1, min(page, total_pages))
@@ -120,7 +125,19 @@ def build_categories_keyboard(prefix: str, page: int = 1, page_size: int = 8) ->
     end_idx = start_idx + page_size
     page_cats = categories[start_idx:end_idx]
 
-    buttons = []
+    # Subject switcher tabs at the top
+    math_tab = "✅ 📐 គណិត" if subject == "math" else "📐 គណិត"
+    phys_tab = "✅ ⚡️ រូប" if subject == "physics" else "⚡️ រូប"
+    chem_tab = "✅ 🧪 គីមី" if subject == "chem" else "🧪 គីមី"
+
+    buttons = [
+        [
+            InlineKeyboardButton(math_tab, callback_data=f"{prefix}_subj_math"),
+            InlineKeyboardButton(phys_tab, callback_data=f"{prefix}_subj_physics"),
+            InlineKeyboardButton(chem_tab, callback_data=f"{prefix}_subj_chem"),
+        ]
+    ]
+
     for cat in page_cats:
         name = cat["name_km"]
         buttons.append([InlineKeyboardButton(f"📘 {name}", callback_data=f"{prefix}_cat_{cat['id']}")])
@@ -129,10 +146,10 @@ def build_categories_keyboard(prefix: str, page: int = 1, page_size: int = 8) ->
     if total_pages > 1:
         nav_row = []
         if page > 1:
-            nav_row.append(InlineKeyboardButton("⬅️ មុន", callback_data=f"{prefix}_page_{page - 1}"))
-        nav_row.append(InlineKeyboardButton(f"📄 ទំព័រ {page}/{total_pages}", callback_data="noop"))
+            nav_row.append(InlineKeyboardButton("⬅️ មុន", callback_data=f"{prefix}_p_{subject}_{page - 1}"))
+        nav_row.append(InlineKeyboardButton(f"📄 {page}/{total_pages}", callback_data="noop"))
         if page < total_pages:
-            nav_row.append(InlineKeyboardButton("បន្ទាប់ ➡️", callback_data=f"{prefix}_page_{page + 1}"))
+            nav_row.append(InlineKeyboardButton("បន្ទាប់ ➡️", callback_data=f"{prefix}_p_{subject}_{page + 1}"))
         buttons.append(nav_row)
 
     buttons.append([InlineKeyboardButton("🏠 ម៉ឺនុយដើម (Home)", callback_data="menu_main")])
@@ -141,22 +158,26 @@ def build_categories_keyboard(prefix: str, page: int = 1, page_size: int = 8) ->
 
 def build_formulas_list_keyboard(category_id: str) -> InlineKeyboardMarkup:
     """Keyboard listing formulas in a selected category."""
+    cat = db.get_category_by_id(category_id)
+    subject = cat.get("subject", "math") if cat else "math"
     formulas = db.get_formulas(category_id)
     buttons = []
     for f in formulas:
         buttons.append([InlineKeyboardButton(f"📐 {f['title_km']}", callback_data=f"form_view_{f['id']}")])
-    buttons.append([InlineKeyboardButton("🔙 ត្រឡប់ទៅបញ្ជីមេរៀន", callback_data="menu_formulas")])
+    buttons.append([InlineKeyboardButton("🔙 ត្រឡប់ទៅបញ្ជីមេរៀន", callback_data=f"form_subj_{subject}")])
     return InlineKeyboardMarkup(buttons)
 
 
 def build_exercises_list_keyboard(category_id: str) -> InlineKeyboardMarkup:
     """Keyboard listing exercises in a selected category."""
+    cat = db.get_category_by_id(category_id)
+    subject = cat.get("subject", "math") if cat else "math"
     exercises = db.get_exercises(category_id)
     buttons = []
     for ex in exercises:
         btn_text = f"📝 {ex.get('code', 'លំហាត់')}: {ex['title'][:22]}..." if len(ex['title']) > 22 else f"📝 {ex.get('code', 'លំហាត់')}: {ex['title']}"
         buttons.append([InlineKeyboardButton(btn_text, callback_data=f"ex_view_{ex['id']}")])
-    buttons.append([InlineKeyboardButton("🔙 ត្រឡប់ទៅបញ្ជីមេរៀន", callback_data="menu_exercises")])
+    buttons.append([InlineKeyboardButton("🔙 ត្រឡប់ទៅបញ្ជីមេរៀន", callback_data=f"ex_subj_{subject}")])
     return InlineKeyboardMarkup(buttons)
 
 
@@ -196,8 +217,9 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
     if data == "menu_main":
         await query.answer()
         welcome_text = (
-            "👋 <b>សូមស្វាគមន៍មកកាន់បូត គ្រូបង្រៀនគណិតវិទ្យាទី១២!</b> 🎓\n\n"
-            "ជ្រើសរើសជម្រើសខាងក្រោមដើម្បីសិក្សារូបមន្ត ឬដោះស្រាយលំហាត់៖"
+            "👋 <b>សូមស្វាគមន៍មកកាន់បូត គ្រូបង្រៀនវិទ្យាសាស្ត្រទី១២ (បាក់ឌុប)!</b> 🎓\n\n"
+            "ជ្រើសរើសមុខវិជ្ជាខាងក្រោមដើម្បីសិក្សារូបមន្ត ឬដោះស្រាយលំហាត់៖\n"
+            "• 📐 <b>គណិតវិទ្យា</b> • ⚡️ <b>រូបវិទ្យា</b> • 🧪 <b>គីមីវិទ្យា</b>"
         )
         await query.edit_message_text(
             welcome_text,
@@ -205,19 +227,51 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
             reply_markup=build_main_menu_keyboard(user.id)
         )
 
+    # Direct Subject selection from main menu
+    elif data in ["subj_math", "subj_physics", "subj_chem"]:
+        await query.answer()
+        subj_code = data.replace("subj_", "")
+        subj_name = "គណិតវិទ្យា" if subj_code == "math" else ("រូបវិទ្យា" if subj_code == "physics" else "គីមីវិទ្យា")
+        text = f"📚 <b>សូមជ្រើសរើសមេរៀន{subj_name}ថ្នាក់ទី១២ (បាក់ឌុប)៖</b>"
+        await query.edit_message_text(
+            text,
+            parse_mode=ParseMode.HTML,
+            reply_markup=build_categories_keyboard("form", subject=subj_code, page=1)
+        )
 
     # 2. Formulas Menu (Categories)
     elif data == "menu_formulas":
         await query.answer()
-        text = "📐 <b>សូមជ្រើសរើសមេរៀនគណិតវិទ្យាដែលចង់មើលរូបមន្ត៖</b>"
-        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("form", page=1))
+        text = "📐 <b>សូមជ្រើសរើសមុខវិជ្ជា និងមេរៀនដែលចង់មើលរូបមន្ត៖</b>"
+        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("form", subject="math", page=1))
+
+    # Subject Tabs within Formulas
+    elif data in ["form_subj_math", "form_subj_physics", "form_subj_chem"]:
+        await query.answer()
+        subj_code = data.replace("form_subj_", "")
+        subj_name = "គណិតវិទ្យា" if subj_code == "math" else ("រូបវិទ្យា" if subj_code == "physics" else "គីមីវិទ្យា")
+        text = f"📐 <b>សូមជ្រើសរើសមេរៀន{subj_name}ដែលចង់មើលរូបមន្ត៖</b>"
+        await query.edit_message_text(
+            text,
+            parse_mode=ParseMode.HTML,
+            reply_markup=build_categories_keyboard("form", subject=subj_code, page=1)
+        )
 
     # Pagination for formulas
+    elif data.startswith("form_p_"):
+        await query.answer()
+        parts = data.split("_")
+        subj_code = parts[2]
+        page_num = int(parts[3])
+        subj_name = "គណិតវិទ្យា" if subj_code == "math" else ("រូបវិទ្យា" if subj_code == "physics" else "គីមីវិទ្យា")
+        text = f"📐 <b>សូមជ្រើសរើសមេរៀន{subj_name}ដែលចង់មើលរូបមន្ត៖</b>"
+        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("form", subject=subj_code, page=page_num))
+
     elif data.startswith("form_page_"):
         await query.answer()
         page_num = int(data.replace("form_page_", ""))
-        text = "📐 <b>សូមជ្រើសរើសមេរៀនគណិតវិទ្យាដែលចង់មើលរូបមន្ត៖</b>"
-        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("form", page=page_num))
+        text = "📐 <b>សូមជ្រើសរើសមេរៀនដែលចង់មើលរូបមន្ត៖</b>"
+        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("form", subject="math", page=page_num))
 
     # 3. View Formulas in Category
     elif data.startswith("form_cat_"):
@@ -228,7 +282,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
             text = "📐 <b>ជ្រើសរើសរូបមន្តជាក់លាក់ដើម្បីមើលការពន្យល់ និងឧទាហរណ៍៖</b>"
             await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_formulas_list_keyboard(cat_id))
         else:
-            cat_obj = next((c for c in db.get_categories() if c["id"] == cat_id), None)
+            cat_obj = db.get_category_by_id(cat_id)
             cat_name = cat_obj["name_km"] if cat_obj else "មេរៀននេះ"
             text = (
                 f"📐 <b>{cat_name}</b>\n"
@@ -258,15 +312,36 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
     # 5. Exercises Menu (Categories)
     elif data == "menu_exercises":
         await query.answer()
-        text = "📝 <b>សូមជ្រើសរើសមេរៀនគណិតវិទ្យាដែលចង់អនុវត្តលំហាត់៖</b>"
-        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("ex", page=1))
+        text = "📝 <b>សូមជ្រើសរើសមុខវិជ្ជា និងមេរៀនដែលចង់អនុវត្តលំហាត់៖</b>"
+        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("ex", subject="math", page=1))
+
+    # Subject Tabs within Exercises
+    elif data in ["ex_subj_math", "ex_subj_physics", "ex_subj_chem"]:
+        await query.answer()
+        subj_code = data.replace("ex_subj_", "")
+        subj_name = "គណិតវិទ្យា" if subj_code == "math" else ("រូបវិទ្យា" if subj_code == "physics" else "គីមីវិទ្យា")
+        text = f"📝 <b>សូមជ្រើសរើសមេរៀន{subj_name}ដែលចង់អនុវត្តលំហាត់៖</b>"
+        await query.edit_message_text(
+            text,
+            parse_mode=ParseMode.HTML,
+            reply_markup=build_categories_keyboard("ex", subject=subj_code, page=1)
+        )
 
     # Pagination for exercises
+    elif data.startswith("ex_p_"):
+        await query.answer()
+        parts = data.split("_")
+        subj_code = parts[2]
+        page_num = int(parts[3])
+        subj_name = "គណិតវិទ្យា" if subj_code == "math" else ("រូបវិទ្យា" if subj_code == "physics" else "គីមីវិទ្យា")
+        text = f"📝 <b>សូមជ្រើសរើសមេរៀន{subj_name}ដែលចង់អនុវត្តលំហាត់៖</b>"
+        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("ex", subject=subj_code, page=page_num))
+
     elif data.startswith("ex_page_"):
         await query.answer()
         page_num = int(data.replace("ex_page_", ""))
-        text = "📝 <b>សូមជ្រើសរើសមេរៀនគណិតវិទ្យាដែលចង់អនុវត្តលំហាត់៖</b>"
-        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("ex", page=page_num))
+        text = "📝 <b>សូមជ្រើសរើសមេរៀនដែលចង់អនុវត្តលំហាត់៖</b>"
+        await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("ex", subject="math", page=page_num))
 
     # 6. View Exercises in Category
     elif data.startswith("ex_cat_"):

@@ -5,105 +5,216 @@
       "name_km": "មេរៀនទី១៖ ចំនួនកុំផ្លិច",
       "name_en": "Complex Numbers",
       "description": "ទម្រង់ពីជគណិត ត្រីកោណមាត្រ ម៉ូឌុល អាគុយម៉ង់ និងរូបមន្តដឺម័រ",
-      "sort_order": 1
+      "sort_order": 1,
+      "subject": "math"
     },
     {
       "id": "lesson_2",
       "name_km": "មេរៀនទី២៖ លីមីត",
       "name_en": "Limits",
       "description": "រាងមិនកំណត់ 0/0, ∞/∞, លីមីតត្រីកោណមាត្រ និងអ៊ិចស្ប៉ូណង់ស្យែល",
-      "sort_order": 2
+      "sort_order": 2,
+      "subject": "math"
     },
     {
       "id": "lesson_3",
       "name_km": "មេរៀនទី៣៖ ដេរីវេ",
       "name_en": "Derivatives",
       "description": "រូបមន្តគ្រឹះ ផលគុណ ផលចែក ដេរីវេបណ្ដាក់ និងត្រីកោណមាត្រ",
-      "sort_order": 3
+      "sort_order": 3,
+      "subject": "math"
     },
     {
       "id": "lesson_4",
       "name_km": "មេរៀនទី៤៖ អាំងតេក្រាលមិនកំណត់",
       "name_en": "Indefinite Integrals",
       "description": "ព្រីមីទីវ រូបមន្តគ្រឹះ អាំងតេក្រាលដោយប្តូរអថេរ និងដោយផ្នែក",
-      "sort_order": 4
+      "sort_order": 4,
+      "subject": "math"
     },
     {
       "id": "lesson_5",
       "name_km": "មេរៀនទី៥៖ សិក្សាអនុគមន៍សនិទាន",
       "name_en": "Rational Functions",
       "description": "ដែនកំណត់ អាស៊ីមតូតឈរ-ដេក-ទ្រេត តារាងអថេរភាព និងសង់ក្រាប",
-      "sort_order": 5
+      "sort_order": 5,
+      "subject": "math"
     },
     {
       "id": "lesson_6",
       "name_km": "មេរៀនទី៦៖ សិក្សាអនុគមន៍អ៊ិចស្ប៉ូ",
       "name_en": "Exponential Functions",
       "description": "អនុគមន៍ e^x, a^x ដេរីវេ លីមីត និងការសិក្សាអថេរភាពក្រាប",
-      "sort_order": 6
+      "sort_order": 6,
+      "subject": "math"
     },
     {
       "id": "lesson_7",
       "name_km": "មេរៀនទី៧៖ សិក្សាអនុគមន៍លោការីត",
       "name_en": "Logarithmic Functions",
       "description": "អនុគមន៍ ln(x), log_a(x) លក្ខណៈ លីមីត និងក្រាប",
-      "sort_order": 7
+      "sort_order": 7,
+      "subject": "math"
     },
     {
       "id": "lesson_9",
       "name_km": "មេរៀនទី៩៖ អាំងតេក្រាលកំណត់",
       "name_en": "Definite Integrals",
       "description": "រូបមន្តញូតុន-ឡែបនីស គណនាផ្ទៃក្រឡា និងមាឌសូលីដបដិវត្តន៍",
-      "sort_order": 9
+      "sort_order": 9,
+      "subject": "math"
     },
     {
       "id": "lesson_10",
       "name_km": "មេរៀនទី១០៖ សមីការឌីផេរ៉ង់ស្យែលលំដាប់១",
       "name_en": "First Order Differential Equations",
       "description": "សមីការលីនេអ៊ែរលំដាប់១ y' + ay = 0 និង y' + ay = P(x)",
-      "sort_order": 10
+      "sort_order": 10,
+      "subject": "math"
     },
     {
       "id": "lesson_11",
       "name_km": "មេរៀនទី១១៖ សមីការឌីផេរ៉ង់ស្យែលលំដាប់២",
       "name_en": "Second Order Differential Equations",
       "description": "សមីការ ay'' + by' + cy = 0 ករណីឌីសគ្រីមីណង់ Delta > 0, = 0, < 0",
-      "sort_order": 11
+      "sort_order": 11,
+      "subject": "math"
     },
     {
       "id": "lesson_12",
       "name_km": "មេរៀនទី១២៖ ប្រូបាប",
       "name_en": "Probability",
       "description": "ចម្ការគំរូ ចំនួនករណីអាច ករណីស្រប បន្សំ តម្រៀប និងច្បាប់ប៊ែរនូយី",
-      "sort_order": 12
+      "sort_order": 12,
+      "subject": "math"
     },
     {
       "id": "lesson_13",
       "name_km": "មេរៀនទី១៣៖ វ៉ិចទ័រក្នុងលំហ",
       "name_en": "Vectors in Space",
       "description": "ផលគុណស្កាលែ ផលគុណវ៉ិចទ័រ សមីការប្លង់ សមីការបន្ទាត់ និងចម្ងាយ",
-      "sort_order": 13
+      "sort_order": 13,
+      "subject": "math"
     },
     {
       "id": "lesson_14",
       "name_km": "មេរៀនទី១៤៖ ប៉ារ៉ាបូល",
       "name_en": "Parabola",
       "description": "សមីការស្ដង់ដា កំពូល កំណុំ បន្ទាត់ប្រាប់ទិស និងក្រាប",
-      "sort_order": 14
+      "sort_order": 14,
+      "subject": "math"
     },
     {
       "id": "lesson_15",
       "name_km": "មេរៀនទី១៥៖ អេលីប",
       "name_en": "Ellipse",
       "description": "សមីការស្ដង់ដា កំពូល កំណុំ អ័ក្សធំ អ័ក្សតូច និងអិចសង់ទ្រិស៊ីតេ",
-      "sort_order": 15
+      "sort_order": 15,
+      "subject": "math"
     },
     {
       "id": "lesson_16",
       "name_km": "មេរៀនទី១៦៖ អ៊ីពែបូល",
       "name_en": "Hyperbola",
       "description": "សមីការស្ដង់ដា កំពូល កំណុំ អាស៊ីមតូត និងអិចសង់ទ្រិស៊ីតេ",
-      "sort_order": 16
+      "sort_order": 16,
+      "subject": "math"
+    },
+    {
+      "id": "phys_1",
+      "name_km": "រូបវិទ្យា មេរៀនទី១៖ ចលនាញ័រ និងលំយោល",
+      "name_en": "Oscillations and Vibrations",
+      "description": "ប៉ោលទោល ប៉ោលរ៉ឺស័រ ខួប ប្រេកង់ និងការរក្សាថាមពលមេកានិច",
+      "sort_order": 1,
+      "subject": "physics"
+    },
+    {
+      "id": "phys_2",
+      "name_km": "រូបវិទ្យា មេរៀនទី២៖ ទែរម៉ូឌីណាមិច",
+      "name_en": "Thermodynamics",
+      "description": "ច្បាប់ទី១ និងទី២ ទែរម៉ូឌីណាមិច បម្រែបម្រួលថាមពលក្នុង និងទិន្នផលម៉ាស៊ីន",
+      "sort_order": 2,
+      "subject": "physics"
+    },
+    {
+      "id": "phys_3",
+      "name_km": "រូបវិទ្យា មេរៀនទី៣៖ រលក និងសំឡេង",
+      "name_en": "Waves and Sound",
+      "description": "រលកមេកានិច ប្រវែងរលក ប្រេកង់ ល្បឿន និងកម្រិតកម្រិតសំឡេង (dB)",
+      "sort_order": 3,
+      "subject": "physics"
+    },
+    {
+      "id": "phys_4",
+      "name_km": "រូបវិទ្យា មេរៀនទី៤៖ អគ្គិសនី និងដែនម៉ាញេទិច",
+      "name_en": "Electricity and Magnetism",
+      "description": "ច្បាប់គូឡុំ ដែនម៉ាញេទិចនៃចរន្ត កម្លាំងឡូរ៉ិន និងកម្លាំងអេឡិចត្រូម៉ាញេទិច",
+      "sort_order": 4,
+      "subject": "physics"
+    },
+    {
+      "id": "phys_5",
+      "name_km": "រូបវិទ្យា មេរៀនទី៥៖ ចរន្តឆ្លាស់ និងសៀគ្វី RLC",
+      "name_en": "Alternating Current and RLC",
+      "description": "តង់ស្យុងនិងចរន្តប្រសិទ្ធ អាំងប៉េដង់ Z សញ្ញាស៊ីនុស និងអនុភាព",
+      "sort_order": 5,
+      "subject": "physics"
+    },
+    {
+      "id": "phys_6",
+      "name_km": "រូបវិទ្យា មេរៀនទី៦៖ រូបវិទ្យានុយក្លេអ៊ែរ",
+      "name_en": "Nuclear Physics",
+      "description": "ម៉ាសបាត់បង់ ថាមពលភ្ជាប់ សមីការអែងស្តែង និងច្បាប់បំបែកវិទ្យុសកម្ម",
+      "sort_order": 6,
+      "subject": "physics"
+    },
+    {
+      "id": "chem_1",
+      "name_km": "គីមីវិទ្យា មេរៀនទី១៖ ស៊ីនេទិចគីមី (ល្បឿនប្រតិកម្ម)",
+      "name_en": "Chemical Kinetics",
+      "description": "ល្បឿនមធ្យម កត្តាជះឥទ្ធិពលលើល្បឿន កាតាលីករ និងទំហំផ្ទៃប៉ះ",
+      "sort_order": 1,
+      "subject": "chem"
+    },
+    {
+      "id": "chem_2",
+      "name_km": "គីមីវិទ្យា មេរៀនទី២៖ សមមូលគីមី",
+      "name_en": "Chemical Equilibrium",
+      "description": "ថេរលំនឹង Kc គោលការណ៍ឡឺឆាតឺលីយេ និងការរំកិលលំនឹង",
+      "sort_order": 2,
+      "subject": "chem"
+    },
+    {
+      "id": "chem_3",
+      "name_km": "គីមីវិទ្យា មេរៀនទី៣៖ អាស៊ីត-បាស និង pH",
+      "name_en": "Acids, Bases and pH",
+      "description": "កំហាប់ [H3O+], [OH-], កម្រិត pH, Ka, Kb និងសូលុយស្យុងតេម៉ូស",
+      "sort_order": 3,
+      "subject": "chem"
+    },
+    {
+      "id": "chem_4",
+      "name_km": "គីមីវិទ្យា មេរៀនទី៤៖ អត្រាកម្មអាស៊ីត-បាស",
+      "name_en": "Acid-Base Titration",
+      "description": "ចំណុចសមមូល CaVa = CbVb អង្គធាតុចង្អុលពណ៌ និងការគណនាកំហាប់",
+      "sort_order": 4,
+      "subject": "chem"
+    },
+    {
+      "id": "chem_5",
+      "name_km": "គីមីវិទ្យា មេរៀនទី៥៖ អេសស្ទែ ខ្លាញ់ និងសាប៊ូ",
+      "name_en": "Esters, Fats and Soaps",
+      "description": "ប្រតិកម្មអេសស្ទែកម្ម ឈ្មោះអេសស្ទែ អ៊ីដ្រូលីស និងសាប៊ូកម្ម",
+      "sort_order": 5,
+      "subject": "chem"
+    },
+    {
+      "id": "chem_6",
+      "name_km": "គីមីវិទ្យា មេរៀនទី៦៖ អាស៊ីតអាមីណេ និងប្រូតេអ៊ីន",
+      "name_en": "Amino Acids and Proteins",
+      "description": "រូបមន្តទូទៅ សម្ព័ន្ធប៉ិបទីត (-CO-NH-) និងរចនាសម្ព័ន្ធប្រូតេអ៊ីន",
+      "sort_order": 6,
+      "subject": "chem"
     }
   ],
   "formulas": [
@@ -121,7 +232,8 @@
         "ឆ្លាស់",
         "complex",
         "modulus"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_c2",
@@ -136,7 +248,8 @@
         "ត្រីកោណមាត្រ",
         "អាគុយម៉ង់",
         "de moivre"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_lim1",
@@ -151,7 +264,8 @@
         "0/0",
         "limits",
         "indeterminate"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_lim2",
@@ -165,7 +279,8 @@
         "លីមីតត្រីកោណមាត្រ",
         "sin x/x",
         "trig limits"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_der1",
@@ -181,7 +296,8 @@
         "ផលចែក",
         "derivative",
         "product rule"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_der2",
@@ -195,7 +311,8 @@
         "chain rule",
         "ដេរីវេបណ្ដាក់",
         "ស្វ័យគុណ"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_der3",
@@ -210,7 +327,8 @@
         "sin",
         "cos",
         "tan"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_int1",
@@ -225,7 +343,8 @@
         "ព្រីមីទីវ",
         "integral",
         "antiderivative"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_int2",
@@ -239,7 +358,8 @@
         "ដោយផ្នែក",
         "by parts",
         "int by parts"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_rat1",
@@ -254,7 +374,8 @@
         "សនិទាន",
         "asymptote",
         "rational"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_exp1",
@@ -268,7 +389,8 @@
         "អ៊ិចស្ប៉ូ",
         "exp",
         "exponential"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_log1",
@@ -282,7 +404,8 @@
         "លោការីត",
         "ln",
         "logarithm"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_def1",
@@ -297,7 +420,8 @@
         "ផ្ទៃក្រឡា",
         "definite integral",
         "area"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_diff1",
@@ -311,7 +435,8 @@
         "ឌីផេរ៉ង់ស្យែលលំដាប់១",
         "សមីការ",
         "differential equation"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_diff2",
@@ -325,7 +450,8 @@
         "ឌីផេរ៉ង់ស្យែលលំដាប់២",
         "សមីការសម្គាល់",
         "2nd order"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_prob1",
@@ -340,7 +466,8 @@
         "បន្សំ",
         "probability",
         "combination"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_vec1",
@@ -355,7 +482,8 @@
         "សមីការប្លង់",
         "vectors",
         "plane"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_par1",
@@ -370,7 +498,8 @@
         "កំណុំ",
         "កំពូល",
         "parabola"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_el1",
@@ -385,7 +514,8 @@
         "អ័ក្សធំ",
         "អ័ក្សតូច",
         "ellipse"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "form_hyp1",
@@ -399,7 +529,203 @@
         "អ៊ីពែបូល",
         "អាស៊ីមតូត",
         "hyperbola"
-      ]
+      ],
+      "subject": "math"
+    },
+    {
+      "id": "form_phys_1",
+      "category_id": "phys_1",
+      "title_km": "ខួប និងថាមពលមេកានិចនៃប៉ោលរ៉ឺស័រ",
+      "title_en": "Period and Mechanical Energy of Spring Pendulum",
+      "formula": "T = 2π√(m/k),  f = 1/T,  E = Ec + Ep = (1/2)kA² = ថេរ",
+      "explanation": "m គិតជា kg, k គិតជា N/m, A ជាអំព្លីទុត (m)។ ថាមពលមេកានិចរក្សាតម្លៃថេរប្រសិនបើគ្មានកម្លាំងកកិត។",
+      "example": "m = 0.2kg, k = 80N/m ==> T = 2π√(0.2/80) = 2π√(1/400) = 2π/20 = π/10 s",
+      "keywords": [
+        "ប៉ោលរ៉ឺស័រ",
+        "ខួប",
+        "ថាមពលមេកានិច",
+        "physics",
+        "រូបវិទ្យា"
+      ],
+      "subject": "physics"
+    },
+    {
+      "id": "form_phys_2",
+      "category_id": "phys_2",
+      "title_km": "ច្បាប់ទី១ ទែរម៉ូឌីណាមិច និងទិន្នផលម៉ាស៊ីន",
+      "title_en": "1st Law of Thermodynamics and Engine Efficiency",
+      "formula": "ΔU = Q + W,   W = -P·ΔV,   η = W / Qh = 1 - (Qc / Qh)",
+      "explanation": "Q > 0 ប្រព័ន្ធស្រូបកម្ដៅ, Q < 0 ប្រព័ន្ធបញ្ចេញកម្ដៅ; W > 0 ប្រព័ន្ធទទួលការងារ, W < 0 ប្រព័ន្ធធ្វើការងារ។",
+      "example": "Qh = 1000J, Qc = 600J ==> W = 400J ==> η = 400/1000 = 40%",
+      "keywords": [
+        "ទែរម៉ូឌីណាមិច",
+        "កម្ដៅ",
+        "ទិន្នផល",
+        "thermodynamics"
+      ],
+      "subject": "physics"
+    },
+    {
+      "id": "form_phys_3",
+      "category_id": "phys_3",
+      "title_km": "ល្បឿនរលក និងកម្រិតកម្រិតសំឡេង",
+      "title_en": "Wave Speed and Sound Intensity Level",
+      "formula": "v = λ · f = λ / T,   L = 10 · log₁₀(I / I₀) (dB)",
+      "explanation": "λ ជាប្រវែងរលក (m), f ជាប្រេកង់ (Hz), I₀ = 10⁻¹² W/m² ជាកម្រិតសំឡេងរលាក់ត្រចៀក។",
+      "example": "f = 500Hz, v = 340m/s ==> λ = 340/500 = 0.68m",
+      "keywords": [
+        "រលក",
+        "សំឡេង",
+        "ដេស៊ីបែល",
+        "sound",
+        "wave"
+      ],
+      "subject": "physics"
+    },
+    {
+      "id": "form_phys_4",
+      "category_id": "phys_4",
+      "title_km": "ច្បាប់គូឡុំ និងកម្លាំងឡូរ៉ិន",
+      "title_en": "Coulomb Law and Lorentz Force",
+      "formula": "F = k·|q₁q₂| / r²,   F = |q|·v·B·sin θ",
+      "explanation": "k = 9×10⁹ N·m²/C²; q គិតជា C, r គិតជា m, B គិតជា Tesla (T)។",
+      "example": "q₁ = 10⁻⁶C, q₂ = 2×10⁻⁶C, r = 0.1m ==> F = 9×10⁹ · (2×10⁻¹² / 0.01) = 1.8 N",
+      "keywords": [
+        "គូឡុំ",
+        "ឡូរ៉ិន",
+        "អគ្គិសនី",
+        "ម៉ាញេទិច",
+        "coulomb"
+      ],
+      "subject": "physics"
+    },
+    {
+      "id": "form_phys_5",
+      "category_id": "phys_5",
+      "title_km": "អាំងប៉េដង់នៃសៀគ្វីចរន្តឆ្លាស់ RLC",
+      "title_en": "Impedance of RLC Circuit",
+      "formula": "Z = √[R² + (Lω - 1/(Cω))²],   I = U / Z,   P = U·I·cos φ",
+      "explanation": "ZL = Lω (រេអាក់តង់អាំងឌុចទីវ), ZC = 1/(Cω) (រេអាក់តង់កាប៉ាស៊ីទីវ)។",
+      "example": "R = 30Ω, ZL = 70Ω, ZC = 30Ω ==> Z = √[30² + (40)²] = 50Ω",
+      "keywords": [
+        "ចរន្តឆ្លាស់",
+        "អាំងប៉េដង់",
+        "RLC",
+        "impedance"
+      ],
+      "subject": "physics"
+    },
+    {
+      "id": "form_phys_6",
+      "category_id": "phys_6",
+      "title_km": "ម៉ាសបាត់បង់ និងថាមពលភ្ជាប់នុយក្លេអ៊ែរ",
+      "title_en": "Mass Defect and Nuclear Binding Energy",
+      "formula": "Δm = [Z·m_p + (A - Z)m_n] - m_X,   Eb = Δm · c² = Δm × 931.5 MeV",
+      "explanation": "Z ចំនួនប្រូតុង, A ចំនួនណុយក្លេអុង, (A - Z) ចំនួនណឺត្រុង។ Δm គិតជា u។",
+      "example": "Δm = 0.03u ==> Eb = 0.03 × 931.5 = 27.945 MeV",
+      "keywords": [
+        "នុយក្លេអ៊ែរ",
+        "ម៉ាសបាត់បង់",
+        "ថាមពលភ្ជាប់",
+        "nuclear"
+      ],
+      "subject": "physics"
+    },
+    {
+      "id": "form_chem_1",
+      "category_id": "chem_1",
+      "title_km": "រូបមន្តល្បឿនមធ្យមនៃប្រតិកម្មគីមី",
+      "title_en": "Average Rate of Reaction",
+      "formula": "Vm(អង្គធាតុប្រតិករ) = -Δ[R] / Δt,   Vm(អង្គធាតុកកើត) = +Δ[P] / Δt",
+      "explanation": "កំហាប់គិតជា mol/L (M), ពេល t គិតជា វិនាទី (s) ឬ នាទី (min)។ ល្បឿនតែងមានតម្លៃវិជ្ជមាន។",
+      "example": "Δ[A] = 0.6M ថយចុះក្នុង Δt = 30s ==> Vm = -(-0.6)/30 = 0.02 mol/(L·s)",
+      "keywords": [
+        "ល្បឿនប្រតិកម្ម",
+        "ស៊ីនេទិច",
+        "គីមីវិទ្យា",
+        "chem"
+      ],
+      "subject": "chem"
+    },
+    {
+      "id": "form_chem_2",
+      "category_id": "chem_2",
+      "title_km": "ថេរលំនឹងគីមី (Equilibrium Constant)",
+      "title_en": "Equilibrium Constant Kc",
+      "formula": "aA + bB ⇌ cC + dD  ==>  Kc = ([C]^c · [D]^d) / ([A]^a · [B]^b)",
+      "explanation": "អង្គធាតុរឹងសុទ្ធ ឬអង្គធាតុរាវសុទ្ធមិនត្រូវដាក់ក្នុងកន្សោម Kc ទេ។ គិតតែកំហាប់ពេលលំនឹងប៉ុណ្ណោះ។",
+      "example": "N2 + 3H2 ⇌ 2NH3 ==> Kc = [NH3]² / ([N2]·[H2]³)",
+      "keywords": [
+        "ថេរលំនឹង",
+        "លំនឹងគីមី",
+        "Kc",
+        "equilibrium"
+      ],
+      "subject": "chem"
+    },
+    {
+      "id": "form_chem_3",
+      "category_id": "chem_3",
+      "title_km": "រូបមន្តគណនា pH នៃសូលុយស្យុង",
+      "title_en": "Formulas for Calculating pH",
+      "formula": "pH = -log₁₀[H₃O⁺],   pOH = -log₁₀[OH⁻],   pH + pOH = 14 (នៅ 25°C)",
+      "explanation": "អាស៊ីតខ្លាំង៖ pH = -log Ca; បាសខ្លាំង៖ pH = 14 + log Cb។",
+      "example": "[H3O+] = 10⁻³ M ==> pH = -log(10⁻³) = 3",
+      "keywords": [
+        "pH",
+        "អាស៊ីត",
+        "បាស",
+        "acid",
+        "base"
+      ],
+      "subject": "chem"
+    },
+    {
+      "id": "form_chem_4",
+      "category_id": "chem_4",
+      "title_km": "ច្បាប់អត្រាកម្មអាស៊ីត-បាស (ចំណុចសមមូល)",
+      "title_en": "Equivalence Point in Titration",
+      "formula": "n(អាស៊ីត) = n(បាស)  ==>  Ca · Va = Cb · Vb",
+      "explanation": "Ca, Cb ជាកំហាប់ជា mol/L; Va, Vb ជាមាឌជា L ឬ mL (ត្រូវប្រើឯកតាដូចគ្នា)។",
+      "example": "Ca × 20mL = 0.1M × 10mL ==> Ca = 1 / 20 = 0.05 M",
+      "keywords": [
+        "អត្រាកម្ម",
+        "សមមូល",
+        "titration"
+      ],
+      "subject": "chem"
+    },
+    {
+      "id": "form_chem_5",
+      "category_id": "chem_5",
+      "title_km": "ប្រតិកម្មអេសស្ទែកម្ម និងសាប៊ូកម្ម",
+      "title_en": "Esterification and Saponification",
+      "formula": "R-COOH + R'-OH ⇌ R-COO-R' + H₂O,   R-COO-R' + NaOH → R-COONa + R'-OH",
+      "explanation": "អេសស្ទែកម្មជាប្រតិកម្មទ្វេទិស យឺត និងមិនសព្វ។ សាប៊ូកម្មជាប្រតិកម្មមួយទិស លឿនដោយកម្តៅ។",
+      "example": "CH3COOH + C2H5OH ⇌ CH3COOC2H5 (អេទីលអាសេតាត) + H2O",
+      "keywords": [
+        "អេសស្ទែ",
+        "សាប៊ូ",
+        "ខ្លាញ់",
+        "ester"
+      ],
+      "subject": "chem"
+    },
+    {
+      "id": "form_chem_6",
+      "category_id": "chem_6",
+      "title_km": "អាស៊ីតអាមីណេ និងសម្ព័ន្ធប៉ិបទីត",
+      "title_en": "Amino Acids and Peptide Bond",
+      "formula": "R-CH(NH₂)-COOH  +  R'-CH(NH₂)-COOH → ឌីប៉ិបទីត + H₂O",
+      "explanation": "សម្ព័ន្ធប៉ិបទីតមានទម្រង់ (-CO-NH-) កើតឡើងរវាងបង្គុំ carboxyl នៃអាស៊ីតទី១ និង amino នៃអាស៊ីតទី២។",
+      "example": "Gly + Ala → Gly-Ala (ឌីប៉ិបទីត) + H2O",
+      "keywords": [
+        "អាស៊ីតអាមីណេ",
+        "ប៉ិបទីត",
+        "ប្រូតេអ៊ីន",
+        "protein"
+      ],
+      "subject": "chem"
     }
   ],
   "exercises": [
@@ -422,7 +748,8 @@
         "កុំផ្លិច",
         "ដឺម័រ",
         "ត្រីកោណមាត្រ"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_c2",
@@ -442,7 +769,8 @@
         "សមីការកុំផ្លិច",
         "ដឺក្រេទីពីរ",
         "ឫសនិម្មិត"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_lim1",
@@ -464,7 +792,8 @@
         "រ៉ាឌីកាល់",
         "កន្សោមឆ្លាស់",
         "0/0"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_lim2",
@@ -484,7 +813,8 @@
         "លីមីតត្រីកោណមាត្រ",
         "cos",
         "sin"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_der1",
@@ -503,7 +833,8 @@
       "keywords": [
         "ដេរីវេផលចែក",
         "quotient rule"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_der2",
@@ -522,7 +853,8 @@
       "keywords": [
         "ដេរីវេបណ្ដាក់",
         "chain rule"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_int1",
@@ -543,7 +875,8 @@
         "អាំងតេក្រាល",
         "ប្តូរអថេរ",
         "substitution"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_int2",
@@ -562,7 +895,8 @@
       "keywords": [
         "អាំងតេក្រាលដោយផ្នែក",
         "by parts"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_rat1",
@@ -582,7 +916,8 @@
         "សនិទាន",
         "អាស៊ីមតូតឈរ",
         "អាស៊ីមតូតដេក"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_rat2",
@@ -601,7 +936,8 @@
       "keywords": [
         "អាស៊ីមតូតទ្រេត",
         "សនិទាន"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_exp1",
@@ -621,7 +957,8 @@
         "អ៊ិចស្ប៉ូ",
         "ដេរីវេ",
         "e^x"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_exp2",
@@ -640,7 +977,8 @@
       "keywords": [
         "សមីការអ៊ិចស្ប៉ូ",
         "e^x"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_log1",
@@ -660,7 +998,8 @@
         "លោការីត",
         "ដេរីវេ ln",
         "ln"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_log2",
@@ -680,7 +1019,8 @@
       "keywords": [
         "សមីការលោការីត",
         "ln"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_def1",
@@ -698,7 +1038,8 @@
       "keywords": [
         "អាំងតេក្រាលកំណត់",
         "ញូតុនឡែបនីស"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_def2",
@@ -718,7 +1059,8 @@
         "ផ្ទៃក្រឡា",
         "អាំងតេក្រាលកំណត់",
         "area"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_diff1_1",
@@ -738,7 +1080,8 @@
       "keywords": [
         "ឌីផេរ៉ង់ស្យែលលំដាប់១",
         "លក្ខខណ្ឌដើម"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_diff1_2",
@@ -757,7 +1100,8 @@
       "keywords": [
         "ឌីផេរ៉ង់ស្យែល",
         "មិនអូម៉ូសែន"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_diff2_1",
@@ -776,7 +1120,8 @@
       "keywords": [
         "ឌីផេរ៉ង់ស្យែលលំដាប់២",
         "សមីការសម្គាល់"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_diff2_2",
@@ -797,7 +1142,8 @@
         "ឫសកុំផ្លិច",
         "cos",
         "sin"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_prob1",
@@ -817,7 +1163,8 @@
         "ប្រូបាប",
         "ចាប់ព្រមគ្នា",
         "បន្សំ"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_prob2",
@@ -837,7 +1184,8 @@
       "keywords": [
         "ប្រូបាប",
         "ព្រឹត្តិការណ៍ផ្ទុយ"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_vec1",
@@ -856,7 +1204,8 @@
         "វ៉ិចទ័រ",
         "ផលគុណស្កាលែ",
         "ផលគុណវ៉ិចទ័រ"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_vec2",
@@ -875,7 +1224,8 @@
       "keywords": [
         "សមីការប្លង់",
         "វ៉ិចទ័រណរម៉ាល់"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_par1",
@@ -897,7 +1247,8 @@
         "កំណុំ",
         "កំពូល",
         "បន្ទាត់ប្រាប់ទិស"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_par2",
@@ -917,7 +1268,8 @@
         "សមីការប៉ារ៉ាបូល",
         "កំពូល",
         "កំណុំ"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_el1",
@@ -938,7 +1290,8 @@
         "កំពូល",
         "កំណុំ",
         "អិចសង់ទ្រិស៊ីតេ"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_el2",
@@ -957,7 +1310,8 @@
       "keywords": [
         "សមីការអេលីប",
         "អ័ក្សធំឈរ"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_hyp1",
@@ -977,7 +1331,8 @@
         "អ៊ីពែបូល",
         "អាស៊ីមតូត",
         "កំណុំ"
-      ]
+      ],
+      "subject": "math"
     },
     {
       "id": "ex_hyp2",
@@ -997,7 +1352,175 @@
         "សមីការអ៊ីពែបូល",
         "កំពូល",
         "កំណុំ"
-      ]
+      ],
+      "subject": "math"
+    },
+    {
+      "id": "ex_phys_1",
+      "category_id": "phys_1",
+      "code": "រូបវិទ្យា១",
+      "title": "គណនាខួប និងថាមពលមេកានិចនៃប៉ោលរ៉ឺស័រ (បាក់ឌុប)",
+      "difficulty": "មធ្យម",
+      "problem": "ប៉ោលរ៉ឺស័រផ្ដេកមួយមានម៉ាស m = 200g = 0.2kg និងថេររឹង k = 50N/m។ គេទាញឱ្យយោលដោយអំព្លីទុត A = 4cm = 0.04m (កកិតចោល)។\nក. គណនាខួប T និងប្រេកង់ f នៃលំយោល។\nខ. គណនាថាមពលមេកានិច E នៃប្រព័ន្ធ។",
+      "hints": "ប្រើរូបមន្ត T = 2π√(m/k), f = 1/T និង E = (1/2) k A²។",
+      "solution_steps": [
+        "ជំហានទី១៖ គណនាខួប T\nT = 2π√(m/k) = 2π√(0.2 / 50) = 2π√(0.004) = 2π × 0.0632 ≈ 0.40 s",
+        "ជំហានទី២៖ គណនាប្រេកង់ f\nf = 1 / T = 1 / 0.40 = 2.5 Hz",
+        "ជំហានទី៣៖ គណនាថាមពលមេកានិច E\nE = (1/2) k A² = (1/2) × 50 × (0.04)² = 25 × 0.0016 = 0.04 J"
+      ],
+      "final_answer": "ក. T ≈ 0.40s, f = 2.5Hz || ខ. E = 0.04 J",
+      "keywords": [
+        "ប៉ោលរ៉ឺស័រ",
+        "រូបវិទ្យា",
+        "ខួប"
+      ],
+      "subject": "physics"
+    },
+    {
+      "id": "ex_phys_2",
+      "category_id": "phys_2",
+      "code": "រូបវិទ្យា២",
+      "title": "ច្បាប់ទី១ ទែរម៉ូឌីណាមិច (បាក់ឌុប)",
+      "difficulty": "ងាយស្រួល",
+      "problem": "ឧស្ម័នមួយស្រូបកម្ដៅ Q = 850J ពីមជ្ឈដ្ឋានក្រៅ និងរីកមាឌធ្វើការងារ W = -450J ទៅលើមជ្ឈដ្ឋានក្រៅ។\nគណនាបម្រែបម្រួលថាមពលក្នុង ΔU នៃឧស្ម័ននោះ។",
+      "hints": "អនុវត្តច្បាប់ទី១ ទែរម៉ូឌីណាមិច៖ ΔU = Q + W។",
+      "solution_steps": [
+        "ជំហានទី១៖ កំណត់សញ្ញានៃ Q និង W\n• Q = +850 J (ព្រោះឧស្ម័នស្រូបកម្ដៅ)\n• W = -450 J (ព្រោះឧស្ម័នធ្វើការងារ)",
+        "ជំហានទី២៖ គណនាបម្រែបម្រួលថាមពលក្នុង ΔU\nΔU = Q + W = 850 + (-450) = 400 J"
+      ],
+      "final_answer": "ΔU = 400 J (ថាមពលក្នុងកើនឡើង 400 Joules)",
+      "keywords": [
+        "ទែរម៉ូឌីណាមិច",
+        "ថាមពលក្នុង",
+        "រូបវិទ្យា"
+      ],
+      "subject": "physics"
+    },
+    {
+      "id": "ex_phys_3",
+      "category_id": "phys_3",
+      "code": "រូបវិទ្យា៣",
+      "title": "គណនាកម្រិតកម្រិតសំឡេងគិតជាដេស៊ីបែល",
+      "difficulty": "មធ្យម",
+      "problem": "ប្រភពសំឡេងមួយបញ្ចេញសំឡេងមកត្រចៀកមនុស្សដោយមានកម្រិតអាំងតង់ស៊ីតេ I = 10⁻⁶ W/m²។\nគណនាកម្រិតកម្រិតសំឡេង L គិតជាដេស៊ីបែល (dB) ដោយដឹងថា I₀ = 10⁻¹² W/m²។",
+      "hints": "ប្រើរូបមន្ត L = 10 · log₁₀(I / I₀)។",
+      "solution_steps": [
+        "ជំហានទី១៖ ជំនួសតម្លៃចូលរូបមន្ត\nL = 10 · log₁₀(10⁻⁶ / 10⁻¹²)",
+        "ជំហានទី២៖ គណនាកន្សោមក្នុង log\n10⁻⁶ / 10⁻¹² = 10⁶",
+        "ជំហានទី៣៖ គណនាតម្លៃ L\nL = 10 · log₁₀(10⁶) = 10 × 6 = 60 dB"
+      ],
+      "final_answer": "L = 60 dB",
+      "keywords": [
+        "សំឡេង",
+        "ដេស៊ីបែល",
+        "រូបវិទ្យា"
+      ],
+      "subject": "physics"
+    },
+    {
+      "id": "ex_phys_4",
+      "category_id": "phys_5",
+      "code": "រូបវិទ្យា៤",
+      "title": "គណនាអាំងប៉េដង់ និងចរន្តប្រសិទ្ធនៃសៀគ្វី RLC (បាក់ឌុប)",
+      "difficulty": "មធ្យម",
+      "problem": "សៀគ្វី RLC តជាស៊េរីមាន R = 40Ω, Lω = 70Ω និង 1/(Cω) = 40Ω ភ្ជាប់ទៅនឹងប្រភពតង់ស្យុងប្រសិទ្ធ U = 100V។\nក. គណនាអាំងប៉េដង់ Z នៃសៀគ្វី។\nខ. គណនាអាំងតង់ស៊ីតេចរន្តប្រសិទ្ធ I។",
+      "hints": "Z = √[R² + (ZL - ZC)²] និង I = U / Z។",
+      "solution_steps": [
+        "ជំហានទី១៖ គណនាអាំងប៉េដង់ Z\nZ = √[40² + (70 - 40)²] = √[40² + 30²] = √[1600 + 900] = √2500 = 50 Ω",
+        "ជំហានទី២៖ គណនាអាំងតង់ស៊ីតេប្រសិទ្ធ I តាមច្បាប់អូម\nI = U / Z = 100 / 50 = 2 A"
+      ],
+      "final_answer": "ក. Z = 50 Ω || ខ. I = 2 A",
+      "keywords": [
+        "RLC",
+        "ចរន្តឆ្លាស់",
+        "រូបវិទ្យា"
+      ],
+      "subject": "physics"
+    },
+    {
+      "id": "ex_chem_1",
+      "category_id": "chem_1",
+      "code": "គីមី១",
+      "title": "គណនាល្បឿនមធ្យមនៃការបាត់អង្គធាតុប្រតិករ (បាក់ឌុប)",
+      "difficulty": "ងាយស្រួល",
+      "problem": "ក្នុងប្រតិកម្មបំបែកអ៊ីដ្រូសែនពែអុកស៊ីត 2H₂O₂ → 2H₂O + O₂ នៅខណៈ t₁ = 0s កំហាប់ [H₂O₂] = 0.50 mol/L។ នៅខណៈ t₂ = 40s កំហាប់ [H₂O₂] ធ្លាក់ចុះមកនៅត្រឹម 0.10 mol/L។\nគណនាល្បឿនមធ្យមនៃការបាត់ H₂O₂ ក្នុងចន្លោះពេលនេះ។",
+      "hints": "ប្រើរូបមន្ត Vm = -Δ[H₂O₂] / Δt = -([H₂O₂]₂ - [H₂O₂]₁) / (t₂ - t₁)។",
+      "solution_steps": [
+        "ជំហានទី១៖ កំណត់តម្លៃបម្រែបម្រួល\n• Δ[H₂O₂] = 0.10 - 0.50 = -0.40 mol/L\n• Δt = 40 - 0 = 40 s",
+        "ជំហានទី២៖ គណនាល្បឿនមធ្យម\nVm = -(-0.40) / 40 = 0.40 / 40 = 0.01 mol/(L·s)"
+      ],
+      "final_answer": "Vm(H₂O₂) = 0.01 mol/(L·s)",
+      "keywords": [
+        "ល្បឿនប្រតិកម្ម",
+        "ស៊ីនេទិច",
+        "គីមីវិទ្យា"
+      ],
+      "subject": "chem"
+    },
+    {
+      "id": "ex_chem_2",
+      "category_id": "chem_3",
+      "code": "គីមី២",
+      "title": "គណនា pH នៃសូលុយស្យុងអាស៊ីតខ្លាំង និងបាសខ្លាំង",
+      "difficulty": "មធ្យម",
+      "problem": "ក. គណនា pH នៃសូលុយស្យុងអាស៊ីតក្លរីឌ្រិច (HCl) កំហាប់ Ca = 0.005 M។\nខ. គណនា pH នៃសូលុយស្យុងសូដ្យូមអ៊ីដ្រុកស៊ីត (NaOH) កំហាប់ Cb = 0.01 M។",
+      "hints": "HCl ជាអាស៊ីតខ្លាំង៖ [H₃O⁺] = Ca ==> pH = -log Ca។ NaOH ជាបាសខ្លាំង៖ [OH⁻] = Cb ==> pOH = -log Cb ==> pH = 14 - pOH។",
+      "solution_steps": [
+        "ជំហានទី១៖ គណនា pH នៃ HCl\n[H₃O⁺] = Ca = 0.005 M = 5 × 10⁻³ M\npH = -log(5 × 10⁻³) = 3 - log(5) = 3 - 0.7 = 2.3",
+        "ជំហានទី២៖ គណនា pH នៃ NaOH\n[OH⁻] = Cb = 0.01 M = 10⁻² M\npOH = -log(10⁻²) = 2\npH = 14 - pOH = 14 - 2 = 12"
+      ],
+      "final_answer": "ក. pH(HCl) = 2.3 || ខ. pH(NaOH) = 12",
+      "keywords": [
+        "pH",
+        "អាស៊ីតខ្លាំង",
+        "បាសខ្លាំង",
+        "គីមីវិទ្យា"
+      ],
+      "subject": "chem"
+    },
+    {
+      "id": "ex_chem_3",
+      "category_id": "chem_4",
+      "code": "គីមី៣",
+      "title": "អត្រាកម្មអាស៊ីត-បាស រកកំហាប់មិនស្គាល់ (បាក់ឌុប)",
+      "difficulty": "មធ្យម",
+      "problem": "គេយកសូលុយស្យុងអាស៊ីតក្លរីឌ្រិច (HCl) ចំណុះ Va = 25 mL ទៅធ្វើអត្រាកម្មជាមួយសូលុយស្យុង NaOH កំហាប់ Cb = 0.10 M។ នៅចំណុចសមមូល គេប្រើអស់សូលុយស្យុង NaOH ចំណុះ Vb = 20 mL។\nគណនាកំហាប់ម៉ូល Ca នៃសូលុយស្យុង HCl ដើម។",
+      "hints": "នៅចំណុចសមមូល៖ Ca · Va = Cb · Vb នាំឱ្យ Ca = (Cb · Vb) / Va។",
+      "solution_steps": [
+        "ជំហានទី១៖ សរសេរសមីការតាងប្រតិកម្មអត្រាកម្ម\nHCl + NaOH → NaCl + H₂O",
+        "ជំហានទី២៖ អនុវត្តសមភាពនៅចំណុចសមមូល\nCa · Va = Cb · Vb\n==> Ca = (Cb · Vb) / Va",
+        "ជំហានទី៣៖ ជំនួសតម្លៃ\nCa = (0.10 M × 20 mL) / 25 mL = 2 / 25 = 0.08 M"
+      ],
+      "final_answer": "Ca(HCl) = 0.08 mol/L (M)",
+      "keywords": [
+        "អត្រាកម្ម",
+        "សមមូល",
+        "គីមីវិទ្យា"
+      ],
+      "subject": "chem"
+    },
+    {
+      "id": "ex_chem_4",
+      "category_id": "chem_5",
+      "code": "គីមី៤",
+      "title": "ប្រតិកម្មអេសស្ទែកម្ម និងទិន្នផល (បាក់ឌុប)",
+      "difficulty": "មធ្យម",
+      "problem": "គេឱ្យអាស៊ីតអេតាណូអ៊ិច CH₃COOH ចំនួន 12g មានអំពើជាមួយអេតាណុល C₂H₅OH លើស។\nក. សរសេរសមីការតាងប្រតិកម្ម និងដាក់ឈ្មោះអេសស្ទែកកើត។\nខ. គណនាម៉ាសអេសស្ទែដែលទទួលបានជាក់ស្ដែង បើទិន្នផលនៃប្រតិកម្មគឺ 65% (C=12, H=1, O=16)។",
+      "hints": "M(CH₃COOH) = 60g/mol, M(CH₃COOC₂H₅) = 88g/mol។ គណនាម៉ាសទ្រឹស្តី រួចគុណនឹង 65%។",
+      "solution_steps": [
+        "ជំហានទី១៖ សរសេរសមីការតាងប្រតិកម្ម\nCH₃COOH + C₂H₅OH ⇌ CH₃COOC₂H₅ + H₂O\nឈ្មោះអេសស្ទែកកើត៖ អេទីលអេតាណូអាត (Ethyl ethanoate)",
+        "ជំហានទី២៖ គណនាម៉ាសម៉ូល\n• M(CH₃COOH) = 12 + 3 + 12 + 32 + 1 = 60 g/mol\n• M(CH₃COOC₂H₅) = 12 + 3 + 12 + 32 + 24 + 5 = 88 g/mol",
+        "ជំហានទី៣៖ គណនាចំនួនម៉ូលអាស៊ីត n = m / M = 12 / 60 = 0.2 mol",
+        "ជំហានទី៤៖ គណនាម៉ាសអេសស្ទែតាមទ្រឹស្តី\nm_th = n × M(ester) = 0.2 × 88 = 17.6 g",
+        "ជំហានទី៥៖ គណនាម៉ាសជាក់ស្ដែងតាមទិន្នផល 65%\nm_act = m_th × 65% = 17.6 × 0.65 = 11.44 g"
+      ],
+      "final_answer": "ក. CH₃COOH + C₂H₅OH ⇌ CH₃COOC₂H₅ + H₂O (អេទីលអេតាណូអាត) || ខ. m = 11.44 g",
+      "keywords": [
+        "អេសស្ទែ",
+        "ទិន្នផល",
+        "គីមីវិទ្យា"
+      ],
+      "subject": "chem"
     }
   ]
 }
