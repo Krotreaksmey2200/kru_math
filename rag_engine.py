@@ -180,12 +180,12 @@ def chunk_text(text: str, chunk_size: int = 700, chunk_overlap: int = 120) -> Li
 
 
 def get_embedding(text: str) -> List[float]:
-    """Get vector embedding using Google Gemini models/text-embedding-004."""
+    """Get vector embedding using Google Gemini models/gemini-embedding-001."""
     if not is_rag_available():
         raise ValueError("GEMINI_API_KEY is not configured or invalid.")
     import google.generativeai as genai
     response = genai.embed_content(
-        model="models/text-embedding-004",
+        model="models/gemini-embedding-001",
         content=text,
         task_type="retrieval_document"
     )
@@ -198,11 +198,12 @@ def get_query_embedding(query: str) -> List[float]:
         raise ValueError("GEMINI_API_KEY is not configured.")
     import google.generativeai as genai
     response = genai.embed_content(
-        model="models/text-embedding-004",
+        model="models/gemini-embedding-001",
         content=query,
         task_type="retrieval_query"
     )
     return response["embedding"]
+
 
 
 def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
@@ -311,9 +312,10 @@ async def answer_with_rag(question: str) -> Dict[str, Any]:
 
     try:
         import google.generativeai as genai
-        model = genai.GenerativeModel("models/gemini-1.5-flash", system_instruction=system_prompt)
+        model = genai.GenerativeModel("models/gemini-3.6-flash", system_instruction=system_prompt)
         response = await model.generate_content_async(question)
         answer_text = response.text.strip()
+
 
         sources = list(set([c["filename"] for c in relevant_chunks]))
         return {
