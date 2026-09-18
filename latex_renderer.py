@@ -169,19 +169,43 @@ def split_line_tokens(text: str) -> List[Tuple[str, str]]:
     Prevents Matplotlib mathtext from choking on Khmer glyphs.
     """
     text = text.strip()
-    if not re.search(r'[\u1780-\u17FF]', text):
-        return [("MATH", normalize_to_latex(text))]
+    if not text:
+        return []
 
-    parts = re.split(r'([^\u1780-\u17FF\n\r៖:]+)', text)
+    # If the text explicitly contains $...$ math blocks, respect them
+    if "$" in text and text.count("$") >= 2:
+        parts = re.split(r'(\$[^$]+\$)', text)
+        tokens = []
+        for p in parts:
+            if not p:
+                continue
+            if p.startswith("$") and p.endswith("$") and len(p) > 2:
+                inner = p[1:-1].strip()
+                # Escape unescaped % inside math
+                inner = re.sub(r'(?<!\\)%', r'\\%', inner)
+                tokens.append(("MATH", normalize_to_latex(inner)))
+            else:
+                p_clean = p.strip()
+                if p_clean:
+                    tokens.append(("KHMER", p_clean))
+        if tokens:
+            return tokens
+
+    if not re.search(r'[\u1780-\u17FF]', text):
+        clean_text = re.sub(r'(?<!\\)%', r'\\%', text)
+        return [("MATH", normalize_to_latex(clean_text))]
+
+    parts = re.split(r'([^\u1780-\u17FF\n\r៖:•\-\*]+)', text)
     tokens = []
     for p in parts:
         p = p.strip()
         if not p:
             continue
-        if re.search(r'[\u1780-\u17FF៖:]', p):
+        if re.search(r'[\u1780-\u17FF៖:•\-\*]', p):
             tokens.append(("KHMER", p))
         else:
-            tokens.append(("MATH", normalize_to_latex(p)))
+            p_clean = re.sub(r'(?<!\\)%', r'\\%', p)
+            tokens.append(("MATH", normalize_to_latex(p_clean)))
     return tokens or [("KHMER", text)]
 
 
@@ -521,25 +545,26 @@ def render_formula_card(
             draw_y = cur_y + s["height"] * 0.45
 
             stype = s["type"]
+            text_val = s.get("text", "").replace("•", "-")
             if stype == "TITLE":
                 if KHMER_FP:
-                    ax.text(0.05, draw_y, s["text"], fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
+                    ax.text(0.05, draw_y, text_val, fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
                 else:
-                    ax.text(0.05, draw_y, s["text"], size=s["size"], color=s["color"], va="center")
+                    ax.text(0.05, draw_y, text_val, size=s["size"], color=s["color"], va="center")
             elif stype == "SUBTITLE":
-                ax.text(0.05, draw_y, s["text"], size=s["size"], color=s["color"], style="italic", va="center")
+                ax.text(0.05, draw_y, text_val, size=s["size"], color=s["color"], style="italic", va="center")
             elif stype == "DIVIDER":
                 ax.axhline(y=draw_y, xmin=0.05, xmax=0.95, color="#E2E8F0", linewidth=1.2)
             elif stype == "SECTION":
                 if KHMER_FP:
-                    ax.text(0.05, draw_y, s["text"], fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
+                    ax.text(0.05, draw_y, text_val, fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
                 else:
-                    ax.text(0.05, draw_y, s["text"], size=s["size"], color=s["color"], va="center")
+                    ax.text(0.05, draw_y, text_val, size=s["size"], color=s["color"], va="center")
             elif stype == "TEXT":
                 if KHMER_FP:
-                    ax.text(0.08, draw_y, s["text"], fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
+                    ax.text(0.08, draw_y, text_val, fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
                 else:
-                    ax.text(0.08, draw_y, s["text"], size=s["size"], color=s["color"], va="center")
+                    ax.text(0.08, draw_y, text_val, size=s["size"], color=s["color"], va="center")
             elif stype == "TOKENS":
                 x_cur = 0.08
                 for tok_kind, tok_val in s["tokens"]:
@@ -555,10 +580,11 @@ def render_formula_card(
                             bbox = t.get_window_extent(renderer=renderer)
                             x_cur = inv.transform(bbox)[1][0] + 0.02
                     else:
+                        tok_khmer = tok_val.replace("•", "-")
                         if KHMER_FP:
-                            t = ax.text(x_cur, draw_y, tok_val, fontproperties=KHMER_FP, size=14.5, color="#1E293B", va="center")
+                            t = ax.text(x_cur, draw_y, tok_khmer, fontproperties=KHMER_FP, size=14.5, color="#1E293B", va="center")
                         else:
-                            t = ax.text(x_cur, draw_y, tok_val, size=14, color="#1E293B", va="center")
+                            t = ax.text(x_cur, draw_y, tok_khmer, size=14, color="#1E293B", va="center")
                         fig.canvas.draw()
                         bbox = t.get_window_extent(renderer=renderer)
                         x_cur = inv.transform(bbox)[1][0] + 0.02
@@ -641,28 +667,29 @@ def render_exercise_card(
             draw_y = cur_y + s["height"] * 0.45
 
             stype = s["type"]
+            text_val = s.get("text", "").replace("•", "-")
             if stype == "TITLE":
                 if KHMER_FP:
-                    ax.text(0.05, draw_y, s["text"], fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
+                    ax.text(0.05, draw_y, text_val, fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
                 else:
-                    ax.text(0.05, draw_y, s["text"], size=s["size"], color=s["color"], va="center")
+                    ax.text(0.05, draw_y, text_val, size=s["size"], color=s["color"], va="center")
             elif stype == "SUBTITLE":
                 if KHMER_FP:
-                    ax.text(0.05, draw_y, s["text"], fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
+                    ax.text(0.05, draw_y, text_val, fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
                 else:
-                    ax.text(0.05, draw_y, s["text"], size=s["size"], color=s["color"], va="center")
+                    ax.text(0.05, draw_y, text_val, size=s["size"], color=s["color"], va="center")
             elif stype == "DIVIDER":
                 ax.axhline(y=draw_y, xmin=0.05, xmax=0.95, color="#E2E8F0", linewidth=1.2)
             elif stype == "SECTION":
                 if KHMER_FP:
-                    ax.text(0.05, draw_y, s["text"], fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
+                    ax.text(0.05, draw_y, text_val, fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
                 else:
-                    ax.text(0.05, draw_y, s["text"], size=s["size"], color=s["color"], va="center")
+                    ax.text(0.05, draw_y, text_val, size=s["size"], color=s["color"], va="center")
             elif stype == "TEXT":
                 if KHMER_FP:
-                    ax.text(0.08, draw_y, s["text"], fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
+                    ax.text(0.08, draw_y, text_val, fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
                 else:
-                    ax.text(0.08, draw_y, s["text"], size=s["size"], color=s["color"], va="center")
+                    ax.text(0.08, draw_y, text_val, size=s["size"], color=s["color"], va="center")
             elif stype == "TOKENS":
                 x_cur = 0.08
                 for tok_kind, tok_val in s["tokens"]:
@@ -678,10 +705,11 @@ def render_exercise_card(
                             bbox = t.get_window_extent(renderer=renderer)
                             x_cur = inv.transform(bbox)[1][0] + 0.02
                     else:
+                        tok_khmer = tok_val.replace("•", "-")
                         if KHMER_FP:
-                            t = ax.text(x_cur, draw_y, tok_val, fontproperties=KHMER_FP, size=14, color="#1E293B", va="center")
+                            t = ax.text(x_cur, draw_y, tok_khmer, fontproperties=KHMER_FP, size=14, color="#1E293B", va="center")
                         else:
-                            t = ax.text(x_cur, draw_y, tok_val, size=13.5, color="#1E293B", va="center")
+                            t = ax.text(x_cur, draw_y, tok_khmer, size=13.5, color="#1E293B", va="center")
                         fig.canvas.draw()
                         bbox = t.get_window_extent(renderer=renderer)
                         x_cur = inv.transform(bbox)[1][0] + 0.02

@@ -131,13 +131,26 @@ def format_exercise_solution_html(ex: Dict[str, Any]) -> str:
 from config import is_admin
 
 
+def get_subject_display_name(subj_code: str) -> str:
+    """Returns human-readable Khmer name for subject codes."""
+    return {
+        "math": "គណិតវិទ្យា",
+        "physics": "រូបវិទ្យា",
+        "chem": "គីមីវិទ្យា",
+        "bio": "ជីវវិទ្យា"
+    }.get(subj_code, "គណិតវិទ្យា")
+
+
 def build_main_menu_keyboard(user_id: Optional[int] = None) -> InlineKeyboardMarkup:
-    """Main navigation keyboard supporting Math, Physics, and Chemistry."""
+    """Main navigation keyboard supporting Math, Physics, Chemistry, and Biology."""
     buttons = [
         [
             InlineKeyboardButton("📐 គណិតវិទ្យា", callback_data="subj_math"),
             InlineKeyboardButton("⚡️ រូបវិទ្យា", callback_data="subj_physics"),
+        ],
+        [
             InlineKeyboardButton("🧪 គីមីវិទ្យា", callback_data="subj_chem"),
+            InlineKeyboardButton("🧬 ជីវវិទ្យា", callback_data="subj_bio"),
         ],
         [
             InlineKeyboardButton("📐 រូបមន្ត (Formulas)", callback_data="menu_formulas"),
@@ -177,12 +190,14 @@ def build_categories_keyboard(prefix: str, subject: str = "math", page: int = 1,
     math_tab = "✅ 📐 គណិត" if subject == "math" else "📐 គណិត"
     phys_tab = "✅ ⚡️ រូប" if subject == "physics" else "⚡️ រូប"
     chem_tab = "✅ 🧪 គីមី" if subject == "chem" else "🧪 គីមី"
+    bio_tab = "✅ 🧬 ជីវៈ" if subject == "bio" else "🧬 ជីវៈ"
 
     buttons = [
         [
             InlineKeyboardButton(math_tab, callback_data=f"{prefix}_subj_math"),
             InlineKeyboardButton(phys_tab, callback_data=f"{prefix}_subj_physics"),
             InlineKeyboardButton(chem_tab, callback_data=f"{prefix}_subj_chem"),
+            InlineKeyboardButton(bio_tab, callback_data=f"{prefix}_subj_bio"),
         ]
     ]
 
@@ -270,7 +285,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         welcome_text = (
             "👋 <b>សូមស្វាគមន៍មកកាន់បូត គ្រូបង្រៀនវិទ្យាសាស្ត្រទី១២ (បាក់ឌុប)!</b> 🎓\n\n"
             "ជ្រើសរើសមុខវិជ្ជាខាងក្រោមដើម្បីសិក្សារូបមន្ត ឬដោះស្រាយលំហាត់៖\n"
-            "• 📐 <b>គណិតវិទ្យា</b> • ⚡️ <b>រូបវិទ្យា</b> • 🧪 <b>គីមីវិទ្យា</b>"
+            "• 📐 <b>គណិតវិទ្យា</b> • ⚡️ <b>រូបវិទ្យា</b> • 🧪 <b>គីមីវិទ្យា</b> • 🧬 <b>ជីវវិទ្យា</b>"
         )
         await query.edit_message_text(
             welcome_text,
@@ -279,10 +294,10 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         )
 
     # Direct Subject selection from main menu
-    elif data in ["subj_math", "subj_physics", "subj_chem"]:
+    elif data in ["subj_math", "subj_physics", "subj_chem", "subj_bio"]:
         await query.answer()
         subj_code = data.replace("subj_", "")
-        subj_name = "គណិតវិទ្យា" if subj_code == "math" else ("រូបវិទ្យា" if subj_code == "physics" else "គីមីវិទ្យា")
+        subj_name = get_subject_display_name(subj_code)
         text = f"📚 <b>សូមជ្រើសរើសមេរៀន{subj_name}ថ្នាក់ទី១២ (បាក់ឌុប)៖</b>"
         await query.edit_message_text(
             text,
@@ -297,10 +312,10 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("form", subject="math", page=1))
 
     # Subject Tabs within Formulas
-    elif data in ["form_subj_math", "form_subj_physics", "form_subj_chem"]:
+    elif data in ["form_subj_math", "form_subj_physics", "form_subj_chem", "form_subj_bio"]:
         await query.answer()
         subj_code = data.replace("form_subj_", "")
-        subj_name = "គណិតវិទ្យា" if subj_code == "math" else ("រូបវិទ្យា" if subj_code == "physics" else "គីមីវិទ្យា")
+        subj_name = get_subject_display_name(subj_code)
         text = f"📐 <b>សូមជ្រើសរើសមេរៀន{subj_name}ដែលចង់មើលរូបមន្ត៖</b>"
         await query.edit_message_text(
             text,
@@ -314,7 +329,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         parts = data.split("_")
         subj_code = parts[2]
         page_num = int(parts[3])
-        subj_name = "គណិតវិទ្យា" if subj_code == "math" else ("រូបវិទ្យា" if subj_code == "physics" else "គីមីវិទ្យា")
+        subj_name = get_subject_display_name(subj_code)
         text = f"📐 <b>សូមជ្រើសរើសមេរៀន{subj_name}ដែលចង់មើលរូបមន្ត៖</b>"
         await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("form", subject=subj_code, page=page_num))
 
@@ -349,7 +364,6 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
             await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=back_kb)
 
     # 4. View Specific Formula
-    # 4. View Specific Formula
     elif data.startswith("form_view_"):
         await query.answer()
         form_id = data.replace("form_view_", "")
@@ -373,10 +387,10 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("ex", subject="math", page=1))
 
     # Subject Tabs within Exercises
-    elif data in ["ex_subj_math", "ex_subj_physics", "ex_subj_chem"]:
+    elif data in ["ex_subj_math", "ex_subj_physics", "ex_subj_chem", "ex_subj_bio"]:
         await query.answer()
         subj_code = data.replace("ex_subj_", "")
-        subj_name = "គណិតវិទ្យា" if subj_code == "math" else ("រូបវិទ្យា" if subj_code == "physics" else "គីមីវិទ្យា")
+        subj_name = get_subject_display_name(subj_code)
         text = f"📝 <b>សូមជ្រើសរើសមេរៀន{subj_name}ដែលចង់អនុវត្តលំហាត់៖</b>"
         await query.edit_message_text(
             text,
@@ -390,7 +404,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         parts = data.split("_")
         subj_code = parts[2]
         page_num = int(parts[3])
-        subj_name = "គណិតវិទ្យា" if subj_code == "math" else ("រូបវិទ្យា" if subj_code == "physics" else "គីមីវិទ្យា")
+        subj_name = get_subject_display_name(subj_code)
         text = f"📝 <b>សូមជ្រើសរើសមេរៀន{subj_name}ដែលចង់អនុវត្តលំហាត់៖</b>"
         await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=build_categories_keyboard("ex", subject=subj_code, page=page_num))
 
