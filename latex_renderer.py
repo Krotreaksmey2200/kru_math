@@ -10,6 +10,7 @@ import re
 import urllib.parse
 import aiohttp
 import logging
+import textwrap
 from typing import Optional, List, Tuple
 from PIL import Image
 
@@ -50,6 +51,17 @@ def normalize_to_latex(text: str) -> str:
     elif s.startswith("$") and s.endswith("$"):
         s = s[1:-1].strip()
 
+    # Multi-char keywords & patterns first
+    s = s.replace("log₁₀", r"\log_{10} ")
+    s = s.replace("==>", r"\Rightarrow ")
+    s = s.replace("=>", r"\Rightarrow ")
+    s = s.replace(r"\implies", r"\Rightarrow ")
+    s = s.replace("⇌", r"\rightleftharpoons ")
+
+    # Superscripts with negative sign
+    s = s.replace("⁻¹", "^{-1}").replace("⁻²", "^{-2}").replace("⁻³", "^{-3}")
+    s = s.replace("⁻⁴", "^{-4}").replace("⁻⁵", "^{-5}").replace("⁻ⁿ", "^{-n}")
+
     # Common unicode conversions
     replacements = [
         ("²", "^2"),
@@ -58,47 +70,81 @@ def normalize_to_latex(text: str) -> str:
         ("⁵", "^5"),
         ("⁶", "^6"),
         ("ⁿ", "^n"),
-        ("⁻¹", "^{-1}"),
-        ("⁻²", "^{-2}"),
+        ("₀", "_0"),
+        ("₁", "_1"),
+        ("₂", "_2"),
+        ("₃", "_3"),
+        ("₄", "_4"),
+        ("ₐ", "_a"),
+        ("ᵇ", "^b"),
         ("√", r"\sqrt"),
-        ("π", r"\pi"),
-        ("θ", r"\theta"),
-        ("α", r"\alpha"),
-        ("β", r"\beta"),
-        ("Δ", r"\Delta"),
-        ("λ", r"\lambda"),
-        ("φ", r"\varphi"),
-        ("ω", r"\omega"),
-        ("∫", r"\int"),
-        ("·", r"\cdot"),
-        ("×", r"\times"),
-        ("±", r"\pm"),
-        ("≠", r"\neq"),
-        ("≤", r"\le"),
-        ("≥", r"\ge"),
-        ("∞", r"\infty"),
-        ("→", r"\to"),
-        ("==>", r"\Rightarrow"),
-        ("=>", r"\Rightarrow"),
-        (r"\implies", r"\Rightarrow"),
-        ("⇌", r"\rightleftharpoons"),
+        ("π", r"\pi "),
+        ("θ", r"\theta "),
+        ("α", r"\alpha "),
+        ("β", r"\beta "),
+        ("Δ", r"\Delta "),
+        ("λ", r"\lambda "),
+        ("φ", r"\varphi "),
+        ("ω", r"\omega "),
+        ("∫", r"\int "),
+        ("·", r" \cdot "),
+        ("×", r" \times "),
+        ("±", r"\pm "),
+        ("≠", r"\neq "),
+        ("≤", r"\le "),
+        ("≥", r"\ge "),
+        ("∞", r"\infty "),
+        ("→", r"\to "),
         ("ℝ", r"\mathbf{R}"),
         (r"\mathbb{R}", r"\mathbf{R}"),
         ("z̄", r"\bar{z}"),
         ("x̄", r"\bar{x}"),
         ("ȳ", r"\bar{y}"),
+        ("u⃗", r"\vec{u}"),
+        ("v⃗", r"\vec{v}"),
     ]
 
     for orig, rep in replacements:
         s = s.replace(orig, rep)
 
-    # Convert \sqrt(...) to \sqrt{...}
-    s = re.sub(r'\\sqrt\(([^)]+)\)', r'\\sqrt{\1}', s)
-    # Convert \sqrt25 to \sqrt{25}
-    s = re.sub(r'\\sqrt([0-9a-zA-Z]+)', r'\\sqrt{\1}', s)
+    # Limits: lim(x→0) or lim(x->0) or lim(x \to 0)
+    s = re.sub(
+        r"\blim\s*\(\s*([a-zA-Z0-9_]+)\s*(?:→|->|\\to)\s*([+\-a-zA-Z0-9_]+)\s*\)",
+        lambda m: r"\lim_{" + m.group(1) + r" \to " + m.group(2) + r"} \, ",
+        s
+    )
+    s = re.sub(r"\blim\b(?!\s*_)", lambda m: r"\lim \, ", s)
 
-    # Add space before parentheses when following alphanumeric, e.g. "bi (" -> "bi \quad ("
-    s = re.sub(r'([a-zA-Z0-9\^}])\s*\(', r'\1 \\quad (', s)
+    # Standard functions: sin, cos, tan, cot, ln, exp, log
+    for fn in ["sin", "cos", "tan", "cot", "ln", "exp", "log"]:
+        s = re.sub(rf"(?<![\\a-zA-Z]){fn}(?![a-zA-Z])", lambda m, f=fn: "\\" + f + " ", s)
+
+    # Clean double spaces
+    s = re.sub(r"[ \t]+", " ", s)
+
+    # Bracket fractions: [A / B]
+    def frac_bracket(m):
+        content = m.group(1)
+        if "/" in content:
+            p = content.rsplit("/", 1)
+            num = p[0].strip()
+            den = p[1].strip()
+            if num.startswith("(") and num.endswith(")"):
+                num = num[1:-1].strip()
+            if den.startswith("(") and den.endswith(")"):
+                den = den[1:-1].strip()
+            return r"\frac{" + num + "}{" + den + "}"
+        return m.group(0)
+
+    s = re.sub(r"\[([^\]]+/[^\]]+)\]", frac_bracket, s)
+
+    # Standalone simple numeric fractions e.g. " 1/2 ", " (1/2) " but not " 0.2/80 "
+    s = re.sub(r"(?<![\.\d\w\\])(\d+)/(\d+)(?![\.\d\w\\])", lambda m: r"\frac{" + m.group(1) + r"}{" + m.group(2) + r"}", s)
+
+    # Convert \sqrt(...) to \sqrt{...}
+    s = re.sub(r'\\sqrt\(([^)]+)\)', lambda m: r'\sqrt{' + m.group(1) + r'}', s)
+    s = re.sub(r'\\sqrt\[([^\]]+)\]', lambda m: r'\sqrt{' + m.group(1) + r'}', s)
+    s = re.sub(r'\\sqrt([0-9a-zA-Z]+)', lambda m: r'\sqrt{' + m.group(1) + r'}', s)
 
     return s
 
@@ -115,6 +161,30 @@ def clean_math_part(text: str) -> str:
     return normalize_to_latex(s)
 
 
+def split_line_tokens(text: str) -> List[Tuple[str, str]]:
+    """
+    Splits a single line into alternating tokens:
+    - ('KHMER', khmer_string)
+    - ('MATH', latex_math_string)
+    Prevents Matplotlib mathtext from choking on Khmer glyphs.
+    """
+    text = text.strip()
+    if not re.search(r'[\u1780-\u17FF]', text):
+        return [("MATH", normalize_to_latex(text))]
+
+    parts = re.split(r'([^\u1780-\u17FF\n\r៖:]+)', text)
+    tokens = []
+    for p in parts:
+        p = p.strip()
+        if not p:
+            continue
+        if re.search(r'[\u1780-\u17FF៖:]', p):
+            tokens.append(("KHMER", p))
+        else:
+            tokens.append(("MATH", normalize_to_latex(p)))
+    return tokens or [("KHMER", text)]
+
+
 def parse_line_khmer_and_math(line: str) -> Tuple[str, str]:
     """
     Parses a single line into (Khmer text prefix, LaTeX math expression).
@@ -122,24 +192,20 @@ def parse_line_khmer_and_math(line: str) -> Tuple[str, str]:
     and natural text before math ("សាលារៀន \int x^3 dx").
     """
     line = line.strip()
-    # Strip leading bullets and numbering
     line = re.sub(r'^[•\-\*\d\.\)]+\s*', '', line)
 
     has_khmer = bool(re.search(r'[\u1780-\u17FF]', line))
     if not has_khmer:
         return ("", clean_math_part(line))
 
-    # Pattern 1: Khmer label ending with colon e.g. "ទម្រង់ពីជគណិត៖ z = a + bi..."
     m1 = re.match(r'^([\u1780-\u17FF\s\(\)]+[៖:])\s*(.*)$', line)
     if m1:
         return (m1.group(1).strip(), clean_math_part(m1.group(2)))
 
-    # Pattern 2: Khmer words followed by a math expression e.g. "សាលារៀន \int x^3 dx"
     m2 = re.match(r'^([\u1780-\u17FF\s]+?)\s+([\\$a-zA-Z0-9].*)$', line)
     if m2:
         return (m2.group(1).strip(), clean_math_part(m2.group(2)))
 
-    # Pattern 3: Pure Khmer text with no clear math
     return (line, "")
 
 
@@ -375,88 +441,258 @@ def render_latex_to_transparent_webp(latex_str: str) -> Optional[bytes]:
         return None
 
 
-def render_formula_card(title_km: str, formula_raw: str, example_raw: str = "") -> Optional[bytes]:
+def render_formula_card(
+    title_km: str,
+    formula_raw: str = "",
+    example_raw: str = "",
+    title_en: str = "",
+    explanation: str = ""
+) -> Optional[bytes]:
     """
-    Renders an entire formula item as a cohesive, beautiful card on a pure white background.
-    Includes Khmer title, formula equations, and example with proper Khmer text shaping and LaTeX math.
+    Renders an entire formula item as a cohesive, beautiful card on a pure white background (#FFFFFF).
+    Includes:
+    - Khmer title & English subtitle
+    - Divider
+    - Formula section with full LaTeX equations
+    - Explanation section with wrapped Khmer text
+    - Example section with full LaTeX equations
     """
     if not MATPLOTLIB_AVAILABLE:
         return None
 
-    lines = []
-    if title_km:
-        # Strip any non-text emoji from title for font rendering
-        clean_title = re.sub(r'[^\u1780-\u17FF\u0000-\u007Fa-zA-Z0-9\s\(\)\:\.\,\-\+]', '', title_km).strip()
-        lines.append(("TITLE", clean_title, ""))
+    sections = []
 
-    for raw_l in formula_raw.splitlines():
-        if raw_l.strip():
-            kh, math = parse_line_khmer_and_math(raw_l)
-            lines.append(("FORMULA", kh, math))
+    # 1. Title & Subtitle
+    clean_title = re.sub(r'[^\u1780-\u17FF\u0000-\u007Fa-zA-Z0-9\s\(\)\:\.\,\-\+\/]', '', title_km).strip()
+    if clean_title:
+        sections.append({"type": "TITLE", "text": clean_title, "size": 19, "color": "#0F172A", "height": 1.25})
 
-    if example_raw:
-        for ex_l in example_raw.splitlines():
-            if ex_l.strip():
-                kh, math = parse_line_khmer_and_math(ex_l)
-                if not kh and not math.startswith("ឧទាហរណ៍"):
-                    kh = "ឧទាហរណ៍៖"
-                lines.append(("EXAMPLE", kh, math))
+    clean_en = title_en.strip()
+    if clean_en:
+        sections.append({"type": "SUBTITLE", "text": f"({clean_en})", "size": 13, "color": "#64748B", "height": 0.75})
 
-    if not lines:
+    sections.append({"type": "DIVIDER", "height": 0.5})
+
+    # 2. Formula Section
+    if formula_raw.strip():
+        sections.append({"type": "SECTION", "text": "រូបមន្ត (Formula)៖", "size": 15, "color": "#1E293B", "height": 0.95})
+        for line in formula_raw.splitlines():
+            line = line.strip()
+            if line:
+                tokens = split_line_tokens(line)
+                sections.append({"type": "TOKENS", "tokens": tokens, "size": 17.5, "height": 1.35})
+
+    # 3. Explanation Section
+    if explanation.strip():
+        sections.append({"type": "SECTION", "text": "ពន្យល់ (Explanation)៖", "size": 15, "color": "#1E293B", "height": 0.95})
+        for wline in textwrap.wrap(explanation.strip(), width=54):
+            sections.append({"type": "TEXT", "text": wline, "size": 13.5, "color": "#334155", "height": 0.85})
+
+    # 4. Example Section
+    if example_raw.strip():
+        sections.append({"type": "SECTION", "text": "ឧទាហរណ៍ (Example)៖", "size": 15, "color": "#1E293B", "height": 0.95})
+        for line in example_raw.splitlines():
+            line = line.strip()
+            if line:
+                tokens = split_line_tokens(line)
+                sections.append({"type": "TOKENS", "tokens": tokens, "size": 17.5, "height": 1.35})
+
+    if not sections:
         return None
 
-    num_lines = len(lines)
     try:
-        fig_height = max(1.4, 0.6 + num_lines * 0.68)
-        fig = plt.figure(figsize=(7.5, fig_height), dpi=260)
+        total_weight = sum(s["height"] for s in sections)
+        fig_height = max(3.0, total_weight * 0.65)
+        fig = plt.figure(figsize=(8.8, fig_height), dpi=260)
         fig.patch.set_facecolor("#FFFFFF")
         ax = plt.subplot(111)
         ax.patch.set_facecolor("#FFFFFF")
         ax.set_xlim(0, 1)
-        ax.set_ylim(0, 1)
+        ax.set_ylim(0, total_weight)
         plt.axis("off")
 
         fig.canvas.draw()
         renderer = fig.canvas.get_renderer()
         inv = ax.transData.inverted()
 
-        y_step = 1.0 / (num_lines + 1)
+        cur_y = total_weight
+        for s in sections:
+            cur_y -= s["height"]
+            draw_y = cur_y + s["height"] * 0.45
 
-        for idx, (kind, kh, math) in enumerate(lines):
-            y_pos = 1.0 - (idx + 1) * y_step
-            x_cursor = 0.05
-
-            if kind == "TITLE":
+            stype = s["type"]
+            if stype == "TITLE":
                 if KHMER_FP:
-                    ax.text(x_cursor, y_pos, kh, fontproperties=KHMER_FP, size=18, color="#0F172A", va="center")
+                    ax.text(0.05, draw_y, s["text"], fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
                 else:
-                    ax.text(x_cursor, y_pos, kh, size=17, color="#0F172A", va="center")
-                continue
-
-            if kh:
-                color = "#1E293B" if kind == "FORMULA" else "#334155"
-                size = 15 if kind == "FORMULA" else 14
+                    ax.text(0.05, draw_y, s["text"], size=s["size"], color=s["color"], va="center")
+            elif stype == "SUBTITLE":
+                ax.text(0.05, draw_y, s["text"], size=s["size"], color=s["color"], style="italic", va="center")
+            elif stype == "DIVIDER":
+                ax.axhline(y=draw_y, xmin=0.05, xmax=0.95, color="#E2E8F0", linewidth=1.2)
+            elif stype == "SECTION":
                 if KHMER_FP:
-                    t_kh = ax.text(x_cursor, y_pos, kh, fontproperties=KHMER_FP, size=size, color=color, va="center")
+                    ax.text(0.05, draw_y, s["text"], fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
                 else:
-                    t_kh = ax.text(x_cursor, y_pos, kh, size=size, color=color, va="center")
-
-                fig.canvas.draw()
-                bbox = t_kh.get_window_extent(renderer=renderer)
-                bbox_data = inv.transform(bbox)
-                x_cursor = bbox_data[1][0] + 0.025
-
-            if math:
-                math_size = 17 if kind == "FORMULA" else 16
-                ax.text(x_cursor, y_pos, f"${math}$", size=math_size, color="#0F172A", va="center")
+                    ax.text(0.05, draw_y, s["text"], size=s["size"], color=s["color"], va="center")
+            elif stype == "TEXT":
+                if KHMER_FP:
+                    ax.text(0.08, draw_y, s["text"], fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
+                else:
+                    ax.text(0.08, draw_y, s["text"], size=s["size"], color=s["color"], va="center")
+            elif stype == "TOKENS":
+                x_cur = 0.08
+                for tok_kind, tok_val in s["tokens"]:
+                    if tok_kind == "MATH":
+                        try:
+                            t = ax.text(x_cur, draw_y, f"${tok_val}$", size=s["size"], color="#0F172A", va="center")
+                            fig.canvas.draw()
+                            bbox = t.get_window_extent(renderer=renderer)
+                            x_cur = inv.transform(bbox)[1][0] + 0.02
+                        except Exception:
+                            t = ax.text(x_cur, draw_y, tok_val, size=s["size"] - 2, color="#0F172A", va="center")
+                            fig.canvas.draw()
+                            bbox = t.get_window_extent(renderer=renderer)
+                            x_cur = inv.transform(bbox)[1][0] + 0.02
+                    else:
+                        if KHMER_FP:
+                            t = ax.text(x_cur, draw_y, tok_val, fontproperties=KHMER_FP, size=14.5, color="#1E293B", va="center")
+                        else:
+                            t = ax.text(x_cur, draw_y, tok_val, size=14, color="#1E293B", va="center")
+                        fig.canvas.draw()
+                        bbox = t.get_window_extent(renderer=renderer)
+                        x_cur = inv.transform(bbox)[1][0] + 0.02
 
         buf = io.BytesIO()
-        plt.savefig(buf, format="png", facecolor="#FFFFFF", bbox_inches="tight", pad_inches=0.25)
+        plt.savefig(buf, format="png", facecolor="#FFFFFF", bbox_inches="tight", pad_inches=0.28)
         plt.close(fig)
         buf.seek(0)
         return buf.getvalue()
     except Exception as e:
-        logger.debug("render_formula_card failed: %s", e)
+        logger.error("render_formula_card error: %s", e)
+        try:
+            plt.close(fig)
+        except Exception:
+            pass
+        return None
+
+
+def render_exercise_card(
+    code: str,
+    title: str,
+    difficulty: str = "មធ្យម",
+    problem_raw: str = "",
+    solution_raw: str = ""
+) -> Optional[bytes]:
+    """
+    Renders an entire exercise item (problem statement & optional solution) as a clean card.
+    """
+    if not MATPLOTLIB_AVAILABLE:
+        return None
+
+    sections = []
+
+    # 1. Title & Difficulty
+    header_text = f"{code}៖ {title}".strip()
+    sections.append({"type": "TITLE", "text": header_text, "size": 18, "color": "#0F172A", "height": 1.25})
+    sections.append({"type": "SUBTITLE", "text": f"កម្រិត៖ {difficulty}", "size": 13, "color": "#64748B", "height": 0.75})
+    sections.append({"type": "DIVIDER", "height": 0.5})
+
+    # 2. Problem Statement
+    if problem_raw.strip():
+        sections.append({"type": "SECTION", "text": "ប្រធានលំហាត់ (Problem)៖", "size": 15, "color": "#1E293B", "height": 0.95})
+        for line in problem_raw.splitlines():
+            line = line.strip()
+            if line:
+                tokens = split_line_tokens(line)
+                sections.append({"type": "TOKENS", "tokens": tokens, "size": 16.5, "height": 1.25})
+
+    # 3. Solution (if provided)
+    if solution_raw.strip():
+        sections.append({"type": "DIVIDER", "height": 0.5})
+        sections.append({"type": "SECTION", "text": "ដំណោះស្រាយលម្អិត (Solution)៖", "size": 15, "color": "#16A34A", "height": 0.95})
+        for line in solution_raw.splitlines():
+            line = line.strip()
+            if line:
+                tokens = split_line_tokens(line)
+                sections.append({"type": "TOKENS", "tokens": tokens, "size": 16.5, "height": 1.25})
+
+    if not sections:
+        return None
+
+    try:
+        total_weight = sum(s["height"] for s in sections)
+        fig_height = max(3.0, total_weight * 0.65)
+        fig = plt.figure(figsize=(8.8, fig_height), dpi=260)
+        fig.patch.set_facecolor("#FFFFFF")
+        ax = plt.subplot(111)
+        ax.patch.set_facecolor("#FFFFFF")
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, total_weight)
+        plt.axis("off")
+
+        fig.canvas.draw()
+        renderer = fig.canvas.get_renderer()
+        inv = ax.transData.inverted()
+
+        cur_y = total_weight
+        for s in sections:
+            cur_y -= s["height"]
+            draw_y = cur_y + s["height"] * 0.45
+
+            stype = s["type"]
+            if stype == "TITLE":
+                if KHMER_FP:
+                    ax.text(0.05, draw_y, s["text"], fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
+                else:
+                    ax.text(0.05, draw_y, s["text"], size=s["size"], color=s["color"], va="center")
+            elif stype == "SUBTITLE":
+                if KHMER_FP:
+                    ax.text(0.05, draw_y, s["text"], fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
+                else:
+                    ax.text(0.05, draw_y, s["text"], size=s["size"], color=s["color"], va="center")
+            elif stype == "DIVIDER":
+                ax.axhline(y=draw_y, xmin=0.05, xmax=0.95, color="#E2E8F0", linewidth=1.2)
+            elif stype == "SECTION":
+                if KHMER_FP:
+                    ax.text(0.05, draw_y, s["text"], fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
+                else:
+                    ax.text(0.05, draw_y, s["text"], size=s["size"], color=s["color"], va="center")
+            elif stype == "TEXT":
+                if KHMER_FP:
+                    ax.text(0.08, draw_y, s["text"], fontproperties=KHMER_FP, size=s["size"], color=s["color"], va="center")
+                else:
+                    ax.text(0.08, draw_y, s["text"], size=s["size"], color=s["color"], va="center")
+            elif stype == "TOKENS":
+                x_cur = 0.08
+                for tok_kind, tok_val in s["tokens"]:
+                    if tok_kind == "MATH":
+                        try:
+                            t = ax.text(x_cur, draw_y, f"${tok_val}$", size=s["size"], color="#0F172A", va="center")
+                            fig.canvas.draw()
+                            bbox = t.get_window_extent(renderer=renderer)
+                            x_cur = inv.transform(bbox)[1][0] + 0.02
+                        except Exception:
+                            t = ax.text(x_cur, draw_y, tok_val, size=s["size"] - 2, color="#0F172A", va="center")
+                            fig.canvas.draw()
+                            bbox = t.get_window_extent(renderer=renderer)
+                            x_cur = inv.transform(bbox)[1][0] + 0.02
+                    else:
+                        if KHMER_FP:
+                            t = ax.text(x_cur, draw_y, tok_val, fontproperties=KHMER_FP, size=14, color="#1E293B", va="center")
+                        else:
+                            t = ax.text(x_cur, draw_y, tok_val, size=13.5, color="#1E293B", va="center")
+                        fig.canvas.draw()
+                        bbox = t.get_window_extent(renderer=renderer)
+                        x_cur = inv.transform(bbox)[1][0] + 0.02
+
+        buf = io.BytesIO()
+        plt.savefig(buf, format="png", facecolor="#FFFFFF", bbox_inches="tight", pad_inches=0.28)
+        plt.close(fig)
+        buf.seek(0)
+        return buf.getvalue()
+    except Exception as e:
+        logger.error("render_exercise_card error: %s", e)
         try:
             plt.close(fig)
         except Exception:

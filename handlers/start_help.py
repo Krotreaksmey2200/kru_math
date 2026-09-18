@@ -64,15 +64,18 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     [InlineKeyboardButton("🏠 ម៉ឺនុយដើម (Home)", callback_data="menu_main")]
                 ])
 
-                png_bytes = render_formula_card(title_km, formula_raw, example_raw)
+                png_bytes = render_formula_card(
+                    title_km=title_km,
+                    formula_raw=formula_raw,
+                    example_raw=example_raw,
+                    title_en=form.get("title_en", ""),
+                    explanation=explanation
+                )
                 if png_bytes:
-                    caption = f"📐 <b>{title_km}</b>\n"
-                    if explanation:
-                        caption += f"\n💡 <b>ពន្យល់៖</b> {explanation}"
                     import io
                     await chat.send_photo(
                         photo=io.BytesIO(png_bytes),
-                        caption=caption,
+                        caption=f"📐 <b>{title_km}</b>",
                         parse_mode=ParseMode.HTML,
                         reply_markup=back_kb
                     )

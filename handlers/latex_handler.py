@@ -85,20 +85,22 @@ async def render_formula_callback(query, form_id: str):
         await query.answer("រកមិនឃើញរូបមន្តនេះទេ!", show_alert=True)
         return
 
-    formula_text = form.get("formula", "")
     await query.answer("⏳ កំពុង Render រូបភាពសមីការផ្ទៃពណ៌ស...")
     chat = query.message.chat if query.message else None
     if not chat:
         return
 
     title = form.get("title_km", "រូបមន្ត")
-    clean_eqs = clean_and_extract_equations(formula_text)
-    katex_code = " \\\\ ".join(clean_eqs) if clean_eqs else formula_text
-
-    # Render HD photo on clean white background with both Khmer text & LaTeX equations
-    png_bytes = await render_latex_to_png(formula_text, bg_color="#FFFFFF")
+    from latex_renderer import render_formula_card
+    png_bytes = render_formula_card(
+        title_km=title,
+        formula_raw=form.get("formula", ""),
+        example_raw=form.get("example", ""),
+        title_en=form.get("title_en", ""),
+        explanation=form.get("explanation", "")
+    )
     if png_bytes:
-        caption = f"📐 <b>{title}</b>\n<code>${html.escape(katex_code)}$</code>"
+        caption = f"📐 <b>{title}</b>"
         await chat.send_photo(
             photo=io.BytesIO(png_bytes),
             caption=caption,
@@ -115,7 +117,6 @@ async def render_exercise_callback(query, ex_id: str):
         await query.answer("រកមិនឃើញលំហាត់នេះទេ!", show_alert=True)
         return
 
-    math_text = ex.get("final_answer") or ex.get("problem") or ""
     await query.answer("⏳ កំពុង Render រូបភាពសមីការផ្ទៃពណ៌ស...")
     chat = query.message.chat if query.message else None
     if not chat:
@@ -123,13 +124,21 @@ async def render_exercise_callback(query, ex_id: str):
 
     code = ex.get("code", "លំហាត់")
     title = ex.get("title", "")
-    clean_eqs = clean_and_extract_equations(math_text)
-    katex_code = " \\\\ ".join(clean_eqs) if clean_eqs else math_text
+    steps = ex.get("solution_steps", [])
+    sol = "\n".join(steps)
+    if ex.get("final_answer"):
+        sol += "\nដូចនេះ៖ " + ex.get("final_answer")
 
-    # Render HD photo on clean white background with both Khmer text & LaTeX equations
-    png_bytes = await render_latex_to_png(math_text, bg_color="#FFFFFF")
+    from latex_renderer import render_exercise_card
+    png_bytes = render_exercise_card(
+        code=code,
+        title=title,
+        difficulty=ex.get("difficulty", "មធ្យម"),
+        problem_raw=ex.get("problem", ""),
+        solution_raw=sol
+    )
     if png_bytes:
-        caption = f"📝 <b>{code}៖ {title}</b>\n<code>${html.escape(katex_code)}$</code>"
+        caption = f"📝 <b>{code}៖ {title}</b>"
         await chat.send_photo(
             photo=io.BytesIO(png_bytes),
             caption=caption,

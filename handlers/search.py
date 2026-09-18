@@ -124,10 +124,27 @@ async def perform_search_and_reply(update: Update, context: ContextTypes.DEFAULT
         return
 
     # 4. Handling Private Chat Search Results
-    # Display matched formulas
+    # Display matched formulas as full rendered cards
     for form in matched_formulas[:2]:
-        msg_text = format_formula_html(form)
-        await chat.send_message(text=msg_text, parse_mode=ParseMode.HTML)
+        from latex_renderer import render_formula_card
+        title_km = form.get("title_km", "")
+        png_bytes = render_formula_card(
+            title_km=title_km,
+            formula_raw=form.get("formula", ""),
+            example_raw=form.get("example", ""),
+            title_en=form.get("title_en", ""),
+            explanation=form.get("explanation", "")
+        )
+        if png_bytes:
+            import io
+            await chat.send_photo(
+                photo=io.BytesIO(png_bytes),
+                caption=f"📐 <b>{title_km}</b>",
+                parse_mode=ParseMode.HTML
+            )
+        else:
+            msg_text = format_formula_html(form)
+            await chat.send_message(text=msg_text, parse_mode=ParseMode.HTML)
 
     # Display matched exercises
     for ex in matched_exercises[:3]:
