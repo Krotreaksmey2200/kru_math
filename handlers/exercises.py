@@ -354,12 +354,36 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         form_id = data.replace("form_view_", "")
         form = db.get_formula_by_id(form_id)
         if form:
-            msg_text = format_formula_html(form)
+            from latex_renderer import render_formula_card
+            title_km = form.get("title_km", "")
+            formula_raw = form.get("formula", "")
+            example_raw = form.get("example", "")
+            explanation = form.get("explanation", "")
+
             back_kb = InlineKeyboardMarkup([
-                [InlineKeyboardButton("🖼 មើលរូបភាពសមីការ (Render ផ្ទៃស)", callback_data=f"form_render_{form_id}")],
                 [InlineKeyboardButton("🔙 ត្រឡប់ក្រោយ (Back)", callback_data=f"form_cat_{form.get('category_id', 'lesson_3')}")]
             ])
-            await query.edit_message_text(msg_text, parse_mode=ParseMode.HTML, reply_markup=back_kb)
+
+            # Render complete card on white background with both Khmer & LaTeX
+            png_bytes = render_formula_card(title_km, formula_raw, example_raw)
+            if png_bytes and chat:
+                caption = f"📐 <b>{title_km}</b>\n"
+                if explanation:
+                    caption += f"\n💡 <b>ពន្យល់៖</b> {explanation}"
+                import io
+                await chat.send_photo(
+                    photo=io.BytesIO(png_bytes),
+                    caption=caption,
+                    parse_mode=ParseMode.HTML,
+                    reply_markup=back_kb
+                )
+                try:
+                    await query.message.delete()
+                except Exception:
+                    pass
+            else:
+                msg_text = format_formula_html(form)
+                await query.edit_message_text(msg_text, parse_mode=ParseMode.HTML, reply_markup=back_kb)
 
     # 5. Exercises Menu (Categories)
     elif data == "menu_exercises":

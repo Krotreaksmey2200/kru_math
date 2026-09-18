@@ -78,8 +78,9 @@ def normalize_to_latex(text: str) -> str:
         ("≥", r"\ge"),
         ("∞", r"\infty"),
         ("→", r"\to"),
-        ("==>", r"\implies"),
-        ("=>", r"\implies"),
+        ("==>", r"\Rightarrow"),
+        ("=>", r"\Rightarrow"),
+        (r"\implies", r"\Rightarrow"),
         ("⇌", r"\rightleftharpoons"),
         ("ℝ", r"\mathbf{R}"),
         (r"\mathbb{R}", r"\mathbf{R}"),
@@ -93,6 +94,8 @@ def normalize_to_latex(text: str) -> str:
 
     # Convert \sqrt(...) to \sqrt{...}
     s = re.sub(r'\\sqrt\(([^)]+)\)', r'\\sqrt{\1}', s)
+    # Convert \sqrt25 to \sqrt{25}
+    s = re.sub(r'\\sqrt([0-9a-zA-Z]+)', r'\\sqrt{\1}', s)
 
     # Add space before parentheses when following alphanumeric, e.g. "bi (" -> "bi \quad ("
     s = re.sub(r'([a-zA-Z0-9\^}])\s*\(', r'\1 \\quad (', s)
@@ -105,7 +108,7 @@ def clean_math_part(text: str) -> str:
     s = text.strip()
     s = re.sub(r'\bដែល\b', '', s)
     s = re.sub(r'\bដោយ\b', '', s)
-    s = re.sub(r'\bនាំឱ្យ\b', r'\\implies ', s)
+    s = re.sub(r'\bនាំឱ្យ\b', r'\\Rightarrow ', s)
     s = re.sub(r'[\u1780-\u17FF]', '', s)
     s = re.sub(r'\(\s*\)', '', s)
     s = re.sub(r'\s+', ' ', s).strip()
@@ -370,3 +373,93 @@ def render_latex_to_transparent_webp(latex_str: str) -> Optional[bytes]:
         except Exception:
             pass
         return None
+
+
+def render_formula_card(title_km: str, formula_raw: str, example_raw: str = "") -> Optional[bytes]:
+    """
+    Renders an entire formula item as a cohesive, beautiful card on a pure white background.
+    Includes Khmer title, formula equations, and example with proper Khmer text shaping and LaTeX math.
+    """
+    if not MATPLOTLIB_AVAILABLE:
+        return None
+
+    lines = []
+    if title_km:
+        # Strip any non-text emoji from title for font rendering
+        clean_title = re.sub(r'[^\u1780-\u17FF\u0000-\u007Fa-zA-Z0-9\s\(\)\:\.\,\-\+]', '', title_km).strip()
+        lines.append(("TITLE", clean_title, ""))
+
+    for raw_l in formula_raw.splitlines():
+        if raw_l.strip():
+            kh, math = parse_line_khmer_and_math(raw_l)
+            lines.append(("FORMULA", kh, math))
+
+    if example_raw:
+        for ex_l in example_raw.splitlines():
+            if ex_l.strip():
+                kh, math = parse_line_khmer_and_math(ex_l)
+                if not kh and not math.startswith("ឧទាហរណ៍"):
+                    kh = "ឧទាហរណ៍៖"
+                lines.append(("EXAMPLE", kh, math))
+
+    if not lines:
+        return None
+
+    num_lines = len(lines)
+    try:
+        fig_height = max(1.4, 0.6 + num_lines * 0.68)
+        fig = plt.figure(figsize=(7.5, fig_height), dpi=260)
+        fig.patch.set_facecolor("#FFFFFF")
+        ax = plt.subplot(111)
+        ax.patch.set_facecolor("#FFFFFF")
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        plt.axis("off")
+
+        fig.canvas.draw()
+        renderer = fig.canvas.get_renderer()
+        inv = ax.transData.inverted()
+
+        y_step = 1.0 / (num_lines + 1)
+
+        for idx, (kind, kh, math) in enumerate(lines):
+            y_pos = 1.0 - (idx + 1) * y_step
+            x_cursor = 0.05
+
+            if kind == "TITLE":
+                if KHMER_FP:
+                    ax.text(x_cursor, y_pos, kh, fontproperties=KHMER_FP, size=18, color="#0F172A", va="center")
+                else:
+                    ax.text(x_cursor, y_pos, kh, size=17, color="#0F172A", va="center")
+                continue
+
+            if kh:
+                color = "#1E293B" if kind == "FORMULA" else "#334155"
+                size = 15 if kind == "FORMULA" else 14
+                if KHMER_FP:
+                    t_kh = ax.text(x_cursor, y_pos, kh, fontproperties=KHMER_FP, size=size, color=color, va="center")
+                else:
+                    t_kh = ax.text(x_cursor, y_pos, kh, size=size, color=color, va="center")
+
+                fig.canvas.draw()
+                bbox = t_kh.get_window_extent(renderer=renderer)
+                bbox_data = inv.transform(bbox)
+                x_cursor = bbox_data[1][0] + 0.025
+
+            if math:
+                math_size = 17 if kind == "FORMULA" else 16
+                ax.text(x_cursor, y_pos, f"${math}$", size=math_size, color="#0F172A", va="center")
+
+        buf = io.BytesIO()
+        plt.savefig(buf, format="png", facecolor="#FFFFFF", bbox_inches="tight", pad_inches=0.25)
+        plt.close(fig)
+        buf.seek(0)
+        return buf.getvalue()
+    except Exception as e:
+        logger.debug("render_formula_card failed: %s", e)
+        try:
+            plt.close(fig)
+        except Exception:
+            pass
+        return None
+
