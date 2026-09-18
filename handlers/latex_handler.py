@@ -101,10 +101,16 @@ async def render_formula_callback(query, form_id: str):
     )
     if png_bytes:
         caption = f"📐 <b>{title}</b>"
+        cat_id = form.get("category_id", "lesson_3")
+        photo_kb = InlineKeyboardMarkup([
+            [InlineKeyboardButton("📝 មើលជា Text ឡើងវិញ", callback_data=f"form_view_{form_id}")],
+            [InlineKeyboardButton("🔙 ត្រឡប់ទៅបញ្ជីរូបមន្ត", callback_data=f"form_cat_{cat_id}")]
+        ])
         await chat.send_photo(
             photo=io.BytesIO(png_bytes),
             caption=caption,
-            parse_mode=ParseMode.HTML
+            parse_mode=ParseMode.HTML,
+            reply_markup=photo_kb
         )
     else:
         await query.answer("មិនអាច Render រូបភាពសម្រាប់រូបមន្តនេះទេ!", show_alert=True)
@@ -139,10 +145,16 @@ async def render_exercise_callback(query, ex_id: str):
     )
     if png_bytes:
         caption = f"📝 <b>{code}៖ {title}</b>"
+        cat_id = ex.get("category_id", "basic")
+        photo_kb = InlineKeyboardMarkup([
+            [InlineKeyboardButton("📝 មើលជា Text ឡើងវិញ", callback_data=f"ex_view_{ex_id}")],
+            [InlineKeyboardButton("🔙 ត្រឡប់ទៅបញ្ជីលំហាត់", callback_data=f"ex_cat_{cat_id}")]
+        ])
         await chat.send_photo(
             photo=io.BytesIO(png_bytes),
             caption=caption,
-            parse_mode=ParseMode.HTML
+            parse_mode=ParseMode.HTML,
+            reply_markup=photo_kb
         )
     else:
         await query.answer("មិនអាច Render រូបភាពសម្រាប់លំហាត់នេះទេ!", show_alert=True)

@@ -349,44 +349,22 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
             await query.edit_message_text(text, parse_mode=ParseMode.HTML, reply_markup=back_kb)
 
     # 4. View Specific Formula
+    # 4. View Specific Formula
     elif data.startswith("form_view_"):
         await query.answer()
         form_id = data.replace("form_view_", "")
         form = db.get_formula_by_id(form_id)
         if form:
-            from latex_renderer import render_formula_card
-            title_km = form.get("title_km", "")
-            formula_raw = form.get("formula", "")
-            example_raw = form.get("example", "")
-            explanation = form.get("explanation", "")
-
-            back_kb = InlineKeyboardMarkup([
-                [InlineKeyboardButton("🔙 ត្រឡប់ក្រោយ (Back)", callback_data=f"form_cat_{form.get('category_id', 'lesson_3')}")]
+            msg_text = format_formula_html(form)
+            cat_id = form.get("category_id", "lesson_3")
+            kb = InlineKeyboardMarkup([
+                [InlineKeyboardButton("🖼 Render រូបភាពសមីការ (HD Card)", callback_data=f"form_render_{form['id']}")],
+                [InlineKeyboardButton("🔙 ត្រឡប់ក្រោយ (Back)", callback_data=f"form_cat_{cat_id}")]
             ])
-
-            # Render complete card on white background with both Khmer & LaTeX
-            png_bytes = render_formula_card(
-                title_km=title_km,
-                formula_raw=formula_raw,
-                example_raw=example_raw,
-                title_en=form.get("title_en", ""),
-                explanation=explanation
-            )
-            if png_bytes and chat:
-                import io
-                await chat.send_photo(
-                    photo=io.BytesIO(png_bytes),
-                    caption=f"📐 <b>{title_km}</b>",
-                    parse_mode=ParseMode.HTML,
-                    reply_markup=back_kb
-                )
-                try:
-                    await query.message.delete()
-                except Exception:
-                    pass
-            else:
-                msg_text = format_formula_html(form)
-                await query.edit_message_text(msg_text, parse_mode=ParseMode.HTML, reply_markup=back_kb)
+            try:
+                await query.edit_message_text(msg_text, parse_mode=ParseMode.HTML, reply_markup=kb)
+            except Exception:
+                await chat.send_message(msg_text, parse_mode=ParseMode.HTML, reply_markup=kb)
 
     # 5. Exercises Menu (Categories)
     elif data == "menu_exercises":
@@ -491,6 +469,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
             else:
                 # Private chat: Edit current message to show full solution
                 back_kb = InlineKeyboardMarkup([
+                    [InlineKeyboardButton("🖼 Render ដំណោះស្រាយ (HD Card)", callback_data=f"ex_render_{ex_id}")],
                     [InlineKeyboardButton("❓ មើលប្រធានឡើងវិញ (Problem)", callback_data=f"ex_view_{ex_id}")],
                     [InlineKeyboardButton("🔙 ត្រឡប់ទៅបញ្ជីលំហាត់", callback_data=f"ex_cat_{ex.get('category_id', 'basic')}")]
                 ])

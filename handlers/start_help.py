@@ -59,35 +59,18 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 example_raw = form.get("example", "")
                 explanation = form.get("explanation", "")
 
+                formula_text = format_formula_html(form)
                 back_kb = InlineKeyboardMarkup([
+                    [InlineKeyboardButton("🖼 Render រូបភាពសមីការ (HD Card)", callback_data=f"form_render_{form['id']}")],
                     [InlineKeyboardButton("📐 មើលរូបមន្តផ្សេងទៀត", callback_data="menu_formulas")],
                     [InlineKeyboardButton("🏠 ម៉ឺនុយដើម (Home)", callback_data="menu_main")]
                 ])
-
-                png_bytes = render_formula_card(
-                    title_km=title_km,
-                    formula_raw=formula_raw,
-                    example_raw=example_raw,
-                    title_en=form.get("title_en", ""),
-                    explanation=explanation
+                await chat.send_message(
+                    text=formula_text,
+                    parse_mode=ParseMode.HTML,
+                    reply_markup=back_kb
                 )
-                if png_bytes:
-                    import io
-                    await chat.send_photo(
-                        photo=io.BytesIO(png_bytes),
-                        caption=f"📐 <b>{title_km}</b>",
-                        parse_mode=ParseMode.HTML,
-                        reply_markup=back_kb
-                    )
-                    return
-                else:
-                    formula_text = format_formula_html(form)
-                    await chat.send_message(
-                        text=formula_text,
-                        parse_mode=ParseMode.HTML,
-                        reply_markup=back_kb
-                    )
-                    return
+                return
 
     # Default /start message (Bilingual Khmer & English)
     welcome_message = (
